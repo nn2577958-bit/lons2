@@ -6,15 +6,15 @@
 <title>🎮 LONS2 커뮤니티</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
-body{ font-family:'Segoe UI',sans-serif; margin:0; padding:0; background:#111; color:white; display:flex; justify-content:center; }
-.container{ width:800px; margin:40px auto; padding:20px; background:#1c1c1c; border-radius:12px;}
+body{ font-family:'Segoe UI',sans-serif; margin:0; padding:0; background:#111; color:white;}
+.container{ max-width:800px; margin:40px auto; padding:20px; background:#1c1c1c; border-radius:12px;}
 h1,h2{ margin-bottom:15px; text-align:center; }
 input,textarea{ width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:none; font-size:16px;}
 button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; background:#28a745; color:white; font-weight:600;}
 .notice-item{ background:#222; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #4CAF50; position: relative;}
 .delete-btn{ position:absolute; top:10px; right:10px; background:#ff4444; font-size:12px; padding:4px 6px; border-radius:4px; }
-#login-msg{ color:#ff4444; margin-bottom:10px; text-align:center; }
-#admin-status{ margin-bottom:15px; transition:0.5s; text-align:center; }
+#login-msg{ color:#ff4444; margin-bottom:10px; text-align:center;}
+#admin-status{ margin-bottom:15px; text-align:center; transition: 0.5s; }
 .online { color:#4CAF50; animation: blink 1s infinite; }
 .offline { color:#ff4444; animation: blink 1s infinite; }
 @keyframes blink { 50% { opacity:0; } }
@@ -69,10 +69,9 @@ loginBtn.addEventListener('click', async () => {
   try {
     await signInWithPopup(auth, provider);
     loginMsg.textContent = "로그인 성공!";
-    currentUser = auth.currentUser;
 
-    // 관리자이면 Firestore 상태 업데이트
-    if (currentUser.email === ADMIN_EMAIL) {
+    // 관리자 로그인 시 Firestore 상태 업데이트
+    if (auth.currentUser?.email === ADMIN_EMAIL) {
       await setDoc(doc(db, "status", "admin"), { isOnline: true, lastChanged: serverTimestamp() });
     }
   } catch (err) {
@@ -86,37 +85,12 @@ logoutBtn.addEventListener('click', async () => {
     await setDoc(doc(db, "status", "admin"), { isOnline: false, lastChanged: serverTimestamp() });
   }
   await signOut(auth);
-  currentUser = null;
   loginMsg.textContent = "로그아웃 완료";
 });
 
 // 관리자 상태 표시 + 버튼 제어
 onAuthStateChanged(auth, user => {
   currentUser = user;
-  updateAdminUI(user);
-});
-
-// 게시글 작성
-postBtn.addEventListener('click', async () => {
-  if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
-    alert("로그인 후 관리자만 글을 작성할 수 있습니다!");
-    return;
-  }
-
-  const author = document.getElementById('author').value.trim();
-  const title = document.getElementById('title').value.trim();
-  const content = document.getElementById('content').value.trim();
-  if (!author || !title || !content) return alert("모든 필드를 입력해주세요!");
-
-  await addDoc(collection(db, 'posts'), {
-    author, title, content,
-    uid: currentUser.uid,
-    createdAt: serverTimestamp()
-  });
-
-  document.getElementById('author').value = '';
-  document.getElementById('title').value = '';
-  document.getElementById('content').value = '';
 });
 
 // 실시간 게시글 구독
@@ -130,6 +104,7 @@ onSnapshot(postsQuery, snapshot => {
     const time = data.createdAt?.toDate().toLocaleString() || '';
     div.innerHTML = `<strong>${data.title}</strong> <small>by ${data.author} | ${time}</small><div>${data.content}</div>`;
 
+    // 관리자 삭제 버튼
     if (currentUser?.email === ADMIN_EMAIL) {
       const delBtn = document.createElement('button');
       delBtn.textContent = "삭제";
@@ -141,39 +116,25 @@ onSnapshot(postsQuery, snapshot => {
       });
       div.appendChild(delBtn);
     }
-
     postsContainer.appendChild(div);
   });
 });
 
-// 실시간 관리자 상태 구독
+// 실시간 관리자 상태 구독 (방문자도 확인 가능)
 onSnapshot(doc(db, "status", "admin"), snapshot => {
   const data = snapshot.data();
   if (data?.isOnline) {
     adminStatus.textContent = "🟢 관리자 온라인";
     adminStatus.className = "online";
+    postBtn.disabled = currentUser?.email !== ADMIN_EMAIL;
+    loginAlert.style.display = currentUser?.email === ADMIN_EMAIL ? "none" : "block";
   } else {
     adminStatus.textContent = "🔴 관리자 오프라인";
     adminStatus.className = "offline";
-  }
-});
-
-// UI 업데이트 함수
-function updateAdminUI(user) {
-  if (user?.email === ADMIN_EMAIL) {
-    adminStatus.textContent = "🟢 관리자 온라인";
-    adminStatus.className = "online";
-    postBtn.disabled = false;
-    loginAlert.style.display = "none";
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "inline-block";
-  } else {
     postBtn.disabled = true;
     loginAlert.style.display = "block";
-    loginBtn.style.display = "inline-block";
-    logoutBtn.style.display = "none";
   }
-}
+});
 </script>
 </body>
 </html>
