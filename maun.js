@@ -1,34 +1,49 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MyCommunity</title>
-  <link rel="stylesheet" href="assets/css/main.css">
-</head>
-<body>
+// main.js
+import { db } from '../../firebase.js';
+import { collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-<header>
-  <h1>MyCommunity</h1>
-  <p>자유롭게 글을 작성하고 소통하는 공간</p>
-</header>
+const postsContainer = document.getElementById('posts-container');
+const postBtn = document.getElementById('post-btn');
 
-<section id="write-section">
-  <h2>글쓰기</h2>
-  <input type="text" id="author" placeholder="작성자">
-  <input type="text" id="title" placeholder="제목">
-  <textarea id="content" placeholder="내용"></textarea>
-  <button id="post-btn">게시글 작성</button>
-</section>
+async function loadPosts() {
+  postsContainer.innerHTML = '';
+  const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    const div = document.createElement('div');
+    div.classList.add('post');
+    div.innerHTML = `
+      <h3>${data.title}</h3>
+      <p>${data.content}</p>
+      <small>작성자: ${data.author}</small>
+    `;
+    postsContainer.appendChild(div);
+  });
+}
 
-<section id="posts">
-  <h2>게시글 목록</h2>
-  <div id="posts-container">
-    <!-- 게시글이 여기 표시됩니다 -->
-  </div>
-</section>
+postBtn.addEventListener('click', async () => {
+  const author = document.getElementById('author').value;
+  const title = document.getElementById('title').value;
+  const content = document.getElementById('content').value;
 
-<script type="module" src="firebase.js"></script>
-<script type="module" src="assets/js/main.js"></script>
-</body>
-</html>
+  if (!author || !title || !content) {
+    alert("모든 필드를 입력해주세요!");
+    return;
+  }
+
+  await addDoc(collection(db, "posts"), {
+    author,
+    title,
+    content,
+    createdAt: new Date()
+  });
+
+  document.getElementById('author').value = '';
+  document.getElementById('title').value = '';
+  document.getElementById('content').value = '';
+  loadPosts();
+});
+
+// 페이지 로드 시 게시글 불러오기
+loadPosts();
