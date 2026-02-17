@@ -1,187 +1,34 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>커뮤니티 사이트</title>
-    <link rel="stylesheet" href="assets/css/main.css">
-    <noscript><link rel="stylesheet" href="assets/css/noscript.css"></noscript>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyCommunity</title>
+  <link rel="stylesheet" href="assets/css/main.css">
 </head>
-<body class="is-preload">
+<body>
 
-<!-- Wrapper -->
-<div id="wrapper" class="fade-in">
+<header>
+  <h1>MyCommunity</h1>
+  <p>자유롭게 글을 작성하고 소통하는 공간</p>
+</header>
 
-    <!-- Intro -->
-    <div id="intro">
-        <h1>커뮤니티에 오신 것을 환영합니다</h1>
-        <p>자유롭게 소통하고 정보를 공유하는 공간</p>
-        <ul class="actions">
-            <li><a href="#main" class="button icon solid solo fa-arrow-down scrolly">시작하기</a></li>
-        </ul>
-    </div>
+<section id="write-section">
+  <h2>글쓰기</h2>
+  <input type="text" id="author" placeholder="작성자">
+  <input type="text" id="title" placeholder="제목">
+  <textarea id="content" placeholder="내용"></textarea>
+  <button id="post-btn">게시글 작성</button>
+</section>
 
-    <!-- Header -->
-    <header id="header">
-        <a href="index.html" class="logo">MyCommunity</a>
-    </header>
+<section id="posts">
+  <h2>게시글 목록</h2>
+  <div id="posts-container">
+    <!-- 게시글이 여기 표시됩니다 -->
+  </div>
+</section>
 
-    <!-- Nav -->
-    <nav id="nav">
-        <ul class="links">
-            <li class="active"><a href="index.html">홈</a></li>
-            <li><a href="about.html">소개</a></li>
-            <li><a href="community.html">게시판</a></li>
-            <li><a href="contact.html">문의</a></li>
-        </ul>
-        <ul class="icons">
-            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-            <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-            <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-            <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-        </ul>
-    </nav>
-
-    <!-- Main -->
-    <div id="main">
-
-        <!-- Featured Post / 공지사항 -->
-        <article class="post featured">
-            <header class="major">
-                <h2><a href="#">공지: 커뮤니티 오픈</a></h2>
-                <p>새로운 커뮤니티가 열렸습니다! 자유롭게 글을 작성하고 소통해보세요.</p>
-            </header>
-            <a href="#" class="image main"><img src="images/pic01.jpg" alt="공지사항 이미지"></a>
-            <ul class="actions special">
-                <li><a href="#" class="button large">자세히 보기</a></li>
-            </ul>
-        </article>
-
-        <!-- Posts / 게시글 목록 -->
-        <section class="posts">
-            <article>
-                <header>
-                    <h2><a href="#">게시글 제목 1</a></h2>
-                    <p>작성자: 김민수 | 2026-02-18 | 댓글 5개</p>
-                </header>
-                <a href="#" class="image fit"><img src="images/pic02.jpg" alt="게시글 이미지"></a>
-                <p>커뮤니티 첫 글입니다. 자유롭게 의견을 남겨주세요.</p>
-                <ul class="actions special">
-                    <li><a href="#" class="button">자세히 보기</a></li>
-                </ul>
-            </article>
-
-            <article>
-                <header>
-                    <h2><a href="#">게시글 제목 2</a></h2>
-                    <p>작성자: 이지훈 | 2026-02-17 | 댓글 2개</p>
-                </header>
-                <a href="#" class="image fit"><img src="images/pic03.jpg" alt="게시글 이미지"></a>
-                <p>좋은 정보를 공유합니다. 같이 이야기 나눠요!</p>
-                <ul class="actions special">
-                    <li><a href="#" class="button">자세히 보기</a></li>
-                </ul>
-            </article>
-
-            <article>
-                <header>
-                    <h2><a href="#">게시글 제목 3</a></h2>
-                    <p>작성자: 박지은 | 2026-02-16 | 댓글 0개</p>
-                </header>
-                <a href="#" class="image fit"><img src="images/pic04.jpg" alt="게시글 이미지"></a>
-                <p>주제별 자유 토론 게시글입니다.</p>
-                <ul class="actions special">
-                    <li><a href="#" class="button">자세히 보기</a></li>
-                </ul>
-            </article>
-        </section>
-
-        <!-- 글쓰기 버튼 -->
-        <div class="actions" style="text-align:center; margin-top:20px;">
-            <a href="write.html" class="button large">글쓰기</a>
-        </div>
-
-        <!-- Pagination -->
-        <footer>
-            <div class="pagination">
-                <a href="#" class="page active">1</a>
-                <a href="#" class="page">2</a>
-                <a href="#" class="page">3</a>
-                <span class="extra">&hellip;</span>
-                <a href="#" class="page">8</a>
-                <a href="#" class="page">9</a>
-                <a href="#" class="page">10</a>
-                <a href="#" class="next">Next</a>
-            </div>
-        </footer>
-
-    </div>
-
-    <!-- Footer -->
-    <footer id="footer">
-        <section>
-            <form method="post" action="#">
-                <div class="fields">
-                    <div class="field">
-                        <label for="name">이름</label>
-                        <input type="text" name="name" id="name">
-                    </div>
-                    <div class="field">
-                        <label for="email">이메일</label>
-                        <input type="text" name="email" id="email">
-                    </div>
-                    <div class="field">
-                        <label for="message">메시지</label>
-                        <textarea name="message" id="message" rows="3"></textarea>
-                    </div>
-                </div>
-                <ul class="actions">
-                    <li><input type="submit" value="보내기"></li>
-                </ul>
-            </form>
-        </section>
-        <section class="split contact">
-            <section class="alt">
-                <h3>주소</h3>
-                <p>서울특별시 강남구 역삼동 123-45<br>대한민국</p>
-            </section>
-            <section>
-                <h3>전화</h3>
-                <p><a href="#">(010) 1234-5678</a></p>
-            </section>
-            <section>
-                <h3>이메일</h3>
-                <p><a href="#">info@mysite.com</a></p>
-            </section>
-            <section>
-                <h3>소셜</h3>
-                <ul class="icons alt">
-                    <li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
-                    <li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
-                    <li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
-                    <li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-                </ul>
-            </section>
-        </section>
-    </footer>
-
-    <!-- Copyright -->
-    <div id="copyright">
-        <ul>
-            <li>&copy; 2026 MyCommunity</li>
-            <li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
-        </ul>
-    </div>
-
-</div>
-
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.scrollex.min.js"></script>
-<script src="assets/js/jquery.scrolly.min.js"></script>
-<script src="assets/js/browser.min.js"></script>
-<script src="assets/js/breakpoints.min.js"></script>
-<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js"></script>
-
+<script type="module" src="firebase.js"></script>
+<script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
