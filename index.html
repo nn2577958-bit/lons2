@@ -14,9 +14,10 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 .notice-item{ background:#222; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #4CAF50; position: relative;}
 .delete-btn{ position:absolute; top:10px; right:10px; background:#ff4444; font-size:12px; padding:4px 6px; border-radius:4px; }
 #login-msg{ color:#ff4444; margin-bottom:10px; }
-#admin-status{ margin-bottom:15px; transition: 0.5s; }
-.online { color:#4CAF50; }
-.offline { color:#ff4444; }
+#admin-status{ margin-bottom:15px; transition: 0.5s; font-weight:600; }
+.online { color:#4CAF50; animation: blink 1s infinite; }
+.offline { color:#ff4444; animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity:0; } }
 #login-alert{ color:#ffaa00; margin-bottom:10px; display:block; }
 #logout-btn{ background:#ff9900; margin-left:10px; }
 </style>
@@ -69,7 +70,6 @@ loginBtn.addEventListener('click', async () => {
     await signInWithPopup(auth, provider);
     loginMsg.textContent = "로그인 성공!";
 
-    // 관리자 로그인 시 Firestore 상태 업데이트
     if (auth.currentUser?.email === ADMIN_EMAIL) {
       await setDoc(doc(db, "status", "admin"), { isOnline: true, lastChanged: serverTimestamp() });
     }
@@ -88,7 +88,7 @@ logoutBtn.addEventListener('click', async () => {
   loginMsg.textContent = "로그아웃 완료";
 });
 
-// 관리자 상태 표시 + 글쓰기 버튼 제어
+// 현재 로그인 상태 저장
 onAuthStateChanged(auth, user => {
   currentUser = user;
 });
@@ -121,7 +121,7 @@ onSnapshot(postsQuery, snapshot => {
   });
 });
 
-// 실시간 관리자 상태 구독
+// 실시간 관리자 상태 구독 (방문자도 온라인/오프라인 확인)
 onSnapshot(doc(db, "status", "admin"), snapshot => {
   const data = snapshot.data();
   if (data?.isOnline) {
