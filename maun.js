@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyCommunity</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+<header>
+  <h1>MyCommunity</h1>
+  <p>자유롭게 글을 작성하고 소통하는 공간</p>
+</header>
+
+<section id="write-section">
+  <h2>글쓰기</h2>
+  <input type="text" id="author" placeholder="작성자">
+  <input type="text" id="title" placeholder="제목">
+  <textarea id="content" placeholder="내용"></textarea>
+  <button id="post-btn">게시글 작성</button>
+</section>
+
+<section id="posts">
+  <h2>게시글 목록</h2>
+  <div id="posts-container">
+    <!-- 게시글이 여기 표시됩니다 -->
+  </div>
+</section>
+
+<script type="module" src="firebase.js"></script>
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
