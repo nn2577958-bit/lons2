@@ -3,17 +3,18 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
+// 🔹 Firebase 설정 (본인 프로젝트)
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
-  projectId: "lons2-74bfa",
+  projectId: "LONS2-74BFA",
   storageBucket: "lons2-74bfa.appspot.com",
   messagingSenderId: "734178165313",
   appId: "1:734178165313:web:395ed759777ec61f4b3cc0"
 };
 
+// Firebase 초기화
 const app = initializeApp(firebaseConfig);
-
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
