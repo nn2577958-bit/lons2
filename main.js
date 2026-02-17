@@ -1,9 +1,11 @@
-import { db } from '../../firebase.js';
+// main.js
+import { db } from '../../firebase.js'; // main.js 기준 상대경로
 import { collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const postsContainer = document.getElementById('posts-container');
 const postBtn = document.getElementById('post-btn');
 
+// 게시글 불러오기
 async function loadPosts() {
   postsContainer.innerHTML = '';
   const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
@@ -21,6 +23,7 @@ async function loadPosts() {
   });
 }
 
+// 게시글 작성
 postBtn.addEventListener('click', async () => {
   const author = document.getElementById('author').value.trim();
   const title = document.getElementById('title').value.trim();
@@ -41,6 +44,7 @@ postBtn.addEventListener('click', async () => {
   document.getElementById('author').value = '';
   document.getElementById('title').value = '';
   document.getElementById('content').value = '';
+
   loadPosts();
 });
 
