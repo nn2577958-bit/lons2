@@ -14,7 +14,9 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 .notice-item{ background:#222; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #4CAF50; position: relative;}
 .delete-btn{ position:absolute; top:10px; right:10px; background:#ff4444; font-size:12px; padding:4px 6px; border-radius:4px; }
 #login-msg{ color:#ff4444; margin-bottom:10px; }
-#admin-status{ margin-bottom:15px; transition:0.5s; }
+#admin-status{ margin-bottom:15px; transition: 0.5s; }
+.online { color:#4CAF50; }
+.offline { color:#ff4444; }
 #login-alert{ color:#ffaa00; margin-bottom:10px; display:block; }
 #logout-btn{ background:#ff9900; margin-left:10px; }
 </style>
@@ -47,7 +49,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 <script type="module">
 import { auth, db } from './firebase.js';
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { collection, addDoc, query, orderBy, serverTimestamp, deleteDoc, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { collection, addDoc, query, orderBy, serverTimestamp, deleteDoc, doc, onSnapshot, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const loginBtn = document.getElementById('login-btn');
 const logoutBtn = document.getElementById('logout-btn');
@@ -71,7 +73,6 @@ loginBtn.addEventListener('click', async () => {
     if (auth.currentUser?.email === ADMIN_EMAIL) {
       await setDoc(doc(db, "status", "admin"), { isOnline: true, lastChanged: serverTimestamp() });
     }
-
   } catch (err) {
     loginMsg.textContent = "로그인 실패: " + err.message;
   }
@@ -86,9 +87,31 @@ logoutBtn.addEventListener('click', async () => {
   loginMsg.textContent = "로그아웃 완료";
 });
 
-// Auth 상태 변경
+// 관리자 상태 표시 + 버튼 제어
+async function updateAdminUI() {
+  const statusDoc = await getDoc(doc(db, "status", "admin"));
+  const isOnline = statusDoc.data()?.isOnline;
+
+  if (currentUser?.email === ADMIN_EMAIL) {
+    adminStatus.textContent = "🟢 관리자 온라인";
+    adminStatus.className = "online";
+    postBtn.disabled = false;
+    loginAlert.style.display = "none";
+    loginBtn.style.display = "none";
+    logoutBtn.style.display = "inline-block";
+  } else {
+    adminStatus.textContent = isOnline ? "🟢 관리자 온라인" : "🔴 관리자 오프라인";
+    adminStatus.className = isOnline ? "online" : "offline";
+    postBtn.disabled = true;
+    loginAlert.style.display = "block";
+    loginBtn.style.display = "inline-block";
+    logoutBtn.style.display = "none";
+  }
+}
+
 onAuthStateChanged(auth, user => {
   currentUser = user;
+  updateAdminUI();
 });
 
 // 게시글 작성
@@ -129,7 +152,6 @@ onSnapshot(postsQuery, snapshot => {
     const time = data.createdAt?.toDate().toLocaleString() || '';
     div.innerHTML = `<strong>${data.title}</strong> <small>by ${data.author} | ${time}</small><div>${data.content}</div>`;
 
-    // 관리자 삭제 버튼
     if (currentUser?.email === ADMIN_EMAIL) {
       const delBtn = document.createElement('button');
       delBtn.textContent = "삭제";
@@ -146,31 +168,12 @@ onSnapshot(postsQuery, snapshot => {
   });
 });
 
-// 실시간 관리자 상태 구독
+// 실시간 관리자 상태 구독 (방문자도 확인)
 onSnapshot(doc(db, "status", "admin"), snapshot => {
   const data = snapshot.data();
   const isOnline = data?.isOnline;
-
-  if (isOnline) {
-    adminStatus.textContent = "🟢 관리자 온라인";
-  } else {
-    adminStatus.textContent = "🔴 관리자 오프라인";
-  }
-
+  adminStatus.textContent = isOnline ? "🟢 관리자 온라인" : "🔴 관리자 오프라인";
   adminStatus.className = isOnline ? "online" : "offline";
-
-  // 버튼 & 알림 제어 (방문자/관리자 구분)
-  if (currentUser?.email === ADMIN_EMAIL) {
-    postBtn.disabled = false;
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "inline-block";
-    loginAlert.style.display = "none";
-  } else {
-    postBtn.disabled = true;
-    loginBtn.style.display = "inline-block";
-    logoutBtn.style.display = "none";
-    loginAlert.style.display = "block";
-  }
 });
 </script>
 </body>
