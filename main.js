@@ -1,5 +1,4 @@
-// main.js
-import { db } from '../../firebase.js'; // main.js 기준 상대경로
+import { db } from '../../firebase.js';  // main.js 기준 상대경로
 import { collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const postsContainer = document.getElementById('posts-container');
@@ -29,10 +28,7 @@ postBtn.addEventListener('click', async () => {
   const title = document.getElementById('title').value.trim();
   const content = document.getElementById('content').value.trim();
 
-  if (!author || !title || !content) {
-    alert("모든 필드를 입력해주세요!");
-    return;
-  }
+  if (!author || !title || !content) return alert("모든 필드를 입력해주세요!");
 
   await addDoc(collection(db, "posts"), {
     author,
@@ -48,5 +44,5 @@ postBtn.addEventListener('click', async () => {
   loadPosts();
 });
 
-// 페이지 로드 시 게시글 불러오기
+// 초기 로드
 loadPosts();
