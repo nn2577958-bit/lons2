@@ -18,6 +18,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 <div class="container">
   <h1>🎮 LONS2 커뮤니티</h1>
 
+  <!-- 로그인 -->
   <div id="login-section">
     <button id="login-btn"><i class="fab fa-google"></i> 구글 로그인</button>
     <div id="login-msg" style="margin-top:10px;color:#ff4444;"></div>
@@ -26,6 +27,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 
   <hr style="margin:20px 0; border-color:#333;">
 
+  <!-- 공지사항 -->
   <h2>📢 공지사항</h2>
   <div id="notice-list">
     <div class="notice-item"><strong>공지사항</strong> <br>항상 모니터링 중입니다.</div>
@@ -33,6 +35,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 
   <hr style="margin:20px 0; border-color:#333;">
 
+  <!-- 커뮤니티 글쓰기 -->
   <h2>📝 커뮤니티 글쓰기</h2>
   <input type="text" id="author" placeholder="작성자">
   <input type="text" id="title" placeholder="제목">
@@ -43,7 +46,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
   <div id="posts-container"></div>
 </div>
 
-<script type="module" src="firebase.js"></script>
+<script type="module" src="./firebase.js"></script>
 <script type="module">
 import { db, auth } from './firebase.js';
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
