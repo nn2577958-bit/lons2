@@ -1,6 +1,5 @@
-// main.js
 import { db } from '../../firebase.js';
-import { collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const postsContainer = document.getElementById('posts-container');
 const postBtn = document.getElementById('post-btn');
@@ -23,9 +22,9 @@ async function loadPosts() {
 }
 
 postBtn.addEventListener('click', async () => {
-  const author = document.getElementById('author').value;
-  const title = document.getElementById('title').value;
-  const content = document.getElementById('content').value;
+  const author = document.getElementById('author').value.trim();
+  const title = document.getElementById('title').value.trim();
+  const content = document.getElementById('content').value.trim();
 
   if (!author || !title || !content) {
     alert("모든 필드를 입력해주세요!");
@@ -36,7 +35,7 @@ postBtn.addEventListener('click', async () => {
     author,
     title,
     content,
-    createdAt: new Date()
+    createdAt: serverTimestamp()
   });
 
   document.getElementById('author').value = '';
