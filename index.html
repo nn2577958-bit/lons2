@@ -6,20 +6,12 @@
 <title>🎮 LONS2 커뮤니티</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
-body{ font-family:'Segoe UI',sans-serif; margin:0; padding:0; background:#111; color:white;}
-.container{ max-width:800px; margin:40px auto; padding:20px; background:#1c1c1c; border-radius:12px; text-align:center;}
-h1,h2{ margin-bottom:15px; text-align:center; }
-input,textarea{ width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:none; font-size:16px; text-align:center;}
-button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; background:#28a745; color:white; font-weight:600; min-width:150px;}
-.notice-item{ background:#222; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #4CAF50; position: relative; text-align:left;}
-.delete-btn{ position:absolute; top:10px; right:10px; background:#ff4444; font-size:12px; padding:4px 6px; border-radius:4px; }
-#login-msg{ color:#ff4444; margin-bottom:10px; }
-#admin-status{ margin-bottom:15px; transition:0.5s; }
-.online { color:#4CAF50; animation: blink 1s infinite; }
-.offline { color:#ff4444; animation: blink 1s infinite; }
-@keyframes blink { 50% { opacity:0; } }
-#login-alert{ color:#ffaa00; margin-bottom:10px; }
-#login-section{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+body { font-family:'Segoe UI',sans-serif; margin:0; padding:0; background:#111; color:white;}
+.container { max-width:800px; margin:40px auto; padding:20px; background:#1c1c1c; border-radius:12px; text-align:center; }
+h1,h2 { margin-bottom:15px; text-align:center; }
+button { padding:10px 16px; border:none; border-radius:6px; cursor:pointer; background:#28a745; color:white; font-weight:600; min-width:150px; }
+#login-msg { color:#ff4444; margin-bottom:10px; }
+#login-section { display:flex; flex-direction:column; align-items:center; gap:10px; }
 #login-section button { text-align:center; }
 </style>
 </head>
@@ -29,42 +21,19 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
   <h1>🎮 LONS2 커뮤니티</h1>
 
   <div id="login-section">
-    <div>
-      <button id="login-btn"><i class="fab fa-google"></i> 구글 로그인</button>
-      <button id="logout-btn" style="display:none;">로그아웃</button>
-    </div>
+    <button id="login-btn"><i class="fab fa-google"></i> 구글 로그인</button>
+    <button id="logout-btn" style="display:none;">로그아웃</button>
     <div id="login-msg"></div>
-    <div id="admin-status">🔴 관리자 오프라인</div>
-    <div id="login-alert">로그인 이후 작성하실 수 있습니다.</div>
   </div>
-
-  <hr style="margin:20px 0; border-color:#333;">
-
-  <h2>📝 커뮤니티 글쓰기</h2>
-  <input type="text" id="author" placeholder="작성자">
-  <input type="text" id="title" placeholder="제목">
-  <textarea id="content" placeholder="내용" rows="4"></textarea>
-  <button id="post-btn" disabled>게시글 작성</button>
-
-  <h2>게시글 목록</h2>
-  <div id="posts-container"></div>
 </div>
 
 <script type="module">
-import { auth, db } from './firebase.js';
+import { auth } from './firebase.js';
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { collection, addDoc, query, orderBy, serverTimestamp, deleteDoc, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const loginBtn = document.getElementById('login-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const loginMsg = document.getElementById('login-msg');
-const adminStatus = document.getElementById('admin-status');
-const postBtn = document.getElementById('post-btn');
-const postsContainer = document.getElementById('posts-container');
-const loginAlert = document.getElementById('login-alert');
-
-const ADMIN_EMAIL = "nn2577958@gmail.com";
-let currentUser = null;
 
 // 로그인
 loginBtn.addEventListener('click', async () => {
@@ -72,11 +41,6 @@ loginBtn.addEventListener('click', async () => {
   try {
     await signInWithPopup(auth, provider);
     loginMsg.textContent = "로그인 성공!";
-
-    // 관리자 로그인 시 Firestore 상태 업데이트
-    if (auth.currentUser?.email === ADMIN_EMAIL) {
-      await setDoc(doc(db, "status", "admin"), { isOnline:true, lastChanged:serverTimestamp() });
-    }
   } catch (err) {
     loginMsg.textContent = "로그인 실패: " + err.message;
   }
@@ -84,69 +48,22 @@ loginBtn.addEventListener('click', async () => {
 
 // 로그아웃
 logoutBtn.addEventListener('click', async () => {
-  if (currentUser?.email === ADMIN_EMAIL) {
-    await setDoc(doc(db, "status", "admin"), { isOnline:false, lastChanged:serverTimestamp() });
+  try {
+    await signOut(auth);
+    loginMsg.textContent = "로그아웃 완료";
+  } catch (err) {
+    loginMsg.textContent = "로그아웃 실패: " + err.message;
   }
-  await signOut(auth);
-  loginMsg.textContent = "로그아웃 완료";
 });
 
 // 로그인 상태 반영
 onAuthStateChanged(auth, user => {
-  currentUser = user;
-
   if (!user) {
     loginBtn.style.display = "inline-block";
     logoutBtn.style.display = "none";
-    postBtn.disabled = true;
-    loginAlert.style.display = "block";
   } else {
     loginBtn.style.display = "none";
     logoutBtn.style.display = "inline-block";
-    postBtn.disabled = user.email !== ADMIN_EMAIL;
-    loginAlert.style.display = user.email === ADMIN_EMAIL ? "none" : "block";
-  }
-});
-
-// 실시간 게시글 구독
-const postsQuery = query(collection(db, 'posts'), orderBy('createdAt','desc'));
-onSnapshot(postsQuery, snapshot => {
-  postsContainer.innerHTML = '';
-  snapshot.forEach(docSnap => {
-    const data = docSnap.data();
-    const div = document.createElement('div');
-    div.className = 'notice-item';
-    const time = data.createdAt?.toDate().toLocaleString() || '';
-    div.innerHTML = `<strong>${data.title}</strong> <small>by ${data.author} | ${time}</small><div>${data.content}</div>`;
-
-    if(currentUser?.email===ADMIN_EMAIL){
-      const delBtn=document.createElement('button');
-      delBtn.textContent="삭제";
-      delBtn.className="delete-btn";
-      delBtn.addEventListener('click',async ()=>{
-        if(confirm("정말 삭제하시겠습니까?")){
-          await deleteDoc(doc(db,'posts',docSnap.id));
-        }
-      });
-      div.appendChild(delBtn);
-    }
-    postsContainer.appendChild(div);
-  });
-});
-
-// 관리자 상태 구독 (방문자도 확인)
-onSnapshot(doc(db,"status","admin"), snapshot => {
-  const data = snapshot.data();
-  if(data?.isOnline){
-    adminStatus.textContent="🟢 관리자 온라인";
-    adminStatus.className="online";
-    postBtn.disabled = currentUser?.email !== ADMIN_EMAIL;
-    loginAlert.style.display = currentUser?.email === ADMIN_EMAIL ? "none" : "block";
-  } else {
-    adminStatus.textContent="🔴 관리자 오프라인";
-    adminStatus.className="offline";
-    postBtn.disabled=true;
-    loginAlert.style.display="block";
   }
 });
 </script>
