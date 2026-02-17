@@ -62,7 +62,7 @@ loginBtn.addEventListener('click', async () => {
   try {
     await signInWithPopup(auth, provider);
     loginMsg.textContent = "로그인 성공!";
-    loadPosts();
+    loadPosts(); // 로그인 직후 게시글 불러오기
   } catch (err) {
     loginMsg.textContent = "로그인 실패: " + err.message;
   }
@@ -108,7 +108,7 @@ postBtn.addEventListener('click', async () => {
   }
 });
 
-// 게시글 불러오기
+// 게시글 불러오기 (항상 로그인 여부 관계없이)
 async function loadPosts() {
   postsContainer.innerHTML = '';
   const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
@@ -117,7 +117,8 @@ async function loadPosts() {
     const data = doc.data();
     const div = document.createElement('div');
     div.className = 'notice-item';
-    div.innerHTML = `<strong>${data.title}</strong> <small>by ${data.author}</small><div>${data.content}</div>`;
+    const time = data.createdAt?.toDate().toLocaleString() || '';
+    div.innerHTML = `<strong>${data.title}</strong> <small>by ${data.author} | ${time}</small><div>${data.content}</div>`;
     postsContainer.appendChild(div);
   });
 }
