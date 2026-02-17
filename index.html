@@ -14,6 +14,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 .notice-item{ background:#222; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #4CAF50;}
 #login-msg{ color:#ff4444; margin-bottom:10px; }
 #admin-status{ margin-bottom:15px; }
+#login-alert{ color:#ffaa00; margin-bottom:10px; }
 </style>
 </head>
 <body>
@@ -25,6 +26,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
     <button id="login-btn"><i class="fab fa-google"></i> 구글 로그인</button>
     <div id="login-msg"></div>
     <div id="admin-status">🔴 관리자 오프라인</div>
+    <div id="login-alert">로그인 이후 작성하실 수 있습니다.</div>
   </div>
 
   <hr style="margin:20px 0; border-color:#333;">
@@ -33,7 +35,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
   <input type="text" id="author" placeholder="작성자">
   <input type="text" id="title" placeholder="제목">
   <textarea id="content" placeholder="내용" rows="4"></textarea>
-  <button id="post-btn">게시글 작성</button>
+  <button id="post-btn" disabled>게시글 작성</button>
 
   <h2>게시글 목록</h2>
   <div id="posts-container"></div>
@@ -49,8 +51,10 @@ const loginMsg = document.getElementById('login-msg');
 const adminStatus = document.getElementById('admin-status');
 const postBtn = document.getElementById('post-btn');
 const postsContainer = document.getElementById('posts-container');
+const loginAlert = document.getElementById('login-alert');
 
 const ADMIN_EMAIL = "nn2577958@gmail.com";
+let currentUser = null;
 
 // 로그인
 loginBtn.addEventListener('click', async () => {
@@ -58,18 +62,23 @@ loginBtn.addEventListener('click', async () => {
   try {
     await signInWithPopup(auth, provider);
     loginMsg.textContent = "로그인 성공!";
-    loadPosts(); // 로그인 직후 게시글 불러오기
+    loadPosts();
   } catch (err) {
     loginMsg.textContent = "로그인 실패: " + err.message;
   }
 });
 
-// 관리자 상태 표시
+// 관리자 상태 표시 및 글쓰기 버튼 제어
 onAuthStateChanged(auth, user => {
+  currentUser = user;
   if (user?.email === ADMIN_EMAIL) {
     adminStatus.textContent = "🟢 관리자 온라인";
+    postBtn.disabled = false;
+    loginAlert.style.display = "none";
   } else {
     adminStatus.textContent = "🔴 관리자 오프라인";
+    postBtn.disabled = true;
+    loginAlert.style.display = "block";
   }
 });
 
@@ -80,12 +89,12 @@ postBtn.addEventListener('click', async () => {
   const content = document.getElementById('content').value.trim();
 
   if (!author || !title || !content) return alert("모든 필드를 입력해주세요!");
-  if (!auth.currentUser) return alert("로그인 후 작성할 수 있습니다!");
+  if (!currentUser || currentUser.email !== ADMIN_EMAIL) return alert("관리자만 작성 가능합니다!");
 
   try {
     await addDoc(collection(db, 'posts'), {
       author, title, content,
-      uid: auth.currentUser.uid,
+      uid: currentUser.uid,
       createdAt: serverTimestamp()
     });
 
@@ -113,7 +122,7 @@ async function loadPosts() {
   });
 }
 
-// 초기 로드 (로그인 안해도 게시글 보기 가능)
+// 초기 로드
 loadPosts();
 </script>
 </body>
