@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>내 사이트</title>
+    <title>커뮤니티 사이트</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <noscript><link rel="stylesheet" href="assets/css/noscript.css"></noscript>
 </head>
@@ -14,16 +14,16 @@
 
     <!-- Intro -->
     <div id="intro">
-        <h1>안녕하세요<br>김민수 포트폴리오</h1>
-        <p>프론트엔드 개발자 / 웹 디자이너</p>
+        <h1>커뮤니티에 오신 것을 환영합니다</h1>
+        <p>자유롭게 소통하고 정보를 공유하는 공간</p>
         <ul class="actions">
-            <li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">시작하기</a></li>
+            <li><a href="#main" class="button icon solid solo fa-arrow-down scrolly">시작하기</a></li>
         </ul>
     </div>
 
     <!-- Header -->
     <header id="header">
-        <a href="index.html" class="logo">MyPortfolio</a>
+        <a href="index.html" class="logo">MyCommunity</a>
     </header>
 
     <!-- Nav -->
@@ -31,7 +31,7 @@
         <ul class="links">
             <li class="active"><a href="index.html">홈</a></li>
             <li><a href="about.html">소개</a></li>
-            <li><a href="portfolio.html">포트폴리오</a></li>
+            <li><a href="community.html">게시판</a></li>
             <li><a href="contact.html">문의</a></li>
         </ul>
         <ul class="icons">
@@ -45,26 +45,27 @@
     <!-- Main -->
     <div id="main">
 
-        <!-- Featured Post / Highlight -->
+        <!-- Featured Post / 공지사항 -->
         <article class="post featured">
             <header class="major">
-                <h2><a href="#">최근 프로젝트: 웹사이트 리디자인</a></h2>
-                <p>사용자 경험 중심의 반응형 웹사이트 제작 및 최적화</p>
+                <h2><a href="#">공지: 커뮤니티 오픈</a></h2>
+                <p>새로운 커뮤니티가 열렸습니다! 자유롭게 글을 작성하고 소통해보세요.</p>
             </header>
-            <a href="#" class="image main"><img src="images/pic01.jpg" alt="Featured Project"></a>
+            <a href="#" class="image main"><img src="images/pic01.jpg" alt="공지사항 이미지"></a>
             <ul class="actions special">
-                <li><a href="#" class="button large">프로젝트 보기</a></li>
+                <li><a href="#" class="button large">자세히 보기</a></li>
             </ul>
         </article>
 
-        <!-- Posts / 프로젝트 목록 -->
+        <!-- Posts / 게시글 목록 -->
         <section class="posts">
             <article>
                 <header>
-                    <h2><a href="#">포트폴리오 프로젝트 1</a></h2>
+                    <h2><a href="#">게시글 제목 1</a></h2>
+                    <p>작성자: 김민수 | 2026-02-18 | 댓글 5개</p>
                 </header>
-                <a href="#" class="image fit"><img src="images/pic02.jpg" alt="Project 1"></a>
-                <p>HTML, CSS, JS를 활용한 반응형 웹 프로젝트.</p>
+                <a href="#" class="image fit"><img src="images/pic02.jpg" alt="게시글 이미지"></a>
+                <p>커뮤니티 첫 글입니다. 자유롭게 의견을 남겨주세요.</p>
                 <ul class="actions special">
                     <li><a href="#" class="button">자세히 보기</a></li>
                 </ul>
@@ -72,10 +73,11 @@
 
             <article>
                 <header>
-                    <h2><a href="#">포트폴리오 프로젝트 2</a></h2>
+                    <h2><a href="#">게시글 제목 2</a></h2>
+                    <p>작성자: 이지훈 | 2026-02-17 | 댓글 2개</p>
                 </header>
-                <a href="#" class="image fit"><img src="images/pic03.jpg" alt="Project 2"></a>
-                <p>React 기반 웹앱 개발 및 UI 최적화.</p>
+                <a href="#" class="image fit"><img src="images/pic03.jpg" alt="게시글 이미지"></a>
+                <p>좋은 정보를 공유합니다. 같이 이야기 나눠요!</p>
                 <ul class="actions special">
                     <li><a href="#" class="button">자세히 보기</a></li>
                 </ul>
@@ -83,15 +85,21 @@
 
             <article>
                 <header>
-                    <h2><a href="#">포트폴리오 프로젝트 3</a></h2>
+                    <h2><a href="#">게시글 제목 3</a></h2>
+                    <p>작성자: 박지은 | 2026-02-16 | 댓글 0개</p>
                 </header>
-                <a href="#" class="image fit"><img src="images/pic04.jpg" alt="Project 3"></a>
-                <p>CMS 연동 및 SEO 최적화 프로젝트.</p>
+                <a href="#" class="image fit"><img src="images/pic04.jpg" alt="게시글 이미지"></a>
+                <p>주제별 자유 토론 게시글입니다.</p>
                 <ul class="actions special">
                     <li><a href="#" class="button">자세히 보기</a></li>
                 </ul>
             </article>
         </section>
+
+        <!-- 글쓰기 버튼 -->
+        <div class="actions" style="text-align:center; margin-top:20px;">
+            <a href="write.html" class="button large">글쓰기</a>
+        </div>
 
         <!-- Pagination -->
         <footer>
@@ -160,14 +168,13 @@
     <!-- Copyright -->
     <div id="copyright">
         <ul>
-            <li>&copy; 2026 김민수</li>
+            <li>&copy; 2026 MyCommunity</li>
             <li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
         </ul>
     </div>
 
 </div>
 
-<!-- 기존 Scripts -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/jquery.scrollex.min.js"></script>
 <script src="assets/js/jquery.scrolly.min.js"></script>
@@ -175,26 +182,6 @@
 <script src="assets/js/breakpoints.min.js"></script>
 <script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
-
-<!-- Firebase JS SDK -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
-    authDomain: "lons2-74bfa.firebaseapp.com",
-    projectId: "lons2-74bfa",
-    storageBucket: "lons2-74bfa.firebasestorage.app",
-    messagingSenderId: "734178165313",
-    appId: "1:734178165313:web:395ed759777ec61f4b3cc0",
-    measurementId: "G-LC2JJD493M"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  console.log("Firebase Initialized", analytics);
-</script>
 
 </body>
 </html>
