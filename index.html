@@ -3,174 +3,116 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LONS SV Palworld</title>
-<link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-b555cb64-84f5-4ab4-b235-73d0d2be6482.png" type="image/png">
+<title>LONS2 커뮤니티</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
-body{margin:0;font-family:'Segoe UI',sans-serif;background:#111;color:white;}
-.container{max-width:900px;margin:auto;padding:20px;}
-h1,h2{margin:10px 0;}
-button{padding:10px 20px;border:none;border-radius:6px;cursor:pointer;margin:5px 0;}
-button:hover{opacity:0.9;}
-#admin-status{margin:10px 0;padding:6px 12px;border-radius:8px;background:rgba(0,0,0,0.5);display:inline-block;}
-#login-msg{color:#ff4444;margin-bottom:10px;}
-input,textarea{width:100%;margin:5px 0;padding:8px;border-radius:6px;border:1px solid #ccc;}
-.notice-item{background:#1c1c1c;padding:15px;border-radius:10px;margin:10px 0;border-left:5px solid #4CAF50;}
+body{ font-family:'Segoe UI',sans-serif; margin:0; padding:0; background:#111; color:white;}
+.container{ max-width:800px; margin:40px auto; padding:20px; background:#1c1c1c; border-radius:12px;}
+h1,h2{ margin-bottom:15px; }
+input,textarea{ width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:none; font-size:16px;}
+button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; background:#28a745; color:white; font-weight:600;}
+.notice-item{ background:#222; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #4CAF50;}
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>LONS SV Palworld</h1>
-  <div id="admin-status">🔴 관리자 오프라인</div>
-  <div id="login-msg"></div>
-  <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
-  <button id="discord-btn" class="disabled" data-tooltip="로그인 후 활성화됩니다"><i class="fab fa-discord"></i> Discord 참여하기</button>
+  <h1>🎮 LONS2 커뮤니티</h1>
 
-  <hr>
+  <div id="login-section">
+    <button id="login-btn"><i class="fab fa-google"></i> 구글 로그인</button>
+    <div id="login-msg" style="margin-top:10px;color:#ff4444;"></div>
+    <div id="admin-status" style="margin-top:10px;">🔴 관리자 오프라인</div>
+  </div>
 
-  <h2>공지사항</h2>
-  <div id="notice-list"></div>
+  <hr style="margin:20px 0; border-color:#333;">
 
-  <hr>
+  <h2>📢 공지사항</h2>
+  <div id="notice-list">
+    <div class="notice-item"><strong>공지사항</strong> <br>항상 모니터링 중입니다.</div>
+  </div>
 
-  <h2>커뮤니티 글쓰기</h2>
+  <hr style="margin:20px 0; border-color:#333;">
+
+  <h2>📝 커뮤니티 글쓰기</h2>
   <input type="text" id="author" placeholder="작성자">
   <input type="text" id="title" placeholder="제목">
-  <textarea id="content" rows="3" placeholder="내용"></textarea>
+  <textarea id="content" placeholder="내용" rows="4"></textarea>
   <button id="post-btn">게시글 작성</button>
 
   <h2>게시글 목록</h2>
   <div id="posts-container"></div>
 </div>
 
+<script type="module" src="firebase.js"></script>
 <script type="module">
-// Firebase 초기화
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { db, auth } from './firebase.js';
+import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
-  authDomain: "lons2-74bfa.firebaseapp.com",
-  projectId: "lons2-74bfa",
-  storageBucket: "lons2-74bfa.appspot.com",
-  messagingSenderId: "734178165313",
-  appId: "1:734178165313:web:395ed759777ec61f4b3cc0"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const loginBtn = document.getElementById('login-btn');
+const loginMsg = document.getElementById('login-msg');
+const adminStatus = document.getElementById('admin-status');
+const postBtn = document.getElementById('post-btn');
+const postsContainer = document.getElementById('posts-container');
 
 const ADMIN_EMAIL = "nn2577958@gmail.com";
 
-const adminStatus = document.getElementById("admin-status");
-const loginMsg = document.getElementById("login-msg");
-const googleBtn = document.getElementById("google-btn");
-const discordBtn = document.getElementById("discord-btn");
-
-const noticeList = document.getElementById("notice-list");
-const postsContainer = document.getElementById("posts-container");
-const postBtn = document.getElementById("post-btn");
-const authorInput = document.getElementById("author");
-const titleInput = document.getElementById("title");
-const contentInput = document.getElementById("content");
-
-let opacity = 1;
-let fadingOut = true;
-
-// 관리자 상태 + 깜박임
-function updateAdminClock(user){
-  const now = new Date();
-  const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  const isOnline = user?.email === ADMIN_EMAIL;
-  adminStatus.innerHTML = `${isOnline ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}<br>${kst}`;
-
-  fadingOut ? opacity-=0.05 : opacity+=0.05;
-  if(opacity<=0) fadingOut=false;
-  if(opacity>=1) fadingOut=true;
-  adminStatus.style.opacity = opacity;
-}
-setInterval(()=>updateAdminClock(auth.currentUser),1000);
-
-// 로그인 상태 감지
-onAuthStateChanged(auth,user=>{
-  if(user){
-    discordBtn.classList.remove("disabled");
-    discordBtn.removeAttribute("data-tooltip");
-  }else{
-    discordBtn.classList.add("disabled");
-    discordBtn.setAttribute("data-tooltip","로그인 후 활성화됩니다");
-  }
-});
-
-// Google 로그인
-googleBtn.addEventListener("click", async ()=>{
-  googleBtn.disabled = true;
-  loginMsg.textContent="";
+// 로그인
+loginBtn.addEventListener('click', async ()=>{
   const provider = new GoogleAuthProvider();
   try{
-    await signInWithPopup(auth,provider);
-    loginMsg.textContent="로그인 성공! Discord 버튼이 활성화되었습니다.";
-  }catch(err){
-    loginMsg.textContent="로그인 실패: "+err.message;
-    googleBtn.disabled=false;
+    await signInWithPopup(auth, provider);
+    loginMsg.textContent = "로그인 성공!";
+  } catch(err){
+    loginMsg.textContent = "로그인 실패: "+err.message;
   }
 });
 
-// Discord 버튼
-discordBtn.addEventListener("click", ()=>{
-  if(discordBtn.classList.contains("disabled")){
-    loginMsg.textContent="구글 로그인 후 버튼이 활성화됩니다!";
-    return;
+// 관리자 상태 표시
+onAuthStateChanged(auth,user=>{
+  if(user?.email===ADMIN_EMAIL){
+    adminStatus.textContent = "🟢 관리자 온라인";
+  } else {
+    adminStatus.textContent = "🔴 관리자 오프라인";
   }
-  loginMsg.textContent="잠시 후 이동...";
-  setTimeout(()=>window.location.href="#",1500); // 원하는 페이지로 변경 가능
 });
 
-// 공지사항 예시
-const notices = [
-  {title:"공지사항", content:"항상 모니터링 중이며 모든 파일은 데이터베이스에 기록됩니다.", createdAt:"2026-02-17 12:00"},
-  {title:"신규 이벤트", content:"당첨자에게 지급 처리됩니다.", createdAt:"2026-02-16 14:00"},
-];
-function renderNotices(){
-  noticeList.innerHTML="";
-  notices.forEach(n=>{
-    const div=document.createElement("div");
-    div.className="notice-item";
-    div.innerHTML=`<strong>${n.title}</strong> <small>${n.createdAt}</small><div>${n.content}</div>`;
-    noticeList.appendChild(div);
+// 게시글 작성
+postBtn.addEventListener('click', async ()=>{
+  const author = document.getElementById('author').value.trim();
+  const title = document.getElementById('title').value.trim();
+  const content = document.getElementById('content').value.trim();
+
+  if(!author || !title || !content) return alert("모든 필드를 입력해주세요!");
+
+  await addDoc(collection(db,'posts'),{
+    author, title, content,
+    createdAt: serverTimestamp()
   });
-}
-renderNotices();
+
+  document.getElementById('author').value='';
+  document.getElementById('title').value='';
+  document.getElementById('content').value='';
+
+  loadPosts();
+});
 
 // 게시글 불러오기
 async function loadPosts(){
-  postsContainer.innerHTML="";
-  const q=query(collection(db,"posts"),orderBy("createdAt","desc"));
-  const snapshot=await getDocs(q);
+  postsContainer.innerHTML='';
+  const q = query(collection(db,'posts'), orderBy('createdAt','desc'));
+  const snapshot = await getDocs(q);
   snapshot.forEach(doc=>{
-    const d=doc.data();
-    const div=document.createElement("div");
-    div.className="notice-item";
-    div.innerHTML=`<strong>${d.title}</strong> <small>${d.createdAt?.seconds ? new Date(d.createdAt.seconds*1000).toLocaleString() : ""}</small><div>${d.content}</div>`;
+    const data = doc.data();
+    const div = document.createElement('div');
+    div.className='notice-item';
+    div.innerHTML=`<strong>${data.title}</strong> <small>by ${data.author}</small><div>${data.content}</div>`;
     postsContainer.appendChild(div);
   });
 }
-loadPosts();
 
-// 글쓰기
-postBtn.addEventListener("click", async ()=>{
-  const author = authorInput.value.trim();
-  const title = titleInput.value.trim();
-  const content = contentInput.value.trim();
-  if(!author || !title || !content) return alert("모든 필드를 입력해주세요!");
-  await addDoc(collection(db,"posts"),{
-    author, title, content, createdAt: serverTimestamp()
-  });
-  authorInput.value=""; titleInput.value=""; contentInput.value="";
-  loadPosts();
-});
+// 초기 로드
+loadPosts();
 </script>
 </body>
 </html>
