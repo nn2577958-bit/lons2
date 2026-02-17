@@ -1,95 +1,37 @@
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { db, auth } from "./firebase.js";
+import { collection, addDoc, getDocs, orderBy, serverTimestamp, query } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
-  authDomain: "lons2-74bfa.firebaseapp.com",
-  projectId: "lons2-74bfa",
-  storageBucket: "lons2-74bfa.appspot.com",
-  messagingSenderId: "734178165313",
-  appId: "1:734178165313:web:395ed759777ec61f4b3cc0"
-};
+const postsContainer=document.getElementById("posts-container");
+const postBtn=document.getElementById("post-btn");
+const authorInput=document.getElementById("author");
+const titleInput=document.getElementById("title");
+const contentInput=document.getElementById("content");
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-console.log("Firebase Initialized");
-
-const ADMIN_EMAIL="nn2577958@gmail.com";
-
-const adminStatus = document.getElementById("admin-status");
-const noticeList = document.getElementById("notice-list");
-const kakaoBtn = document.getElementById("kakao-btn");
-const discordBtn = document.getElementById("discord-btn");
-const logoutBtn = document.getElementById("logout-btn");
-const modal = document.getElementById("pc-modal");
-
-const notices = [
-  {title:"공지 사항",content:"항상 모니터링 중이며 모든 파일은 데이터 베이스에 기록 됩니다.",createdAt:"2026-02-17 12:00~12:10"},
-  {title:"신규 뽑기 이벤트 시작!",content:"당첨되신 분들은 요청 주시면 지급 처리됩니다.",createdAt:"2026-02-16 14:00"},
-  {title:"업데이트 완료",content:"PAL 0.7.2 최신 패치가 적용되었습니다.",createdAt:"2026-02-16 14:30"},
-  {title:"SV 오픈 날짜",content:"2026 01.12",createdAt:"2026-01-12 01:00"},
-  {title:"지원금 안내",content:"모든 지원금은 운영비에 쓰이고 있습니다,",createdAt:"2026-02-16 14:30"},
-  {title:"서버 접속 상황",content:"1SV / 2SV 모두 정상 작동 중입니다.",createdAt:"2026-02-16 00:00"},
-  {title:"서버 오픈 안내",content:"하드코어 02 / 20 大 오픈 많이 사랑 해주세요!",createdAt:"2026-02-20 12:00"}
-];
-
-onAuthStateChanged(auth, (user) => {
-  if(!user){ window.location.href="index.html"; return; }
-
-  if(user.email === ADMIN_EMAIL){
-      function updateAdminStatus(){
-          const now = new Date();
-          const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
-          adminStatus.innerHTML = `🟢 관리자 온라인 – ${kstString} (오프라인/온라인 되면 자동으로 시간 반영됩니다)`;
-      }
-      updateAdminStatus();
-      setInterval(updateAdminStatus, 1000);
-
-      setInterval(()=>{
-          adminStatus.style.opacity = adminStatus.style.opacity === "0" ? "1" : "0";
-      }, 800);
-
-      adminStatus.style.background = "#28a745";
-  } else {
-      adminStatus.innerHTML = "🔴 관리자 오프라인 (오프라인/온라인 되면 자동으로 시간 반영됩니다)";
-      adminStatus.style.background = "#dc3545";
-      adminStatus.style.opacity = "1";
-  }
-
-  noticeList.innerHTML = "";
-  notices.forEach(data => {
-      const div = document.createElement("div");
-      div.className = "notice-item";
-      div.innerHTML = `
-          <strong>${data.title}</strong>
-          <small>${data.createdAt}</small>
-          <div>${data.content}</div>
-      `;
-      noticeList.appendChild(div);
+async function loadPosts(){
+  postsContainer.innerHTML="";
+  const q=query(collection(db,"posts"),orderBy("createdAt","desc"));
+  const snapshot=await getDocs(q);
+  snapshot.forEach(doc=>{
+    const data=doc.data();
+    const div=document.createElement("div");
+    div.className="notice-item";
+    div.innerHTML=`<strong>${data.title}</strong> <small>${new Date(data.createdAt?.seconds*1000).toLocaleString()}</small><div>${data.content}</div>`;
+    postsContainer.appendChild(div);
   });
+}
+
+postBtn.addEventListener("click",async()=>{
+  const author=authorInput.value.trim();
+  const title=titleInput.value.trim();
+  const content=contentInput.value.trim();
+  if(!author||!title||!content)return alert("모든 필드를 입력해주세요!");
+  await addDoc(collection(db,"posts"),{
+    author,title,content,createdAt:serverTimestamp()
+  });
+  authorInput.value=""; titleInput.value=""; contentInput.value="";
+  loadPosts();
 });
 
-// 로그아웃
-logoutBtn.onclick = async () => {
-  await signOut(auth);
-  window.location.href="index.html";
-};
-
-// Discord 버튼
-discordBtn.onclick = () => window.open("https://discord.gg/tnMXbQ65Hk","_blank");
-
-// Pay 버튼
-kakaoBtn.onclick = () => {
-  const ua = navigator.userAgent || navigator.vendor || window.opera;
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
-  if(isMobile){
-      window.location.href="https://qr.kakaopay.com/FRydbZ6Gr";
-  } else {
-      modal.style.display = "flex";
-  }
-};
-
-// 모달 닫기
-window.closeModal = () => modal.style.display="none";
+loadPosts();
 </script>
