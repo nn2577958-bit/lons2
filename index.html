@@ -18,7 +18,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 .online { color:#4CAF50; animation: blink 1s infinite; }
 .offline { color:#ff4444; animation: blink 1s infinite; }
 @keyframes blink { 50% { opacity:0; } }
-#login-alert{ color:#ffaa00; margin-bottom:10px; }
+#login-alert{ color:#ffaa00; margin-bottom:10px; display:block; }
 #logout-btn{ background:#ff9900; margin-left:10px; }
 </style>
 </head>
@@ -50,7 +50,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 <script type="module">
 import { auth, db } from './firebase.js';
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { collection, addDoc, query, orderBy, serverTimestamp, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { collection, addDoc, query, orderBy, serverTimestamp, deleteDoc, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const loginBtn = document.getElementById('login-btn');
 const logoutBtn = document.getElementById('logout-btn');
@@ -69,6 +69,12 @@ loginBtn.addEventListener('click', async () => {
   try {
     await signInWithPopup(auth, provider);
     loginMsg.textContent = "로그인 성공!";
+
+    // 로그인 시 관리자 상태 Firestore에 반영
+    if (auth.currentUser?.email === ADMIN_EMAIL) {
+      await setDoc(doc(db, "status", "admin"), { isOnline: true, lastChanged: serverTimestamp() });
+    }
+
   } catch (err) {
     loginMsg.textContent = "로그인 실패: " + err.message;
   }
@@ -76,13 +82,17 @@ loginBtn.addEventListener('click', async () => {
 
 // 로그아웃
 logoutBtn.addEventListener('click', async () => {
+  if (currentUser?.email === ADMIN_EMAIL) {
+    await setDoc(doc(db, "status", "admin"), { isOnline: false, lastChanged: serverTimestamp() });
+  }
   await signOut(auth);
   loginMsg.textContent = "로그아웃 완료";
 });
 
-// 관리자 상태 표시 + 버튼 제어
+// 관리자 상태 표시 + 버튼 제어 (관리자 로그인/방문자 모두 반영)
 onAuthStateChanged(auth, user => {
   currentUser = user;
+
   if (user?.email === ADMIN_EMAIL) {
     adminStatus.textContent = "🟢 관리자 온라인";
     adminStatus.className = "online";
@@ -102,12 +112,15 @@ onAuthStateChanged(auth, user => {
 
 // 게시글 작성
 postBtn.addEventListener('click', async () => {
+  if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+    alert("로그인 후 관리자만 글을 작성할 수 있습니다!");
+    return;
+  }
+
   const author = document.getElementById('author').value.trim();
   const title = document.getElementById('title').value.trim();
   const content = document.getElementById('content').value.trim();
-
   if (!author || !title || !content) return alert("모든 필드를 입력해주세요!");
-  if (!currentUser || currentUser.email !== ADMIN_EMAIL) return alert("관리자만 작성 가능합니다!");
 
   try {
     await addDoc(collection(db, 'posts'), {
@@ -150,6 +163,18 @@ onSnapshot(postsQuery, snapshot => {
 
     postsContainer.appendChild(div);
   });
+});
+
+// 실시간 관리자 상태 구독 (방문자도 온라인/오프라인 확인)
+onSnapshot(doc(db, "status", "admin"), snapshot => {
+  const data = snapshot.data();
+  if (data?.isOnline) {
+    adminStatus.textContent = "🟢 관리자 온라인";
+    adminStatus.className = "online";
+  } else {
+    adminStatus.textContent = "🔴 관리자 오프라인";
+    adminStatus.className = "offline";
+  }
 });
 </script>
 </body>
