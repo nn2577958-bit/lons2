@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LONS2 커뮤니티</title>
+<title>🎮 LONS2 커뮤니티</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
 body{ font-family:'Segoe UI',sans-serif; margin:0; padding:0; background:#111; color:white;}
@@ -12,6 +12,8 @@ h1,h2{ margin-bottom:15px; }
 input,textarea{ width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:none; font-size:16px;}
 button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; background:#28a745; color:white; font-weight:600;}
 .notice-item{ background:#222; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #4CAF50;}
+#login-msg{ color:#ff4444; margin-bottom:10px; }
+#admin-status{ margin-top:10px; }
 </style>
 </head>
 <body>
@@ -21,8 +23,8 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
   <!-- 로그인 -->
   <div id="login-section">
     <button id="login-btn"><i class="fab fa-google"></i> 구글 로그인</button>
-    <div id="login-msg" style="margin-top:10px;color:#ff4444;"></div>
-    <div id="admin-status" style="margin-top:10px;">🔴 관리자 오프라인</div>
+    <div id="login-msg"></div>
+    <div id="admin-status">🔴 관리자 오프라인</div>
   </div>
 
   <hr style="margin:20px 0; border-color:#333;">
@@ -35,7 +37,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 
   <hr style="margin:20px 0; border-color:#333;">
 
-  <!-- 커뮤니티 글쓰기 -->
+  <!-- 글쓰기 -->
   <h2>📝 커뮤니티 글쓰기</h2>
   <input type="text" id="author" placeholder="작성자">
   <input type="text" id="title" placeholder="제목">
@@ -46,18 +48,33 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
   <div id="posts-container"></div>
 </div>
 
-<script type="module" src="./firebase.js"></script>
+<!-- Firebase -->
 <script type="module">
-import { db, auth } from './firebase.js';
-import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
+// 🔹 Firebase 설정
+const firebaseConfig = {
+  apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
+  authDomain: "lons2-74bfa.firebaseapp.com",
+  projectId: "lons2-74bfa",
+  storageBucket: "lons2-74bfa.appspot.com",
+  messagingSenderId: "734178165313",
+  appId: "1:734178165313:web:395ed759777ec61f4b3cc0"
+};
+
+// Firebase 초기화
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// 요소
 const loginBtn = document.getElementById('login-btn');
 const loginMsg = document.getElementById('login-msg');
 const adminStatus = document.getElementById('admin-status');
 const postBtn = document.getElementById('post-btn');
 const postsContainer = document.getElementById('posts-container');
-
 const ADMIN_EMAIL = "nn2577958@gmail.com";
 
 // 로그인
@@ -67,7 +84,7 @@ loginBtn.addEventListener('click', async ()=>{
     await signInWithPopup(auth, provider);
     loginMsg.textContent = "로그인 성공!";
   } catch(err){
-    loginMsg.textContent = "로그인 실패: "+err.message;
+    loginMsg.textContent = "로그인 실패: " + err.message;
   }
 });
 
@@ -87,17 +104,23 @@ postBtn.addEventListener('click', async ()=>{
   const content = document.getElementById('content').value.trim();
 
   if(!author || !title || !content) return alert("모든 필드를 입력해주세요!");
+  if(!auth.currentUser) return alert("먼저 구글 로그인 후 작성해주세요!");
 
-  await addDoc(collection(db,'posts'),{
-    author, title, content,
-    createdAt: serverTimestamp()
-  });
+  try{
+    await addDoc(collection(db,'posts'),{
+      author, title, content,
+      createdAt: serverTimestamp()
+    });
 
-  document.getElementById('author').value='';
-  document.getElementById('title').value='';
-  document.getElementById('content').value='';
+    document.getElementById('author').value='';
+    document.getElementById('title').value='';
+    document.getElementById('content').value='';
 
-  loadPosts();
+    loadPosts();
+  } catch(err){
+    alert("게시글 작성 실패: " + err.message);
+    console.error(err);
+  }
 });
 
 // 게시글 불러오기
