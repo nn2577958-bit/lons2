@@ -14,10 +14,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 .notice-item{ background:#222; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #4CAF50; position: relative;}
 .delete-btn{ position:absolute; top:10px; right:10px; background:#ff4444; font-size:12px; padding:4px 6px; border-radius:4px; }
 #login-msg{ color:#ff4444; margin-bottom:10px; }
-#admin-status{ margin-bottom:15px; transition: 0.5s; }
-.online { color:#4CAF50; animation: blink 1s infinite; }
-.offline { color:#ff4444; animation: blink 1s infinite; }
-@keyframes blink { 50% { opacity:0; } }
+#admin-status{ margin-bottom:15px; transition:0.5s; }
 #login-alert{ color:#ffaa00; margin-bottom:10px; display:block; }
 #logout-btn{ background:#ff9900; margin-left:10px; }
 </style>
@@ -89,25 +86,9 @@ logoutBtn.addEventListener('click', async () => {
   loginMsg.textContent = "로그아웃 완료";
 });
 
-// 관리자 상태 표시 + 버튼 제어 (관리자 로그인/방문자 모두 반영)
+// Auth 상태 변경
 onAuthStateChanged(auth, user => {
   currentUser = user;
-
-  if (user?.email === ADMIN_EMAIL) {
-    adminStatus.textContent = "🟢 관리자 온라인";
-    adminStatus.className = "online";
-    postBtn.disabled = false;
-    loginAlert.style.display = "none";
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "inline-block";
-  } else {
-    adminStatus.textContent = "🔴 관리자 오프라인";
-    adminStatus.className = "offline";
-    postBtn.disabled = true;
-    loginAlert.style.display = "block";
-    loginBtn.style.display = "inline-block";
-    logoutBtn.style.display = "none";
-  }
 });
 
 // 게시글 작성
@@ -165,15 +146,30 @@ onSnapshot(postsQuery, snapshot => {
   });
 });
 
-// 실시간 관리자 상태 구독 (방문자도 온라인/오프라인 확인)
+// 실시간 관리자 상태 구독
 onSnapshot(doc(db, "status", "admin"), snapshot => {
   const data = snapshot.data();
-  if (data?.isOnline) {
+  const isOnline = data?.isOnline;
+
+  if (isOnline) {
     adminStatus.textContent = "🟢 관리자 온라인";
-    adminStatus.className = "online";
   } else {
     adminStatus.textContent = "🔴 관리자 오프라인";
-    adminStatus.className = "offline";
+  }
+
+  adminStatus.className = isOnline ? "online" : "offline";
+
+  // 버튼 & 알림 제어 (방문자/관리자 구분)
+  if (currentUser?.email === ADMIN_EMAIL) {
+    postBtn.disabled = false;
+    loginBtn.style.display = "none";
+    logoutBtn.style.display = "inline-block";
+    loginAlert.style.display = "none";
+  } else {
+    postBtn.disabled = true;
+    loginBtn.style.display = "inline-block";
+    logoutBtn.style.display = "none";
+    loginAlert.style.display = "block";
   }
 });
 </script>
