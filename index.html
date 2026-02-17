@@ -11,7 +11,8 @@ body{ font-family:'Segoe UI',sans-serif; margin:0; padding:0; background:#111; c
 h1,h2{ margin-bottom:15px; }
 input,textarea{ width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:none; font-size:16px;}
 button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; background:#28a745; color:white; font-weight:600;}
-.notice-item{ background:#222; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #4CAF50;}
+.notice-item{ background:#222; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #4CAF50; position: relative;}
+.delete-btn{ position:absolute; top:10px; right:10px; background:#ff4444; font-size:12px; padding:4px 6px; border-radius:4px; }
 #login-msg{ color:#ff4444; margin-bottom:10px; }
 #admin-status{ margin-bottom:15px; }
 #login-alert{ color:#ffaa00; margin-bottom:10px; }
@@ -44,7 +45,7 @@ button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; backg
 <script type="module">
 import { auth, db } from './firebase.js';
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { collection, addDoc, getDocs, query, orderBy, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const loginBtn = document.getElementById('login-btn');
 const loginMsg = document.getElementById('login-msg');
@@ -62,7 +63,7 @@ loginBtn.addEventListener('click', async () => {
   try {
     await signInWithPopup(auth, provider);
     loginMsg.textContent = "로그인 성공!";
-    loadPosts(); // 로그인 직후 게시글 불러오기
+    loadPosts(); 
   } catch (err) {
     loginMsg.textContent = "로그인 실패: " + err.message;
   }
@@ -108,17 +109,32 @@ postBtn.addEventListener('click', async () => {
   }
 });
 
-// 게시글 불러오기 (항상 로그인 여부 관계없이)
+// 게시글 불러오기
 async function loadPosts() {
   postsContainer.innerHTML = '';
   const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(q);
-  snapshot.forEach(doc => {
-    const data = doc.data();
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
     const div = document.createElement('div');
     div.className = 'notice-item';
     const time = data.createdAt?.toDate().toLocaleString() || '';
     div.innerHTML = `<strong>${data.title}</strong> <small>by ${data.author} | ${time}</small><div>${data.content}</div>`;
+
+    // 관리자만 삭제 버튼 표시
+    if (currentUser?.email === ADMIN_EMAIL) {
+      const delBtn = document.createElement('button');
+      delBtn.textContent = "삭제";
+      delBtn.className = "delete-btn";
+      delBtn.addEventListener('click', async () => {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          await deleteDoc(doc(db, 'posts', docSnap.id));
+          loadPosts();
+        }
+      });
+      div.appendChild(delBtn);
+    }
+
     postsContainer.appendChild(div);
   });
 }
