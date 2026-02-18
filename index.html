@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL</title>
+<title>라니 MALL - 로그인</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 body {
@@ -56,7 +56,7 @@ button {
 button:hover { transform: translateY(-2px); }
 button:active { transform: translateY(1px); }
 
-#google-btn { background:#fff; color:#444; display:inline-block; }
+#google-btn { background:#fff; color:#444; }
 #logout-btn { background:#ff9900; color:white; display:none; }
 
 #login-msg {
@@ -105,7 +105,7 @@ const logoutBtn = document.getElementById("logout-btn");
 const loginMsg = document.getElementById("login-msg");
 const status = document.getElementById("status");
 
-// 방문자 항상 온라인 표시 + 깜빡임
+// 온라인 상태 + 깜빡임 + 시계 갱신
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
@@ -114,13 +114,18 @@ function updateStatus(){
 setInterval(updateStatus, 1000);
 
 // 로그인 상태 감지
-onAuthStateChanged(auth, user=>{
+onAuthStateChanged(auth,user=>{
   if(user){
     googleBtn.style.display="none";
     logoutBtn.style.display="inline-block";
+
+    // 로그인 성공 팝업 + 1.5초 후 home 이동
+    loginMsg.textContent = "로그인 성공! 잠시 후 이동됩니다!";
+    setTimeout(()=>{ window.location.href="home.html"; },1500);
   } else {
     googleBtn.style.display="inline-block";
     logoutBtn.style.display="none";
+    loginMsg.textContent = "로그인되지 않았습니다.";
   }
 });
 
@@ -131,7 +136,7 @@ googleBtn.addEventListener("click", async ()=>{
   const provider = new GoogleAuthProvider();
   try{
     await signInWithPopup(auth, provider);
-    loginMsg.textContent="로그인 성공!";
+    googleBtn.disabled = false;
   }catch(err){
     loginMsg.textContent="로그인 실패: "+err.message;
     googleBtn.disabled=false;
