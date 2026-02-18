@@ -48,6 +48,7 @@ input { width:90%; padding:8px; margin:6px 0; border-radius:6px; border:1px soli
   padding:6px 12px; border-radius:8px;
   display:inline-block; line-height:1.4; animation: blink 1s infinite alternate;
 }
+#modal-msg { margin-top:10px; font-weight:600; color:#333; }
 </style>
 </head>
 <body>
@@ -67,6 +68,7 @@ input { width:90%; padding:8px; margin:6px 0; border-radius:6px; border:1px soli
     <input type="email" id="signup-email" placeholder="이메일">
     <input type="password" id="signup-pw" placeholder="비밀번호">
     <button id="signup-submit">가입하기</button>
+    <div id="signup-msg"></div>
   </div>
 </div>
 
@@ -78,13 +80,13 @@ input { width:90%; padding:8px; margin:6px 0; border-radius:6px; border:1px soli
     <input type="email" id="login-email" placeholder="이메일">
     <input type="password" id="login-pw" placeholder="비밀번호">
     <button id="login-submit">로그인</button>
+    <div id="login-msg"></div>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 // Firebase 초기화
 const firebaseConfig = {
@@ -97,17 +99,17 @@ const firebaseConfig = {
   measurementId: "G-LC2JJD493M"
 };
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
+initializeApp(firebaseConfig);
+const auth = getAuth();
 
-// 버튼/모달 요소
+// 요소
 const signupBtn = document.getElementById('signup-btn');
 const loginBtn = document.getElementById('login-btn');
 const signupModal = document.getElementById('signup-modal');
 const loginModal = document.getElementById('login-modal');
 const closeBtns = document.querySelectorAll('.close');
-const msg = document.getElementById('msg');
+const signupMsg = document.getElementById('signup-msg');
+const loginMsg = document.getElementById('login-msg');
 const status = document.getElementById('status');
 
 // 온라인 시계
@@ -119,29 +121,24 @@ function updateStatus(){
 setInterval(updateStatus,1000);
 
 // 모달 열기
-signupBtn.onclick = ()=> signupModal.style.display='flex';
-loginBtn.onclick = ()=> loginModal.style.display='flex';
+signupBtn.onclick = ()=> { signupModal.style.display='flex'; signupMsg.textContent=''; }
+loginBtn.onclick = ()=> { loginModal.style.display='flex'; loginMsg.textContent=''; }
 
 // 모달 닫기
 closeBtns.forEach(b=> b.onclick = ()=> { signupModal.style.display='none'; loginModal.style.display='none'; });
 window.onclick = e => { if(e.target==signupModal||e.target==loginModal) e.target.style.display='none'; };
 
-// 메시지 모달 함수
-function showMessage(text){
-  alert(text); // 단순 alert로 모달처럼 표시
-}
-
 // 회원가입
 document.getElementById('signup-submit').onclick = async ()=>{
   const email = document.getElementById('signup-email').value;
   const pw = document.getElementById('signup-pw').value;
+  signupMsg.textContent="";
   try{
     await createUserWithEmailAndPassword(auth,email,pw);
-    signupModal.style.display='none';
-    showMessage("회원가입 완료! 재로그인 해주세요."); // ✅ 홈 이동 X
+    signupMsg.textContent="회원가입 완료! 재로그인 해주세요.";
+    setTimeout(()=>signupModal.style.display='none',500);
   }catch(err){
-    signupModal.style.display='none';
-    showMessage("회원가입 실패: 이메일 형식과 비밀번호를 확인해주세요.");
+    signupMsg.textContent="회원가입 실패: 이메일 형식과 비밀번호를 확인해주세요.";
   }
 };
 
@@ -149,14 +146,14 @@ document.getElementById('signup-submit').onclick = async ()=>{
 document.getElementById('login-submit').onclick = async ()=>{
   const email = document.getElementById('login-email').value;
   const pw = document.getElementById('login-pw').value;
+  loginMsg.textContent="";
   try{
     await signInWithEmailAndPassword(auth,email,pw);
+    loginMsg.textContent="로그인 성공! 잠시 후 홈으로 이동합니다.";
     loginModal.style.display='none';
-    showMessage("로그인 성공! 잠시 후 홈으로 이동합니다.");
     setTimeout(()=>window.location.href="home.html",1500);
   }catch(err){
-    loginModal.style.display='none';
-    showMessage("로그인 실패: 이메일과 비밀번호를 확인해주세요.");
+    loginMsg.textContent="로그인 실패: 이메일과 비밀번호를 확인해주세요.";
   }
 };
 
