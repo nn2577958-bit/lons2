@@ -3,35 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> LONS </title>
+<title>🎮 LONS2 커뮤니티</title>
 <style>
 body{ font-family:'Segoe UI',sans-serif; margin:0; padding:0; background:#111; color:white;}
 .container{ max-width:600px; margin:50px auto; padding:20px; background:#1c1c1c; border-radius:12px; text-align:center;}
 h1,h2{ margin-bottom:15px; }
-button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; background:#28a745; color:white; font-weight:600; margin:5px;}
+button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; background:#28a745; color:white; font-weight:600; margin:5px; min-width:150px;}
 #login-msg{ color:#ffaa00; margin:10px 0;}
 #admin-status{ font-weight:bold; margin:15px 0;}
-a{ color:#4CAF50; text-decoration:none; font-weight:bold;}
+#discord-link{ display:inline-block; margin-top:10px; padding:8px 12px; border:2px solid #4CAF50; border-radius:6px; color:#4CAF50; text-decoration:none; font-weight:bold;}
+#login-section{ display:flex; flex-direction:column; align-items:center; gap:10px; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h1> LONS </h1>
+  <h1>🎮 LONS2 커뮤니티</h1>
 
   <div id="login-section">
     <button id="login-btn">구글 로그인</button>
     <button id="logout-btn" style="display:none;">로그아웃</button>
     <div id="login-msg"></div>
     <div id="admin-status">관리자 상태: 🔴 오프라인</div>
-    <div><a href="https://discord.gg/yEym2KZ9BU" target="_blank">💬 디스코드 바로가기</a></div>
+    <a id="discord-link" href="https://discord.gg/yEym2KZ9BU" target="_blank">💬 디스코드 바로가기</a>
   </div>
 </div>
 
 <script type="module">
-import { auth, db } from './firebase.js';
-import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+// Firebase 설정
+const firebaseConfig = {
+  apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
+  authDomain: "lons2-74bfa.firebaseapp.com",
+  projectId: "lons2-74bfa",
+  storageBucket: "lons2-74bfa.appspot.com",
+  messagingSenderId: "734178165313",
+  appId: "1:734178165313:web:395ed759777ec61f4b3cc0"
+};
+
+// 초기화
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 const loginBtn = document.getElementById('login-btn');
 const logoutBtn = document.getElementById('logout-btn');
@@ -76,20 +92,12 @@ onAuthStateChanged(auth,user=>{
   }
 });
 
-// 관리자 상태 실시간 구독 (방문자도 확인)
+// 관리자 상태 실시간 구독 (방문자도 확인 가능)
 onSnapshot(doc(db,"status","admin"), snapshot=>{
   const data = snapshot.data();
   if(data){
     const isOnline = data.isOnline;
-    let lastChanged = data.lastChanged?.toDate();
-    if(lastChanged){
-      // 한국 시간(KST) 변환
-      lastChanged = new Date(lastChanged.getTime() + 9*60*60*1000);
-      const timeStr = lastChanged.toLocaleString('ko-KR', {hour12:false});
-      adminStatus.textContent = `관리자 상태: ${isOnline?"🟢 온라인":"🔴 오프라인"} (최종: ${timeStr})`;
-    } else{
-      adminStatus.textContent = `관리자 상태: ${isOnline?"🟢 온라인":"🔴 오프라인"}`;
-    }
+    adminStatus.textContent = `관리자 상태: ${isOnline?"🟢 온라인":"🔴 오프라인"}`;
   }
 });
 </script>
