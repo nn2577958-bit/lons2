@@ -115,7 +115,7 @@ document.getElementById('login-submit').onclick = async ()=>{
   msg.textContent="";
   try{
     await signInWithEmailAndPassword(auth,email,pw);
-    msg.textContent="로그인 되셨습니다. 잠시 후 홈으로 이동합니다.";
+    msg.textContent="잠시후 이동 합니다.";
     loginModal.style.display='none';
     setTimeout(()=>window.location.href="home.html",1500);
   }catch(err){
