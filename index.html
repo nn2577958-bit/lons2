@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
-/* 전체 배경: 이미지 + 반투명 그라데이션 */
 body {
   margin:0;
   height:100vh;
@@ -20,37 +19,32 @@ body {
 }
 
 .container {
-  width:400px;
+  width:380px;
   background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9));
-  padding:40px 30px;
-  border-radius:18px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  padding:35px 25px;
+  border-radius:15px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.35);
   text-align:center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.container:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow:0 15px 40px rgba(0,0,0,0.45);
 }
 
-h2 { color:#222; margin-bottom:25px; font-size:26px; }
+h2 { color:#222; margin-bottom:20px; font-size:24px; }
 
 button {
   width:100%;
-  padding:15px;
-  margin:12px 0;
-  border-radius:10px;
+  padding:14px;
+  margin:10px 0;
+  border-radius:8px;
   border:none;
   font-size:18px;
   font-weight:600;
   cursor:pointer;
-  box-shadow:0px 4px 12px rgba(0,0,0,0.25);
+  box-shadow:0px 4px 10px rgba(0,0,0,0.2);
   position:relative;
-  transition: all 0.25s ease;
+  transition: all 0.23s ease;
 }
 button:hover { transform: translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,0.3); }
 button:active { transform: translateY(1px); box-shadow:0 2px 6px rgba(0,0,0,0.2); }
-button i { margin-right:10px; }
+button i { margin-right:8px; }
 
 #google-btn { background:#fff; color:#444; border:1px solid #ccc; }
 #google-btn:hover { background:#f0f0f0; }
@@ -59,49 +53,49 @@ button i { margin-right:10px; }
 #logout-btn:hover { background:#e68a00; }
 
 #discord-btn { background:#7289DA; color:white; }
+#discord-btn:hover { background:#5b6eae; }
 #discord-btn.disabled { cursor:not-allowed; opacity:0.6; }
 
-#discord-btn[data-tooltip]:hover::after {
-  content:attr(data-tooltip);
-  position:absolute; top:-30px; left:50%; transform:translateX(-50%);
-  background:#444; color:#fff; padding:5px 10px; border-radius:6px; font-size:13px; white-space:nowrap; z-index:10;
-}
-
 #admin-status {
-  color:white; font-weight:bold; margin-bottom:15px;
-  background:rgba(0,0,0,0.55); padding:8px 15px; border-radius:10px;
+  color:white; font-weight:bold; margin-bottom:10px;
+  background:rgba(0,0,0,0.5); padding:6px 12px; border-radius:8px;
   display:inline-block; line-height:1.4;
 }
 
-#login-msg { color:#ff4444; margin-bottom:15px; font-weight:500; text-align:center; }
+#login-msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h2>🎮 LONS2 커뮤니티 로그인</h2>
-  <div id="admin-status">🔴 관리자 오프라인</div>
+  <h2>🎮 LONS2 커뮤니티</h2>
+  <div id="admin-status">🔴 오프라인</div>
   <div id="login-msg"></div>
 
   <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
   <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
-  <button id="discord-btn" class="disabled" data-tooltip="로그인 후 활성화됩니다"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
+  <button id="discord-btn" class="disabled"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
-// Firebase 설정
+// 🔹 Firebase 설정 (말씀하신 앱키)
 const firebaseConfig = {
-  apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
-  authDomain: "lons-dc24d.firebaseapp.com",
-  projectId: "lons-dc24d",
-  storageBucket: "lons-dc24d.appspot.com",
-  messagingSenderId: "755692328918",
-  appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
+  apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
+  authDomain: "lons2-74bfa.firebaseapp.com",
+  projectId: "lons2-74bfa",
+  storageBucket: "lons2-74bfa.firebasestorage.app",
+  messagingSenderId: "734178165313",
+  appId: "1:734178165313:web:395ed759777ec61f4b3cc0",
+  measurementId: "G-LC2JJD493M"
 };
+
+// Firebase 초기화
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
 // 관리자 이메일
@@ -116,14 +110,13 @@ const adminStatus = document.getElementById("admin-status");
 let opacity = 1;
 let fadingOut = true;
 
-// 관리자 상태 + 시계 깜박임
+// 모든 방문자도 온라인/오프라인 표시 + 실시간 시계
 function updateAdminClock(user){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  const isAdmin = user?.email === ADMIN_EMAIL;
-  adminStatus.innerHTML = `${isAdmin ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}<br>${kst}`;
+  const isOnline = user ? true : false;
+  adminStatus.innerHTML = `${isOnline ? "🟢 온라인" : "🔴 오프라인"}<br>${kst}`;
 
-  // 깜박임
   if(fadingOut){ opacity -= 0.05; if(opacity<=0){ opacity=0; fadingOut=false; } }
   else { opacity += 0.05; if(opacity>=1){ opacity=1; fadingOut=true; } }
   adminStatus.style.opacity = opacity;
@@ -131,17 +124,15 @@ function updateAdminClock(user){
 setInterval(()=>updateAdminClock(auth.currentUser),1000);
 
 // 로그인 상태 감지
-onAuthStateChanged(auth, user=>{
+onAuthStateChanged(auth,user=>{
   if(user){
     googleBtn.style.display="none";
     logoutBtn.style.display="inline-block";
     discordBtn.classList.remove("disabled");
-    discordBtn.removeAttribute("data-tooltip");
   } else {
     googleBtn.style.display="inline-block";
     logoutBtn.style.display="none";
     discordBtn.classList.add("disabled");
-    discordBtn.setAttribute("data-tooltip","로그인 후 활성화됩니다");
   }
 });
 
