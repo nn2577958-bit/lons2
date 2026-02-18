@@ -127,7 +127,7 @@ document.getElementById('signup-submit').onclick = async ()=>{
   try{
     await createUserWithEmailAndPassword(auth,email,pw);
     signupModal.style.display='none';
-    showMessage("회원가입 완료! 재로그인 해주세요.");
+    showMessage("회원가입 완료! 재로그인 해주세요."); // 모달 띄우고 홈 이동 없음
   }catch(err){
     signupModal.style.display='none';
     showMessage("회원가입 실패: 올바른 이메일과 비밀번호를 입력해주세요.");
