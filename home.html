@@ -8,104 +8,100 @@
 <style>
 body {
   margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:white;
 }
 
-.container {
-  text-align:center;
-  background:none;
-  padding:0;
-}
+h2 { text-shadow:0 0 5px rgba(0,0,0,0.7); margin-bottom:20px; }
 
 button {
-  width:140px;
+  width:160px;
   padding:10px;
-  margin:6px 0;
+  margin:6px;
   border:none;
   border-radius:6px;
   font-size:14px;
   font-weight:600;
   cursor:pointer;
-  box-shadow:none;
   transition: transform 0.2s;
 }
 button:hover { transform: translateY(-2px); }
 button:active { transform: translateY(1px); }
 
-#purchase-btn { background:#28a745; color:white; }
 #logout-btn { background:#ff9900; color:white; }
+#purchase-btn { background:#28a745; color:white; }
 
 #status {
-  color:white;
-  font-weight:bold;
   margin-bottom:12px;
+  font-weight:bold;
   padding:6px 12px;
   border-radius:8px;
-  display:inline-block;
-  line-height:1.4;
   animation: blink 1s infinite alternate;
 }
+@keyframes blink { 0%{opacity:0.3;}50%{opacity:1;}100%{opacity:0.3;} }
 
-@keyframes blink {
-  0% { opacity:0.3; }
-  50% { opacity:1; }
-  100% { opacity:0.3; }
-}
-
-#msg {
-  color:#ff4444;
-  margin-bottom:10px;
-  font-weight:500;
-  text-align:center;
-}
-
-/* 모달 스타일 */
-.modal-bg {
-  position:fixed;
-  top:0; left:0; right:0; bottom:0;
-  background:rgba(0,0,0,0.6);
+/* 상품 모달 */
+.modal {
   display:none;
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.7);
   justify-content:center;
   align-items:center;
 }
-
-.modal {
+.modal-content {
   background:white;
   padding:20px;
   border-radius:10px;
+  width:90%;
+  max-width:400px;
   text-align:center;
-  min-width:260px;
+  color:black;
 }
-
-.modal button {
-  width:120px;
-  margin:6px;
+.modal-content img {
+  width:80%;
+  margin:10px 0;
+  border-radius:8px;
 }
+.modal-content button { margin:6px 0; width:100%; padding:10px; border-radius:6px; cursor:pointer; }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <div id="status">🟢 온라인</div>
-  <div id="msg"></div>
-  <button id="purchase-btn"><i class="fas fa-shopping-cart"></i> 구매하기</button>
-  <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
-</div>
+<h2>라니 MALL</h2>
+<div id="status">🟢 온라인</div>
+
+<button id="purchase-btn">구매하기</button>
+<button id="logout-btn">로그아웃</button>
 
 <!-- 상품 모달 -->
-<div class="modal-bg" id="modal-bg">
-  <div class="modal">
+<div id="product-modal" class="modal">
+  <div class="modal-content">
     <h3>상품 선택</h3>
-    <button id="product1-btn">상품 1</button>
-    <button id="product2-btn">상품 2</button>
-    <br><br>
-    <button id="close-modal">취소</button>
+
+    <div>
+      <img src="https://cdn.phototourl.com/uploads/2026-02-18-687292e6-f45e-46fa-bf3b-5e31ddfd8403.webp" alt="상품 1">
+      <button class="product-btn" data-name="상품 1">상품 1 구매</button>
+    </div>
+
+    <div>
+      <img src="https://cdn.phototourl.com/uploads/2026-02-18-687292e6-f45e-46fa-bf3b-5e31ddfd8403.webp" alt="상품 2">
+      <button class="product-btn" data-name="상품 2">상품 2 구매</button>
+    </div>
+
+    <div>
+      <img src="https://cdn.phototourl.com/uploads/2026-02-18-687292e6-f45e-46fa-bf3b-5e31ddfd8403.webp" alt="상품 3">
+      <button class="product-btn" data-name="상품 3">상품 3 구매</button>
+    </div>
+
+    <button onclick="document.getElementById('product-modal').style.display='none'">닫기</button>
   </div>
 </div>
 
@@ -129,59 +125,46 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-const purchaseBtn = document.getElementById("purchase-btn");
-const logoutBtn = document.getElementById("logout-btn");
-const msg = document.getElementById("msg");
 const status = document.getElementById("status");
+const logoutBtn = document.getElementById("logout-btn");
+const purchaseBtn = document.getElementById("purchase-btn");
+const productModal = document.getElementById("product-modal");
+const productBtns = document.querySelectorAll(".product-btn");
 
-const modalBg = document.getElementById("modal-bg");
-const product1Btn = document.getElementById("product1-btn");
-const product2Btn = document.getElementById("product2-btn");
-const closeModalBtn = document.getElementById("close-modal");
-
-// 방문자 온라인 표시 + 깜빡임
+// 온라인 상태 표시
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
   status.textContent = `🟢 온라인 | ${kst}`;
 }
-setInterval(updateStatus, 1000);
+setInterval(updateStatus,1000);
 
-// 접근 차단: 로그인 안 된 경우 index.html로 이동
+// 로그인 체크: 로그인 안하면 인덱스로
 onAuthStateChanged(auth, user=>{
   if(!user){
-    window.location.href = "index.html";
+    window.location.href="index.html";
   }
 });
 
 // 로그아웃
 logoutBtn.addEventListener("click", async ()=>{
-  try{
-    await signOut(auth);
-    window.location.href="index.html";
-  }catch(err){
-    msg.textContent="로그아웃 오류: "+err.message;
-  }
+  await signOut(auth);
+  window.location.href="index.html";
 });
 
-// 구매하기 버튼 -> 모달 표시
-purchaseBtn.addEventListener("click", ()=>{
-  modalBg.style.display="flex";
+// 구매하기 버튼 → 상품 모달 열기
+purchaseBtn.addEventListener("click",()=>{
+  productModal.style.display="flex";
 });
 
-// 모달 닫기
-closeModalBtn.addEventListener("click", ()=>{
-  modalBg.style.display="none";
-});
-
-// 상품 버튼 클릭 -> 디스코드 링크 열기
-product1Btn.addEventListener("click", ()=>{
-  window.open("https://discord.gg/yEym2KZ9BU","_blank");
-  modalBg.style.display="none";
-});
-product2Btn.addEventListener("click", ()=>{
-  window.open("https://discord.gg/yEym2KZ9BU","_blank");
-  modalBg.style.display="none";
+// 상품 클릭 → 디스코드 연동 + 결제 안내 팝업
+productBtns.forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const productName = btn.dataset.name;
+    alert(`${productName} 선택됨!\n잠시 후 결제 페이지로 이동합니다.\n디스코드 채널과 연동됩니다.`);
+    window.open("https://discord.gg/yEym2KZ9BU","_blank");
+    productModal.style.display="none";
+  });
 });
 </script>
 
