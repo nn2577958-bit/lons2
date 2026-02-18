@@ -106,16 +106,18 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
-  authDomain: "lons-dc24d.firebaseapp.com",
-  projectId: "lons-dc24d",
-  storageBucket: "lons-dc24d.appspot.com",
-  messagingSenderId: "755692328918",
-  appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
+  apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
+  authDomain: "lons2-74bfa.firebaseapp.com",
+  projectId: "lons2-74bfa",
+  storageBucket: "lons2-74bfa.firebasestorage.app",
+  messagingSenderId: "734178165313",
+  appId: "1:734178165313:web:395ed759777ec61f4b3cc0",
+  measurementId: "G-LC2JJD493M"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const analytics = getAnalytics(app);
 
 const googleBtn = document.getElementById("google-btn");
 const logoutBtn = document.getElementById("logout-btn");
