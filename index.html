@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL - 로그인 / 회원가입</title>
+<title>라니 MALL - 로그인/회원가입</title>
 <style>
 body {
   margin:0; height:100vh;
@@ -63,7 +63,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
-// Firebase 설정
+// Firebase 초기화
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -92,7 +92,7 @@ loginBtn.onclick = ()=> loginModal.style.display='flex';
 
 // 닫기
 closeBtns.forEach(b=> b.onclick = ()=> { signupModal.style.display='none'; loginModal.style.display='none'; });
-window.onclick = e => { if(e.target==signupModal || e.target==loginModal) { e.target.style.display='none'; } };
+window.onclick = e => { if(e.target==signupModal || e.target==loginModal) e.target.style.display='none'; };
 
 // 회원가입
 document.getElementById('signup-submit').onclick = async ()=>{
@@ -101,8 +101,8 @@ document.getElementById('signup-submit').onclick = async ()=>{
   msg.textContent="";
   try{
     await createUserWithEmailAndPassword(auth,email,pw);
-    msg.textContent="회원가입 완료! 잠시 후 홈으로 이동합니다.";
-    setTimeout(()=>window.location.href="home.html",1500);
+    msg.textContent="회원가입 완료! 재로그인 해주세요.";
+    signupModal.style.display='none';
   }catch(err){
     msg.textContent="회원가입 실패: "+err.message;
   }
@@ -115,7 +115,8 @@ document.getElementById('login-submit').onclick = async ()=>{
   msg.textContent="";
   try{
     await signInWithEmailAndPassword(auth,email,pw);
-    msg.textContent="로그인 되셨습니다. 잠시 후 이동합니다.";
+    msg.textContent="로그인 되셨습니다. 잠시 후 홈으로 이동합니다.";
+    loginModal.style.display='none';
     setTimeout(()=>window.location.href="home.html",1500);
   }catch(err){
     msg.textContent="로그인 실패: "+err.message;
