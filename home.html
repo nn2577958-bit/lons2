@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 HOME</title>
+<title>라니</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 body {
@@ -25,35 +25,33 @@ body {
 
 h2 {
   color:white;
-  font-size:26px;
-  margin-bottom:20px;
+  font-size:24px;
+  margin-bottom:15px;
   text-shadow: 0 0 5px rgba(0,0,0,0.7);
 }
 
 button {
-  width:220px;
-  padding:14px;
-  margin:10px 0;
+  width:160px;
+  padding:10px;
+  margin:6px 0;
   border:none;
-  border-radius:8px;
-  font-size:18px;
+  border-radius:6px;
+  font-size:15px;
   font-weight:600;
   cursor:pointer;
-  transition: transform 0.2s;
   box-shadow:none;
+  transition: transform 0.2s;
 }
 button:hover { transform: translateY(-2px); }
 button:active { transform: translateY(1px); }
 
-#purchase-btn { background:#28a745; color:white; }
-#discord-btn { background:#7289DA; color:white; }
-#discord-btn.disabled { opacity:0.6; cursor:not-allowed; }
-#logout-btn { background:#ff9900; color:white; }
+#google-btn { background:#fff; color:#444; }
+#logout-btn { background:#ff9900; color:white; display:none; }
 
 #status {
   color:white;
   font-weight:bold;
-  margin-bottom:15px;
+  margin-bottom:12px;
   padding:6px 12px;
   border-radius:8px;
   display:inline-block;
@@ -61,6 +59,7 @@ button:active { transform: translateY(1px); }
   animation: blink 1s infinite alternate;
 }
 
+/* 깜빡임 애니메이션 */
 @keyframes blink {
   0% { opacity:0.3; }
   50% { opacity:1; }
@@ -78,19 +77,17 @@ button:active { transform: translateY(1px); }
 <body>
 
 <div class="container">
-  <h2>라니 HOME</h2>
-
-  <div id="status">🔵 서버 상태: 온라인</div>
+  <h2>방문을 환영 합니다</h2>
+  <div id="status">🟢 온라인</div>
   <div id="login-msg"></div>
 
-  <button id="purchase-btn">💳 구매하기</button>
-  <button id="discord-btn" class="disabled"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
+  <button id="google-btn"><i class="fab fa-google"></i> 로그인</button>
   <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 // Firebase 설정
@@ -104,32 +101,49 @@ const firebaseConfig = {
   measurementId: "G-LC2JJD493M"
 };
 
+// Firebase 초기화
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-const purchaseBtn = document.getElementById("purchase-btn");
-const discordBtn = document.getElementById("discord-btn");
+const googleBtn = document.getElementById("google-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const loginMsg = document.getElementById("login-msg");
 const status = document.getElementById("status");
 
-// 서버 상태 + 깜빡임
-function updateStatus(user){
+// 방문자 항상 온라인 표시 + 깜빡임 + 시계 갱신
+function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  status.textContent = `🔵 서버 상태: 온라인 | ${kst}`;
+  status.textContent = `🟢 온라인 | ${kst}`;
 }
-setInterval(()=>updateStatus(auth.currentUser),1000);
+setInterval(updateStatus, 1000);
 
 // 로그인 상태 감지
 onAuthStateChanged(auth,user=>{
   if(user){
-    discordBtn.classList.remove("disabled");
+    googleBtn.style.display="none";
     logoutBtn.style.display="inline-block";
   } else {
-    discordBtn.classList.add("disabled");
+    googleBtn.style.display="inline-block";
     logoutBtn.style.display="none";
+  }
+});
+
+// 구글 로그인 + 팝업 안내 후 1.5초 뒤 home.html 이동
+googleBtn.addEventListener("click", async ()=>{
+  googleBtn.disabled = true;
+  loginMsg.textContent = "";
+  const provider = new GoogleAuthProvider();
+  try{
+    await signInWithPopup(auth, provider);
+    loginMsg.textContent="로그인 성공! 잠시 후 이동합니다...";
+    setTimeout(()=>{
+      window.location.href = "home.html";
+    },1500); // 1.5초 대기 후 이동
+  }catch(err){
+    loginMsg.textContent="로그인 실패: "+err.message;
+    googleBtn.disabled=false;
   }
 });
 
@@ -141,20 +155,6 @@ logoutBtn.addEventListener("click", async ()=>{
   }catch(err){
     loginMsg.textContent="로그아웃 오류: "+err.message;
   }
-});
-
-// 디스코드
-discordBtn.addEventListener("click", ()=>{
-  if(discordBtn.classList.contains('disabled')){
-    loginMsg.textContent="로그인 후 참여하기 버튼이 활성화됩니다!";
-    return;
-  }
-  window.open("https://discord.gg/yEym2KZ9BU","_blank");
-});
-
-// 구매하기 버튼
-purchaseBtn.addEventListener("click", ()=>{
-  window.open("https://yourpurchasepage.com","_blank");
 });
 </script>
 
