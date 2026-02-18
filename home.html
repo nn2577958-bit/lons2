@@ -28,7 +28,6 @@ body {
   animation: blink 1s infinite alternate;
 }
 
-/* 깜빡임 */
 @keyframes blink {
   0% { opacity:0.3; }
   50% { opacity:1; }
@@ -37,11 +36,11 @@ body {
 
 button {
   width:140px;
-  padding:8px;
+  padding:10px;
   margin:6px;
   border:none;
   border-radius:6px;
-  font-size:14px;
+  font-size:15px;
   font-weight:600;
   cursor:pointer;
   box-shadow:none;
@@ -52,11 +51,12 @@ button:active { transform: translateY(1px); }
 
 #google-btn { background:#fff; color:#444; }
 #logout-btn { background:#ff9900; color:white; display:none; }
+#purchase-btn { background:#7289DA; color:white; }
 
 #login-msg { color:#ff4444; margin-bottom:10px; text-align:center; }
 
-#products-container {
-  display:flex;
+.products {
+  display:none; /* 처음에는 숨김 */
   flex-wrap:wrap;
   justify-content:center;
   margin-top:20px;
@@ -64,25 +64,17 @@ button:active { transform: translateY(1px); }
 }
 
 .product-card {
-  width:140px;
-  background:rgba(255,255,255,0.9);
-  color:#000;
+  background: rgba(255,255,255,0.1);
+  padding:10px;
   border-radius:8px;
-  padding:8px;
-  text-align:center;
-  font-size:13px;
-}
-.product-card img {
   width:120px;
-  border-radius:6px;
+  text-align:center;
+  cursor:pointer;
+  transition: transform 0.2s;
 }
-.product-card button {
-  width:100%;
-  background:#7289DA;
-  color:white;
-  margin-top:6px;
-}
-.product-card button:hover { background:#5b6eae; }
+.product-card:hover { transform: scale(1.05); }
+.product-card img { width:100%; border-radius:6px; margin-bottom:6px; }
+.product-card span { display:block; font-size:14px; font-weight:600; }
 
 </style>
 </head>
@@ -90,19 +82,33 @@ button:active { transform: translateY(1px); }
 
 <div id="status">🟢 온라인</div>
 <div id="login-msg"></div>
+
 <div>
   <button id="google-btn"><i class="fab fa-google"></i> 로그인</button>
   <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
+  <button id="purchase-btn"><i class="fas fa-shopping-cart"></i> 구매하기</button>
 </div>
 
-<div id="products-container"></div>
+<div class="products" id="products">
+  <div class="product-card" data-name="상품1">
+    <img src="https://via.placeholder.com/120x120.png?text=상품1" alt="상품1">
+    <span>상품1</span>
+  </div>
+  <div class="product-card" data-name="상품2">
+    <img src="https://via.placeholder.com/120x120.png?text=상품2" alt="상품2">
+    <span>상품2</span>
+  </div>
+  <div class="product-card" data-name="상품3">
+    <img src="https://via.placeholder.com/120x120.png?text=상품3" alt="상품3">
+    <span>상품3</span>
+  </div>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
-// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -113,17 +119,18 @@ const firebaseConfig = {
   measurementId: "G-LC2JJD493M"
 };
 
-// 초기화
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
 const googleBtn = document.getElementById("google-btn");
 const logoutBtn = document.getElementById("logout-btn");
+const purchaseBtn = document.getElementById("purchase-btn");
 const loginMsg = document.getElementById("login-msg");
 const status = document.getElementById("status");
+const products = document.getElementById("products");
 
-// 방문자 온라인 표시
+// 온라인 상태 갱신
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
@@ -149,8 +156,8 @@ googleBtn.addEventListener("click", async ()=>{
   const provider = new GoogleAuthProvider();
   try{
     await signInWithPopup(auth, provider);
-    loginMsg.textContent="로그인 성공! 1.5초 후 홈 화면으로 이동합니다.";
-    setTimeout(()=>{ window.location.href="home.html"; },1500);
+    loginMsg.textContent="로그인 성공! 1.5초 후 상품 확인 가능";
+    setTimeout(()=>{ products.style.display="flex"; },1500);
   }catch(err){
     loginMsg.textContent="로그인 실패: "+err.message;
     googleBtn.disabled=false;
@@ -162,36 +169,24 @@ logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
     loginMsg.textContent="로그아웃 완료";
+    products.style.display="none";
   }catch(err){
     loginMsg.textContent="로그아웃 오류: "+err.message;
   }
 });
 
-// 상품 목록 예시
-const products = [
-  { id:1, name:"티셔츠", price:25000, img:"https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp" },
-  { id:2, name:"머그컵", price:12000, img:"https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp" }
-];
-
-// 상품 카드 생성 + 디스코드 연동
-const container = document.getElementById("products-container");
-products.forEach(p=>{
-  const card = document.createElement("div");
-  card.className = "product-card";
-  card.innerHTML = `
-    <img src="${p.img}" alt="${p.name}" />
-    <h4>${p.name}</h4>
-    <p>${p.price.toLocaleString()}원</p>
-    <button>구매하기</button>
-  `;
-  const btn = card.querySelector("button");
-  btn.addEventListener("click", ()=>{
-    window.open("https://discord.gg/yEym2KZ9BU","_blank");
-    alert(`${p.name} 구매 안내를 디스코드에서 확인하세요!`);
-  });
-  container.appendChild(card);
+// 구매하기 버튼 클릭
+purchaseBtn.addEventListener("click", ()=>{
+  products.style.display="flex";
 });
 
+// 상품 클릭 시 결제 안내
+document.querySelectorAll('.product-card').forEach(card=>{
+  card.addEventListener('click', ()=>{
+    const name = card.dataset.name;
+    alert(`${name} 결제 페이지로 이동합니다!`);
+  });
+});
 </script>
 </body>
 </html>
