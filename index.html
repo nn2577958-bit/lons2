@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🎮 LONS2 커뮤니티 로그인</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 <style>
 body {
   margin:0; height:100vh; display:flex; justify-content:center; align-items:center;
@@ -23,7 +23,7 @@ button { width:100%; padding:14px; margin:10px 0; border-radius:8px; border:none
 button i { margin-right:8px; }
 #google-btn { background:#fff; color:#444; border:1px solid #ccc; }
 #google-btn:hover { background:#f0f0f0; }
-#logout-btn { background:#ff9900; color:white; }
+#logout-btn { background:#ff9900; color:white; display:none; }
 #discord-btn { background:#7289DA; color:white; margin-top:10px; }
 #discord-btn.disabled { cursor:not-allowed; opacity:0.6; }
 #admin-status { color:white; font-weight:bold; margin-bottom:10px; background:rgba(0,0,0,0.5); padding:6px 12px; border-radius:8px; display:inline-block; line-height:1.4; }
@@ -36,8 +36,8 @@ button i { margin-right:8px; }
   <div id="admin-status">🔴 관리자 오프라인</div>
   <div id="login-msg"></div>
   <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
-  <button id="logout-btn" style="display:none;"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
-  <button id="discord-btn" class="disabled"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
+  <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
+  <button id="discord-btn" class="disabled" data-tooltip="로그인 후 활성화됩니다"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
 </div>
 
 <script type="module">
@@ -45,7 +45,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// Firebase 초기화 (lons2 프로젝트)
+// Firebase 초기화
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -58,23 +58,28 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// 요소
 const ADMIN_EMAIL = "nn2577958@gmail.com";
-
+const adminStatus = document.getElementById("admin-status");
 const googleBtn = document.getElementById("google-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const discordBtn = document.getElementById("discord-btn");
-const adminStatus = document.getElementById("admin-status");
 const loginMsg = document.getElementById("login-msg");
 
 let currentUser = null;
 
-// 관리자 상태 + KST 시간 표시
+// 관리자 상태 + KST 시간 갱신
 function updateAdminStatus(user){
   const now = new Date();
-  const kstTime = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  const isOnline = user?.email === ADMIN_EMAIL;
-  adminStatus.textContent = `${isOnline ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}  ${kstTime}`;
+  const kstString = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
+  const isAdmin = user?.email === ADMIN_EMAIL;
+  adminStatus.textContent = `${isAdmin?"🟢 관리자 온라인":"🔴 관리자 오프라인"}  ${kstString}`;
 }
+
+// 실시간 시간 갱신 (1초)
+setInterval(()=>{
+  updateAdminStatus(currentUser);
+}, 1000);
 
 // 로그인 상태 감지
 onAuthStateChanged(auth,user=>{
@@ -84,10 +89,12 @@ onAuthStateChanged(auth,user=>{
     googleBtn.style.display="none";
     logoutBtn.style.display="inline-block";
     discordBtn.classList.remove("disabled");
-  } else{
+    discordBtn.removeAttribute("data-tooltip");
+  } else {
     googleBtn.style.display="inline-block";
     logoutBtn.style.display="none";
     discordBtn.classList.add("disabled");
+    discordBtn.setAttribute("data-tooltip","로그인 후 활성화됩니다");
   }
 });
 
@@ -97,58 +104,53 @@ googleBtn.addEventListener("click", async ()=>{
   loginMsg.textContent = "";
   const provider = new GoogleAuthProvider();
   try{
-    await signInWithPopup(auth, provider);
-    loginMsg.textContent = "로그인 성공! 디스코드 버튼 활성화됨.";
-    // 관리자 Firestore 상태 업데이트는 실패해도 무시
+    await signInWithPopup(auth,provider);
+    loginMsg.textContent="로그인 성공! 디스코드 버튼 활성화됨.";
     if(auth.currentUser?.email === ADMIN_EMAIL){
-      setDoc(doc(db,"status","admin"), { isOnline:true, lastChanged:serverTimestamp() })
-      .catch(err=>console.warn("Firestore 상태 업데이트 실패", err));
+      await setDoc(doc(db,"status","admin"),{isOnline:true,lastChanged:serverTimestamp()});
     }
   }catch(err){
-    loginMsg.textContent = "로그인 실패: "+err.message;
-  } finally {
-    googleBtn.disabled = false;
+    loginMsg.textContent="로그인 실패: "+err.message;
+    googleBtn.disabled=false;
   }
 });
 
 // 로그아웃
 logoutBtn.addEventListener("click", async ()=>{
-  loginMsg.textContent = "";
   try{
-    // Firestore 업데이트 실패해도 로그아웃 실행
     if(currentUser?.email === ADMIN_EMAIL){
-      setDoc(doc(db,"status","admin"), { isOnline:false, lastChanged:serverTimestamp() })
-      .catch(err=>console.warn("Firestore 상태 업데이트 실패", err));
+      await setDoc(doc(db,"status","admin"),{isOnline:false,lastChanged:serverTimestamp()});
     }
     await signOut(auth);
-  }catch(err){
-    console.error("로그아웃 실패:", err);
-  } finally {
     currentUser = null;
     googleBtn.style.display="inline-block";
     logoutBtn.style.display="none";
-    discordBtn.classList.add("disabled");
     loginMsg.textContent="로그아웃 완료";
-    updateAdminStatus(null);
+    discordBtn.classList.add("disabled");
+    discordBtn.setAttribute("data-tooltip","로그인 후 활성화됩니다");
+  }catch(err){
+    console.error(err);
+    loginMsg.textContent="로그아웃 오류";
   }
 });
 
 // 디스코드 버튼
 discordBtn.addEventListener("click", ()=>{
   if(discordBtn.classList.contains("disabled")){
-    loginMsg.textContent="로그인 후 참여하기 버튼 활성화됩니다!";
+    loginMsg.textContent="로그인 후 참여하기 버튼이 활성화됩니다!";
     return;
   }
   window.open("https://discord.gg/yEym2KZ9BU","_blank");
 });
 
-// 관리자 상태 실시간 구독 (선택적)
+// Firestore 관리자 상태 실시간 구독 (방문자도 확인)
 onSnapshot(doc(db,"status","admin"), snapshot=>{
   const data = snapshot.data();
   if(data){
+    const isOnline = data.isOnline;
     const now = new Date();
-    const kstTime = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-    adminStatus.textContent = `${data.isOnline ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}  ${kstTime}`;
+    const kstString = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
+    adminStatus.textContent = `${isOnline ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}  ${kstString}`;
   }
 });
 </script>
