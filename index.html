@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> 라니 MALL 로그인 </title>
+<title>매끈하고 깔끔하고</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 body {
@@ -19,7 +19,7 @@ body {
 
 .container {
   text-align:center;
-  background:none; /* 외곽 박스 제거 */
+  background:none;
   padding:0;
 }
 
@@ -46,10 +46,9 @@ button:hover { transform: translateY(-2px); }
 button:active { transform: translateY(1px); }
 
 #google-btn { background:#fff; color:#444; }
-#discord-btn { background:#7289DA; color:white; }
-#discord-btn.disabled { opacity:0.6; cursor:not-allowed; }
+#logout-btn { background:#ff9900; color:white; display:none; }
 
-#server-status, #admin-status {
+#status {
   color:white;
   font-weight:bold;
   margin-bottom:15px;
@@ -60,7 +59,6 @@ button:active { transform: translateY(1px); }
   animation: blink 1s infinite alternate;
 }
 
-/* 깜빡임 애니메이션 */
 @keyframes blink {
   0% { opacity:0.3; }
   50% { opacity:1; }
@@ -78,15 +76,12 @@ button:active { transform: translateY(1px); }
 <body>
 
 <div class="container">
-  <h2> 방문을 환영 합니다! </h2>
-
-  <!-- 서버 상태 (방문자에게도 항상 표시) -->
-  <div id="server-status">🔵 서버 상태: 온라인</div>
-  <div id="admin-status">🔴 선생님 온라인</div>
+  <h2>선생님의 따끈한 의뢰</h2>
+  <div id="status">🔵 온라인</div>
   <div id="login-msg"></div>
 
   <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
-  <button id="discord-btn" class="disabled"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
+  <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
 </div>
 
 <script type="module">
@@ -105,46 +100,33 @@ const firebaseConfig = {
   measurementId: "G-LC2JJD493M"
 };
 
-// 초기화
+// Firebase 초기화
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-// 관리자 이메일
-const ADMIN_EMAIL = "nn2577958@gmail.com";
-
 const googleBtn = document.getElementById("google-btn");
-const discordBtn = document.getElementById("discord-btn");
+const logoutBtn = document.getElementById("logout-btn");
 const loginMsg = document.getElementById("login-msg");
-const adminStatus = document.getElementById("admin-status");
-const serverStatus = document.getElementById("server-status");
+const status = document.getElementById("status");
 
-// 서버/관리자 상태 갱신
-function updateStatus(user){
+// 온라인 상태 + 깜빡임
+function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-
-  // 관리자 표시
-  const isAdmin = user?.email === ADMIN_EMAIL;
-  adminStatus.textContent = isAdmin ? `🟢 관리자 온라인 | ${kst}` : `🔴 관리자 오프라인 | ${kst}`;
-
-  // 서버 상태는 항상 온라인 표시
-  serverStatus.textContent = `🔵 서버 상태: 온라인 | ${kst}`;
+  const isOnline = auth.currentUser ? true : false;
+  status.textContent = `${isOnline ? "🟢 온라인" : "🔴 오프라인"} | ${kst}`;
 }
-
-// 1초마다 갱신
-setInterval(()=>updateStatus(auth.currentUser),1000);
+setInterval(updateStatus,1000);
 
 // 로그인 상태 감지
 onAuthStateChanged(auth,user=>{
-  updateStatus(user);
-
   if(user){
     googleBtn.style.display="none";
-    discordBtn.classList.remove("disabled");
+    logoutBtn.style.display="inline-block";
   } else {
     googleBtn.style.display="inline-block";
-    discordBtn.classList.add("disabled");
+    logoutBtn.style.display="none";
   }
 });
 
@@ -155,20 +137,21 @@ googleBtn.addEventListener("click", async ()=>{
   const provider = new GoogleAuthProvider();
   try{
     await signInWithPopup(auth, provider);
-    loginMsg.textContent="로그인 성공! 디스코드 버튼 활성화됨.";
+    loginMsg.textContent="로그인 성공!";
   }catch(err){
     loginMsg.textContent="로그인 실패: "+err.message;
     googleBtn.disabled=false;
   }
 });
 
-// 디스코드 버튼
-discordBtn.addEventListener("click", ()=>{
-  if(discordBtn.classList.contains('disabled')){
-    loginMsg.textContent="로그인 후 참여하기 버튼이 활성화됩니다!";
-    return;
+// 로그아웃
+logoutBtn.addEventListener("click", async ()=>{
+  try{
+    await signOut(auth);
+    loginMsg.textContent="로그아웃 완료";
+  }catch(err){
+    loginMsg.textContent="로그아웃 오류: "+err.message;
   }
-  window.open("https://discord.gg/yEym2KZ9BU","_blank");
 });
 </script>
 
