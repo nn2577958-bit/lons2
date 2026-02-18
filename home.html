@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL - 로그인</title>
+<title>라니 MALL - Home</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 body {
@@ -56,8 +56,8 @@ button {
 button:hover { transform: translateY(-2px); }
 button:active { transform: translateY(1px); }
 
-#google-btn { background:#fff; color:#444; }
-#logout-btn { background:#ff9900; color:white; display:none; }
+#purchase-btn { background:#00AAFF; color:white; }
+#logout-btn { background:#ff9900; color:white; display:inline-block; }
 
 #login-msg {
   color:#ff4444;
@@ -74,14 +74,14 @@ button:active { transform: translateY(1px); }
   <div id="login-msg"></div>
 
   <div>
-    <button id="google-btn"><i class="fab fa-google"></i> 로그인</button>
+    <button id="purchase-btn"><i class="fas fa-shopping-cart"></i> 구매하기</button>
     <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 // Firebase 설정
@@ -100,12 +100,12 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-const googleBtn = document.getElementById("google-btn");
+const purchaseBtn = document.getElementById("purchase-btn");
 const logoutBtn = document.getElementById("logout-btn");
-const loginMsg = document.getElementById("login-msg");
 const status = document.getElementById("status");
+const loginMsg = document.getElementById("login-msg");
 
-// 온라인 상태 + 깜빡임 + 시계 갱신
+// 온라인 상태 + 깜빡임
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
@@ -114,33 +114,17 @@ function updateStatus(){
 setInterval(updateStatus, 1000);
 
 // 로그인 상태 감지
-onAuthStateChanged(auth,user=>{
-  if(user){
-    googleBtn.style.display="none";
-    logoutBtn.style.display="inline-block";
-
-    // 로그인 성공 팝업 + 1.5초 후 home 이동
-    loginMsg.textContent = "로그인 성공! 잠시 후 이동됩니다!";
-    setTimeout(()=>{ window.location.href="home.html"; },1500);
+onAuthStateChanged(auth, user=>{
+  if(!user){
+    loginMsg.textContent="로그아웃 상태입니다.";
   } else {
-    googleBtn.style.display="inline-block";
-    logoutBtn.style.display="none";
-    loginMsg.textContent = "로그인되지 않았습니다.";
+    loginMsg.textContent="";
   }
 });
 
-// 구글 로그인
-googleBtn.addEventListener("click", async ()=>{
-  googleBtn.disabled = true;
-  loginMsg.textContent = "";
-  const provider = new GoogleAuthProvider();
-  try{
-    await signInWithPopup(auth, provider);
-    googleBtn.disabled = false;
-  }catch(err){
-    loginMsg.textContent="로그인 실패: "+err.message;
-    googleBtn.disabled=false;
-  }
+// 구매하기 버튼 클릭 예시
+purchaseBtn.addEventListener("click", ()=>{
+  alert("구매하기 기능은 준비중입니다!");
 });
 
 // 로그아웃
