@@ -3,28 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL - HOME</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<title>라니 MALL - 홈</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous"/>
 <style>
 body {
   margin:0;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:20px;
-  box-sizing:border-box;
-  color:white;
 }
 
+button {
+  width:160px;
+  padding:10px;
+  margin:6px 0;
+  border:none;
+  border-radius:6px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition: transform 0.2s;
+}
+button:hover { transform: translateY(-2px); }
+button:active { transform: translateY(1px); }
+
+#purchase-btn { background:#28a745; color:white; }
+#logout-btn { background:#ff9900; color:white; }
+
 #status {
+  color:white;
   font-weight:bold;
   margin-bottom:12px;
   padding:6px 12px;
   border-radius:8px;
+  display:inline-block;
+  line-height:1.4;
   animation: blink 1s infinite alternate;
 }
 
@@ -34,81 +52,23 @@ body {
   100% { opacity:0.3; }
 }
 
-button {
-  width:140px;
-  padding:10px;
-  margin:6px;
-  border:none;
-  border-radius:6px;
-  font-size:15px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:none;
-  transition: transform 0.2s;
-}
-button:hover { transform: translateY(-2px); }
-button:active { transform: translateY(1px); }
-
-#google-btn { background:#fff; color:#444; }
-#logout-btn { background:#ff9900; color:white; display:none; }
-#purchase-btn { background:#7289DA; color:white; }
-
-#login-msg { color:#ff4444; margin-bottom:10px; text-align:center; }
-
-.products {
-  display:none;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top:20px;
-  gap:12px;
-}
-
-.product-card {
-  background: rgba(255,255,255,0.1);
-  padding:10px;
-  border-radius:8px;
-  width:120px;
-  text-align:center;
-  cursor:pointer;
-  transition: transform 0.2s;
-}
-.product-card:hover { transform: scale(1.05); }
-.product-card img { width:100%; border-radius:6px; margin-bottom:6px; }
-.product-card span { display:block; font-size:14px; font-weight:600; }
-
+#msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
 </style>
 </head>
 <body>
 
 <div id="status">🟢 온라인</div>
-<div id="login-msg"></div>
+<div id="msg"></div>
 
-<div>
-  <button id="google-btn"><i class="fab fa-google"></i> 로그인</button>
-  <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
-  <button id="purchase-btn"><i class="fas fa-shopping-cart"></i> 구매하기</button>
-</div>
-
-<div class="products" id="products">
-  <div class="product-card" data-name="상품1">
-    <img src="https://via.placeholder.com/120x120.png?text=상품1" alt="상품1">
-    <span>상품1</span>
-  </div>
-  <div class="product-card" data-name="상품2">
-    <img src="https://via.placeholder.com/120x120.png?text=상품2" alt="상품2">
-    <span>상품2</span>
-  </div>
-  <div class="product-card" data-name="상품3">
-    <img src="https://via.placeholder.com/120x120.png?text=상품3" alt="상품3">
-    <span>상품3</span>
-  </div>
-</div>
+<button id="purchase-btn">구매하기</button>
+<button id="logout-btn">로그아웃</button>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
+// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -123,14 +83,12 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-const googleBtn = document.getElementById("google-btn");
-const logoutBtn = document.getElementById("logout-btn");
-const purchaseBtn = document.getElementById("purchase-btn");
-const loginMsg = document.getElementById("login-msg");
 const status = document.getElementById("status");
-const products = document.getElementById("products");
+const msg = document.getElementById("msg");
+const purchaseBtn = document.getElementById("purchase-btn");
+const logoutBtn = document.getElementById("logout-btn");
 
-// 온라인 상태 갱신
+// 온라인 표시 + 깜빡임
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
@@ -138,57 +96,31 @@ function updateStatus(){
 }
 setInterval(updateStatus,1000);
 
-// 로그인 상태 감지
+// 로그인 상태 확인
 onAuthStateChanged(auth,user=>{
-  if(user){
-    googleBtn.style.display="none";
-    logoutBtn.style.display="inline-block";
-  } else {
-    googleBtn.style.display="inline-block";
-    logoutBtn.style.display="none";
-    products.style.display="none"; // 로그아웃시 상품 숨김
+  if(!user){
+    // 로그인 안 됨 → 인덱스로 이동
+    window.location.href="/lons2/index.html";
   }
 });
 
-// 구글 로그인
-googleBtn.addEventListener("click", async ()=>{
-  googleBtn.disabled = true;
-  loginMsg.textContent = "";
-  const provider = new GoogleAuthProvider();
-  try{
-    await signInWithPopup(auth, provider);
-    loginMsg.textContent="로그인 성공! 1.5초 후 상품 확인 가능";
-    setTimeout(()=>{ products.style.display="flex"; },1500);
-  }catch(err){
-    loginMsg.textContent="로그인 실패: "+err.message;
-    googleBtn.disabled=false;
-  }
+// 구매하기 버튼
+purchaseBtn.addEventListener("click", ()=>{
+  msg.textContent="상품 페이지로 이동합니다!";
+  // 여기에 상품 표시 / 결제 로직 추가 가능
 });
 
 // 로그아웃
 logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
-    loginMsg.textContent="로그아웃 완료! 로그인 화면으로 이동합니다.";
-    products.style.display="none";
-    setTimeout(()=>{ window.location.href="index.html"; },500); // 로그아웃 후 0.5초 뒤 이동
+    msg.textContent="로그아웃 완료! 로그인 화면으로 이동...";
+    setTimeout(()=>window.location.href="/lons2/index.html",500);
   }catch(err){
-    loginMsg.textContent="로그아웃 오류: "+err.message;
+    msg.textContent="로그아웃 오류: "+err.message;
   }
 });
-
-// 구매하기 버튼 클릭
-purchaseBtn.addEventListener("click", ()=>{
-  products.style.display="flex";
-});
-
-// 상품 클릭 시 결제 안내
-document.querySelectorAll('.product-card').forEach(card=>{
-  card.addEventListener('click', ()=>{
-    const name = card.dataset.name;
-    alert(`${name} 결제 페이지로 이동합니다!`);
-  });
-});
 </script>
+
 </body>
 </html>
