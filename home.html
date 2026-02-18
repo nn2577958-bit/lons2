@@ -64,6 +64,32 @@ button:active { transform: translateY(1px); }
   font-weight:500;
   text-align:center;
 }
+
+/* 팝업 스타일 */
+#product-popup {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.6);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+
+#popup-content {
+  background:#fff;
+  padding:20px;
+  border-radius:10px;
+  width:280px;
+  text-align:center;
+}
+
+#popup-content h3 { margin-bottom:15px; }
+#popup-content button {
+  width:120px;
+  margin:6px;
+}
 </style>
 </head>
 <body>
@@ -74,6 +100,18 @@ button:active { transform: translateY(1px); }
 
   <button id="buy-btn"><i class="fas fa-cart-plus"></i> 구매하기</button>
   <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
+</div>
+
+<!-- 상품 선택 팝업 -->
+<div id="product-popup">
+  <div id="popup-content">
+    <h3>상품을 선택하세요</h3>
+    <button id="product1-btn">상품 1</button>
+    <button id="product2-btn">상품 2</button>
+    <div style="margin-top:12px;">
+      <button id="close-popup">닫기</button>
+    </div>
+  </div>
 </div>
 
 <script type="module">
@@ -101,6 +139,11 @@ const buyBtn = document.getElementById("buy-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const loginMsg = document.getElementById("login-msg");
 
+const popup = document.getElementById("product-popup");
+const closePopup = document.getElementById("close-popup");
+const product1Btn = document.getElementById("product1-btn");
+const product2Btn = document.getElementById("product2-btn");
+
 // 온라인 상태 + 깜빡임
 function updateStatus(){
   const now = new Date();
@@ -112,7 +155,6 @@ setInterval(updateStatus,1000);
 // 로그인 확인
 onAuthStateChanged(auth,user=>{
   if(!user){
-    // 로그인 안 되어 있으면 index.html로 강제 이동
     window.location.href = "index.html";
   }
 });
@@ -122,19 +164,30 @@ logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
     loginMsg.textContent="로그아웃 완료";
-
     setTimeout(()=>{ window.location.href="index.html"; }, 500);
   }catch(err){
     loginMsg.textContent="로그아웃 오류: "+err.message;
   }
 });
 
-// 구매하기 버튼
+// 구매하기 → 팝업 열기
 buyBtn.addEventListener("click", ()=>{
-  alert("결제 페이지로 이동합니다!");
-  // 실제 결제/상품 페이지 링크로 이동 가능
-  // window.location.href = "결제페이지.html";
+  popup.style.display="flex";
 });
+
+// 팝업 닫기
+closePopup.addEventListener("click", ()=>{
+  popup.style.display="none";
+});
+
+// 상품 선택 → 디스코드 이동
+function openDiscord(){
+  window.open("https://discord.gg/yEym2KZ9BU","_blank");
+  popup.style.display="none";
+}
+
+product1Btn.addEventListener("click", openDiscord);
+product2Btn.addEventListener("click", openDiscord);
 </script>
 
 </body>
