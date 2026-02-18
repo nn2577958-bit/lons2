@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎮 LONS2 커뮤니티 홈</title>
+<title>🎮 LONS2 홈</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 body {
@@ -19,7 +19,7 @@ body {
 
 .container {
   text-align:center;
-  background:none; /* 외곽 박스 제거 */
+  background:none;
   padding:0;
 }
 
@@ -43,7 +43,7 @@ button:active { transform: translateY(1px); }
 #discord-btn { background:#7289DA; color:white; }
 #discord-btn.disabled { opacity:0.6; cursor:not-allowed; }
 
-#logout-btn { background:#ff4444; color:white; } /* 로그아웃 버튼 */
+#logout-btn { background:#ff4444; color:white; }
 #logout-btn:hover { background:#cc0000; }
 
 #admin-status {
@@ -106,7 +106,7 @@ const discordBtn = document.getElementById("discord-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const adminStatus = document.getElementById("admin-status");
 
-// 온라인 상태 + 깜빡임 + 시계 갱신
+// 온라인 상태 깜빡임 + 시계
 function updateOnlineClock(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
@@ -114,7 +114,7 @@ function updateOnlineClock(){
 }
 setInterval(updateOnlineClock, 1000);
 
-// 로그인 상태 감지: 로그아웃 버튼, 디스코드 버튼 활성화
+// 로그인 상태 감지
 onAuthStateChanged(auth, user=>{
   if(user){
     discordBtn.classList.remove("disabled");
@@ -130,19 +130,18 @@ logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
     alert("로그아웃 완료");
-    // 로그아웃 후 index로 이동
-    window.location.href = "index.html";
+    window.location.href = "index.html"; // 로그아웃 후 index로 이동
   }catch(err){
     alert("로그아웃 오류: "+err.message);
   }
 });
 
-// 구매하기 버튼 클릭
+// 구매하기 버튼
 document.getElementById("purchase-btn").addEventListener("click", ()=>{
-  alert("구매 페이지로 이동 준비 중...");
+  alert("구매 페이지 준비 중...");
 });
 
-// 디스코드 버튼 클릭
+// 디스코드 버튼
 discordBtn.addEventListener("click", ()=>{
   if(discordBtn.classList.contains('disabled')){
     alert("로그인 후 참여하기 버튼이 활성화됩니다!");
