@@ -20,11 +20,10 @@ body {
 
 .container {
   width:380px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9));
   padding:35px 25px;
   border-radius:15px;
   text-align:center;
-  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9));
-  box-shadow:0 8px 25px rgba(0,0,0,0.35);
 }
 
 h2 { color:#222; margin-bottom:20px; font-size:24px; }
@@ -34,36 +33,32 @@ button {
   padding:14px;
   margin:10px 0;
   border-radius:8px;
-  border:none;
+  border:none;           /* 테두리 제거 */
+  box-shadow:none;       /* 그림자 제거 */
   font-size:18px;
   font-weight:600;
   cursor:pointer;
-  box-shadow:0px 4px 10px rgba(0,0,0,0.2);
-  transition: all 0.23s ease;
+  background:#fff;
+  color:#444;
+  transition: background 0.2s;
 }
-button:hover { transform: translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,0.3); }
-button:active { transform: translateY(1px); box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+button:hover { background:#f0f0f0; } /* hover 시 색상만 약간 변함 */
+button:active { background:#e0e0e0; } /* active 시 색상만 변함 */
 button i { margin-right:8px; }
 
-/* 버튼 색상 */
-#google-btn { background:#fff; color:#444; border:none; }
+/* 버튼별 색상 */
+#logout-btn { background:#ff9900; color:white; }
 #discord-btn { background:#7289DA; color:white; }
 #discord-btn.disabled { cursor:not-allowed; opacity:0.6; }
 
-#logout-btn { background:#ff9900; color:white; display:none; }
-#logout-btn:hover { background:#e68a00; }
-
-#status {
-  color:white;
-  font-weight:bold;
-  margin-bottom:10px;
-  background:rgba(0,0,0,0.5);
-  padding:6px 12px;
-  border-radius:8px;
-  display:inline-block;
-  line-height:1.4;
+/* 관리자/온라인 표시 */
+#admin-status {
+  color:white; font-weight:bold; margin-bottom:10px;
+  background:rgba(0,0,0,0.5); padding:6px 12px; border-radius:8px;
+  display:inline-block; line-height:1.4;
 }
 
+/* 로그인 메시지 */
 #login-msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
 </style>
 </head>
@@ -71,7 +66,7 @@ button i { margin-right:8px; }
 
 <div class="container">
   <h2>🎮 LONS2 커뮤니티</h2>
-  <div id="status">🔴 오프라인</div>
+  <div id="admin-status">🔴 오프라인</div>
   <div id="login-msg"></div>
 
   <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
@@ -84,7 +79,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
-// Firebase 설정 (앱키)
+// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -94,7 +89,6 @@ const firebaseConfig = {
   appId: "1:734178165313:web:395ed759777ec61f4b3cc0",
   measurementId: "G-LC2JJD493M"
 };
-
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
@@ -102,24 +96,24 @@ const auth = getAuth(app);
 const googleBtn = document.getElementById("google-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const discordBtn = document.getElementById("discord-btn");
-const status = document.getElementById("status");
 const loginMsg = document.getElementById("login-msg");
+const adminStatus = document.getElementById("admin-status");
 
 let opacity = 1;
 let fadingOut = true;
 
-// 모든 방문자 온라인/오프라인 표시 + 시계
-function updateStatus(user){
+// 온라인/오프라인 표시 + 깜빡이는 시계
+function updateClock(user){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
   const isOnline = !!user;
-  status.innerHTML = `${isOnline ? "🟢 온라인" : "🔴 오프라인"}<br>${kst}`;
+  adminStatus.innerHTML = `${isOnline ? "🟢 온라인" : "🔴 오프라인"}<br>${kst}`;
 
   if(fadingOut){ opacity -= 0.05; if(opacity<=0){ opacity=0; fadingOut=false; } }
   else { opacity += 0.05; if(opacity>=1){ opacity=1; fadingOut=true; } }
-  status.style.opacity = opacity;
+  adminStatus.style.opacity = opacity;
 }
-setInterval(()=>updateStatus(auth.currentUser),1000);
+setInterval(()=>updateClock(auth.currentUser),1000);
 
 // 로그인 상태 감지
 onAuthStateChanged(auth, user=>{
@@ -139,7 +133,6 @@ googleBtn.addEventListener("click", async ()=>{
   googleBtn.disabled = true;
   loginMsg.textContent = "";
   const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: "select_account" }); // 재로그인 가능
   try{
     await signInWithPopup(auth, provider);
     loginMsg.textContent="로그인 성공! 디스코드 버튼 활성화됨.";
@@ -154,7 +147,6 @@ logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
     loginMsg.textContent="로그아웃 완료";
-    googleBtn.disabled = false;
   }catch(err){
     loginMsg.textContent="로그아웃 오류: "+err.message;
   }
@@ -169,5 +161,6 @@ discordBtn.addEventListener("click", ()=>{
   window.open("https://discord.gg/yEym2KZ9BU","_blank");
 });
 </script>
+
 </body>
 </html>
