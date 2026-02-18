@@ -63,6 +63,8 @@ loginBtn.addEventListener('click', async () => {
   try {
     await signInWithPopup(auth, provider);
     loginMsg.textContent = "로그인 성공!";
+    
+    // 관리자 로그인 시 Firestore 상태 업데이트
     if(auth.currentUser?.email === ADMIN_EMAIL){
       await setDoc(doc(db, "status", "admin"), { isOnline:true, lastChanged:serverTimestamp() });
     }
@@ -73,19 +75,28 @@ loginBtn.addEventListener('click', async () => {
 
 // 로그아웃
 logoutBtn.addEventListener('click', async () => {
-  if(currentUser?.email === ADMIN_EMAIL){
-    await setDoc(doc(db,"status","admin"), { isOnline:false, lastChanged:serverTimestamp() });
+  try {
+    if(currentUser?.email === ADMIN_EMAIL){
+      await setDoc(doc(db,"status","admin"), { isOnline:false, lastChanged:serverTimestamp() });
+    }
+    await signOut(auth);
+    currentUser = null;
+    loginBtn.style.display="inline-block";
+    logoutBtn.style.display="none";
+    loginMsg.textContent = "로그아웃 완료";
+  } catch(err) {
+    console.error(err);
+    loginMsg.textContent = "로그아웃 오류";
   }
-  await signOut(auth);
-  loginMsg.textContent = "로그아웃 완료";
 });
 
-// 로그인 상태 반영
-onAuthStateChanged(auth,user=>{
+// 로그인 상태 반영 (페이지 새로고침 포함)
+onAuthStateChanged(auth, user => {
   currentUser = user;
   if(!user){
     loginBtn.style.display="inline-block";
     logoutBtn.style.display="none";
+    loginMsg.textContent = "";
   } else{
     loginBtn.style.display="none";
     logoutBtn.style.display="inline-block";
