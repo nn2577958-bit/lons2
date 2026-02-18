@@ -13,37 +13,50 @@ body {
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
 }
 .container { text-align:center; }
+
 button {
-  width:140px; padding:10px; margin:6px 0;
-  border:none; border-radius:6px; font-size:14px; font-weight:600;
-  cursor:pointer; transition:transform 0.2s; background:#fff; color:#444;
+  width:150px; padding:12px; margin:8px 0;
+  border:none; border-radius:8px; font-size:15px; font-weight:600;
+  cursor:pointer; transition: transform 0.2s;
+  animation: blink 1.2s infinite alternate;
 }
 button:hover { transform:translateY(-2px); }
-.modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%;
+button:active { transform:translateY(1px); }
+
+#signup-btn { background:#4CAF50; color:white; }
+#login-btn { background:#2196F3; color:white; }
+
+@keyframes blink {
+  0% { opacity:0.5; }
+  50% { opacity:1; }
+  100% { opacity:0.5; }
+}
+
+.modal {
+  display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%;
   background:rgba(0,0,0,0.5); justify-content:center; align-items:center;
 }
-.modal-content { background:#fff; padding:20px; border-radius:12px; width:320px; max-width:90%; text-align:center; position:relative; }
+.modal-content {
+  background:#fff; padding:20px; border-radius:12px; width:320px; max-width:90%; text-align:center; position:relative;
+}
 .close { position:absolute; right:15px; top:10px; font-size:20px; cursor:pointer; }
 input { width:90%; padding:8px; margin:6px 0; border-radius:6px; border:1px solid #ccc; }
+
 #msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
-#clock { color:white; font-weight:bold; margin-bottom:12px; font-size:16px; animation: blink 1s infinite alternate; }
-@keyframes blink { 0% { opacity:0.3; } 50% { opacity:1; } 100% { opacity:0.3; } }
+#status {
+  color:white; font-weight:bold; margin-bottom:12px;
+  padding:6px 12px; border-radius:8px;
+  display:inline-block; line-height:1.4; animation: blink 1s infinite alternate;
+}
 </style>
 </head>
 <body>
 
 <div class="container">
-  <div id="clock">🟢 온라인</div>
+  <div id="status">🟢 온라인</div>
+  <div id="msg"></div>
   <button id="signup-btn">회원가입</button>
   <button id="login-btn">로그인</button>
-</div>
-
-<!-- 메시지 모달 -->
-<div id="message-modal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <div id="modal-msg"></div>
-  </div>
 </div>
 
 <!-- 회원가입 모달 -->
@@ -88,36 +101,34 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-// 모달, 버튼
+// 버튼/모달 요소
 const signupBtn = document.getElementById('signup-btn');
 const loginBtn = document.getElementById('login-btn');
 const signupModal = document.getElementById('signup-modal');
 const loginModal = document.getElementById('login-modal');
-const messageModal = document.getElementById('message-modal');
-const modalMsg = document.getElementById('modal-msg');
 const closeBtns = document.querySelectorAll('.close');
-const clock = document.getElementById('clock');
+const msg = document.getElementById('msg');
+const status = document.getElementById('status');
 
-// 시계 + 온라인 표시
-function updateClock(){
+// 온라인 시계
+function updateStatus(){
   const now = new Date();
-  const kst = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
-  clock.textContent = `🟢 온라인 | ${kst}`;
+  const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
+  status.textContent = `🟢 온라인 | ${kst}`;
 }
-setInterval(updateClock,1000);
+setInterval(updateStatus,1000);
 
 // 모달 열기
 signupBtn.onclick = ()=> signupModal.style.display='flex';
 loginBtn.onclick = ()=> loginModal.style.display='flex';
 
 // 모달 닫기
-closeBtns.forEach(b=> b.onclick = ()=> { signupModal.style.display='none'; loginModal.style.display='none'; messageModal.style.display='none'; });
-window.onclick = e => { if(e.target==signupModal || e.target==loginModal || e.target==messageModal) e.target.style.display='none'; };
+closeBtns.forEach(b=> b.onclick = ()=> { signupModal.style.display='none'; loginModal.style.display='none'; });
+window.onclick = e => { if(e.target==signupModal||e.target==loginModal) e.target.style.display='none'; };
 
-// 공통 메시지 띄우기 + 모달
+// 메시지 모달 함수
 function showMessage(text){
-  modalMsg.textContent = text;
-  messageModal.style.display='flex';
+  alert(text); // 단순 alert로 모달처럼 표시
 }
 
 // 회원가입
@@ -127,10 +138,10 @@ document.getElementById('signup-submit').onclick = async ()=>{
   try{
     await createUserWithEmailAndPassword(auth,email,pw);
     signupModal.style.display='none';
-    showMessage("회원가입 완료! 재로그인 해주세요."); // 모달 띄우고 홈 이동 없음
+    showMessage("회원가입 완료! 재로그인 해주세요."); // ✅ 홈 이동 X
   }catch(err){
     signupModal.style.display='none';
-    showMessage("회원가입 실패: 올바른 이메일과 비밀번호를 입력해주세요.");
+    showMessage("회원가입 실패: 이메일 형식과 비밀번호를 확인해주세요.");
   }
 };
 
@@ -141,22 +152,18 @@ document.getElementById('login-submit').onclick = async ()=>{
   try{
     await signInWithEmailAndPassword(auth,email,pw);
     loginModal.style.display='none';
-    showMessage("로그인 되셨습니다. 잠시 후 홈으로 이동합니다.");
+    showMessage("로그인 성공! 잠시 후 홈으로 이동합니다.");
     setTimeout(()=>window.location.href="home.html",1500);
   }catch(err){
     loginModal.style.display='none';
-    showMessage("로그인 실패: 이메일 또는 비밀번호가 잘못되었습니다.");
+    showMessage("로그인 실패: 이메일과 비밀번호를 확인해주세요.");
   }
 };
 
 // 로그인 상태 체크
 onAuthStateChanged(auth,user=>{
-  if(user){
-    showMessage("이미 로그인 되어 있습니다. 잠시 후 홈으로 이동합니다.");
-    setTimeout(()=>window.location.href="home.html",1500);
-  }
+  if(user){ setTimeout(()=>window.location.href="home.html",1500); }
 });
 </script>
-
 </body>
 </html>
