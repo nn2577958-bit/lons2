@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎮 LONS2 홈</title>
+<title>라니 HOME</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 body {
@@ -23,11 +23,18 @@ body {
   padding:0;
 }
 
+h2 {
+  color:white;
+  font-size:26px;
+  margin-bottom:20px;
+  text-shadow: 0 0 5px rgba(0,0,0,0.7);
+}
+
 button {
   width:220px;
   padding:14px;
   margin:10px 0;
-  border:none; 
+  border:none;
   border-radius:8px;
   font-size:18px;
   font-weight:600;
@@ -35,18 +42,15 @@ button {
   transition: transform 0.2s;
   box-shadow:none;
 }
-
 button:hover { transform: translateY(-2px); }
 button:active { transform: translateY(1px); }
 
-#purchase-btn { background:#ff9900; color:white; }
+#purchase-btn { background:#28a745; color:white; }
 #discord-btn { background:#7289DA; color:white; }
 #discord-btn.disabled { opacity:0.6; cursor:not-allowed; }
+#logout-btn { background:#ff9900; color:white; }
 
-#logout-btn { background:#ff4444; color:white; }
-#logout-btn:hover { background:#cc0000; }
-
-#admin-status {
+#status {
   color:white;
   font-weight:bold;
   margin-bottom:15px;
@@ -74,12 +78,14 @@ button:active { transform: translateY(1px); }
 <body>
 
 <div class="container">
-  <div id="admin-status">🟢 온라인</div>
+  <h2>라니 HOME</h2>
+
+  <div id="status">🔵 서버 상태: 온라인</div>
   <div id="login-msg"></div>
 
-  <button id="purchase-btn"><i class="fas fa-cart-shopping"></i> 구매하기</button>
+  <button id="purchase-btn">💳 구매하기</button>
   <button id="discord-btn" class="disabled"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
-  <button id="logout-btn" style="display:none;"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
+  <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
 </div>
 
 <script type="module">
@@ -102,26 +108,28 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
+const purchaseBtn = document.getElementById("purchase-btn");
 const discordBtn = document.getElementById("discord-btn");
 const logoutBtn = document.getElementById("logout-btn");
-const adminStatus = document.getElementById("admin-status");
+const loginMsg = document.getElementById("login-msg");
+const status = document.getElementById("status");
 
-// 온라인 상태 깜빡임 + 시계
-function updateOnlineClock(){
+// 서버 상태 + 깜빡임
+function updateStatus(user){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  adminStatus.textContent = `🟢 온라인 | ${kst}`;
+  status.textContent = `🔵 서버 상태: 온라인 | ${kst}`;
 }
-setInterval(updateOnlineClock, 1000);
+setInterval(()=>updateStatus(auth.currentUser),1000);
 
 // 로그인 상태 감지
-onAuthStateChanged(auth, user=>{
+onAuthStateChanged(auth,user=>{
   if(user){
     discordBtn.classList.remove("disabled");
-    logoutBtn.style.display = "inline-block";
+    logoutBtn.style.display="inline-block";
   } else {
     discordBtn.classList.add("disabled");
-    logoutBtn.style.display = "none";
+    logoutBtn.style.display="none";
   }
 });
 
@@ -129,25 +137,24 @@ onAuthStateChanged(auth, user=>{
 logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
-    alert("로그아웃 완료");
-    window.location.href = "index.html"; // 로그아웃 후 index로 이동
+    loginMsg.textContent="로그아웃 완료";
   }catch(err){
-    alert("로그아웃 오류: "+err.message);
+    loginMsg.textContent="로그아웃 오류: "+err.message;
   }
 });
 
-// 구매하기 버튼
-document.getElementById("purchase-btn").addEventListener("click", ()=>{
-  alert("구매 페이지 준비 중...");
-});
-
-// 디스코드 버튼
+// 디스코드
 discordBtn.addEventListener("click", ()=>{
   if(discordBtn.classList.contains('disabled')){
-    alert("로그인 후 참여하기 버튼이 활성화됩니다!");
+    loginMsg.textContent="로그인 후 참여하기 버튼이 활성화됩니다!";
     return;
   }
   window.open("https://discord.gg/yEym2KZ9BU","_blank");
+});
+
+// 구매하기 버튼
+purchaseBtn.addEventListener("click", ()=>{
+  window.open("https://yourpurchasepage.com","_blank");
 });
 </script>
 
