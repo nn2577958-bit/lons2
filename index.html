@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL - 로그인</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous"/>
+<title>라니 MALL</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 body {
   margin:0;
@@ -22,24 +22,6 @@ body {
   background:none;
   padding:0;
 }
-
-button {
-  width:140px;
-  padding:8px;
-  margin:6px 0;
-  border:none;
-  border-radius:6px;
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:none;
-  transition: transform 0.2s;
-}
-button:hover { transform: translateY(-2px); }
-button:active { transform: translateY(1px); }
-
-#google-btn { background:#fff; color:#444; }
-#logout-btn { background:#ff9900; color:white; display:none; }
 
 #status {
   color:white;
@@ -59,12 +41,24 @@ button:active { transform: translateY(1px); }
   100% { opacity:0.3; }
 }
 
-#login-msg {
-  color:#ff4444;
-  margin-bottom:10px;
-  font-weight:500;
-  text-align:center;
+button {
+  width:140px;
+  padding:8px;
+  margin:6px 0;
+  border:none;
+  border-radius:6px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:none;
+  transition: transform 0.2s;
 }
+button:hover { transform: translateY(-2px); }
+button:active { transform: translateY(1px); }
+
+#google-btn { background:#fff; color:#444; }
+#logout-btn { background:#ff9900; color:white; display:none; }
+#login-msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
 </style>
 </head>
 <body>
@@ -82,7 +76,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
-// Firebase 설정
+// 🔹 Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -93,7 +87,6 @@ const firebaseConfig = {
   measurementId: "G-LC2JJD493M"
 };
 
-// Firebase 초기화
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
@@ -103,23 +96,22 @@ const logoutBtn = document.getElementById("logout-btn");
 const loginMsg = document.getElementById("login-msg");
 const status = document.getElementById("status");
 
-// 온라인 상태 + 깜빡임
+// 방문자 항상 온라인 표시 + 깜빡임
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
   status.textContent = `🟢 온라인 | ${kst}`;
 }
-setInterval(updateStatus,1000);
+setInterval(updateStatus, 1000);
 
 // 로그인 상태 감지
 onAuthStateChanged(auth,user=>{
   if(user){
     googleBtn.style.display="none";
     logoutBtn.style.display="inline-block";
-    // 로그인 후 1.5초 후 홈으로 이동
-    setTimeout(()=>{
-      window.location.href="/lons2/home.html";
-    },1500);
+
+    // 로그인 후 1.5초 뒤 home.html 이동
+    setTimeout(()=>{ window.location.href="home.html"; }, 1500);
   } else {
     googleBtn.style.display="inline-block";
     logoutBtn.style.display="none";
@@ -133,7 +125,7 @@ googleBtn.addEventListener("click", async ()=>{
   const provider = new GoogleAuthProvider();
   try{
     await signInWithPopup(auth, provider);
-    loginMsg.textContent="로그인 성공! 홈으로 이동합니다...";
+    loginMsg.textContent="로그인 성공!";
   }catch(err){
     loginMsg.textContent="로그인 실패: "+err.message;
     googleBtn.disabled=false;
@@ -144,10 +136,10 @@ googleBtn.addEventListener("click", async ()=>{
 logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
-    loginMsg.textContent="로그아웃 완료! 로그인 화면으로 이동합니다.";
-    setTimeout(()=>{
-      window.location.href="/lons2/index.html";
-    },500);
+    loginMsg.textContent="로그아웃 완료";
+
+    // 로그아웃 시 index.html로 강제 이동
+    setTimeout(()=>{ window.location.href="index.html"; }, 500);
   }catch(err){
     loginMsg.textContent="로그아웃 오류: "+err.message;
   }
