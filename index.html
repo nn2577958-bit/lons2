@@ -105,6 +105,19 @@ function updateStatus(){
 }
 setInterval(updateStatus, 1000);
 
+// 로그인 상태 체크 후 home 이동
+function redirectIfLoggedIn(user){
+  if(user){
+    // 이미 로그인 상태면 바로 home.html
+    setTimeout(()=>window.location.href="home.html", 200);
+  }
+}
+
+// 페이지 로드 시 현재 로그인 여부 확인
+onAuthStateChanged(auth, user=>{
+  redirectIfLoggedIn(user);
+});
+
 // 구글 로그인
 googleBtn.addEventListener("click", async ()=>{
   googleBtn.disabled = true;
@@ -112,18 +125,12 @@ googleBtn.addEventListener("click", async ()=>{
   const provider = new GoogleAuthProvider();
   try{
     await signInWithPopup(auth, provider);
-    msg.textContent="로그인 성공! 잠시 후 홈으로 이동합니다.";
-    setTimeout(()=>window.location.href="home.html",1500);
+    msg.textContent = "로그인 성공! 잠시 후 홈으로 이동합니다.";
+    // 로그인 성공 후 1.5초 후 홈으로 이동
+    setTimeout(()=>window.location.href="home.html", 1500);
   }catch(err){
-    msg.textContent="로그인 실패: "+err.message;
+    msg.textContent = "로그인 실패: " + err.message;
     googleBtn.disabled=false;
-  }
-});
-
-// 로그인 상태 체크: 이미 로그인 상태면 바로 home.html
-onAuthStateChanged(auth, user=>{
-  if(user){
-    window.location.href="home.html";
   }
 });
 </script>
