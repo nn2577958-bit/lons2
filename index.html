@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎮 LONS2 커뮤니티 로그인</title>
+<title>🎮 LONS2 커뮤니티</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
@@ -49,20 +49,15 @@ button i { margin-right:8px; }
 #google-btn { background:#fff; color:#444; border:1px solid #ccc; }
 #google-btn:hover { background:#f0f0f0; }
 
-#logout-btn { background:#ff9900; color:white; display:none; }
-#logout-btn:hover { background:#e68a00; }
-
 #discord-btn { background:#7289DA; color:white; }
 #discord-btn:hover { background:#5b6eae; }
 #discord-btn.disabled { cursor:not-allowed; opacity:0.6; }
 
 #admin-status {
-  color:white; font-weight:bold; margin-bottom:10px;
+  color:white; font-weight:bold; margin-bottom:15px;
   background:rgba(0,0,0,0.5); padding:6px 12px; border-radius:8px;
   display:inline-block; line-height:1.4;
 }
-
-#login-msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
 </style>
 </head>
 <body>
@@ -70,10 +65,8 @@ button i { margin-right:8px; }
 <div class="container">
   <h2>🎮 LONS2 커뮤니티</h2>
   <div id="admin-status">🔴 오프라인</div>
-  <div id="login-msg"></div>
 
   <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
-  <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
   <button id="discord-btn" class="disabled"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
 </div>
 
@@ -82,7 +75,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
-// 🔹 Firebase 설정 (말씀하신 앱키)
+// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -92,29 +85,22 @@ const firebaseConfig = {
   appId: "1:734178165313:web:395ed759777ec61f4b3cc0",
   measurementId: "G-LC2JJD493M"
 };
-
-// Firebase 초기화
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-// 관리자 이메일
-const ADMIN_EMAIL = "nn2577958@gmail.com";
-
 const googleBtn = document.getElementById("google-btn");
-const logoutBtn = document.getElementById("logout-btn");
 const discordBtn = document.getElementById("discord-btn");
-const loginMsg = document.getElementById("login-msg");
 const adminStatus = document.getElementById("admin-status");
 
 let opacity = 1;
 let fadingOut = true;
 
-// 모든 방문자도 온라인/오프라인 표시 + 실시간 시계
+// 방문자 온라인 표시 + 시계 깜빡임
 function updateAdminClock(user){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  const isOnline = user ? true : false;
+  const isOnline = user ? true : true; // 모든 방문자 온라인으로 표시
   adminStatus.innerHTML = `${isOnline ? "🟢 온라인" : "🔴 오프라인"}<br>${kst}`;
 
   if(fadingOut){ opacity -= 0.05; if(opacity<=0){ opacity=0; fadingOut=false; } }
@@ -126,12 +112,10 @@ setInterval(()=>updateAdminClock(auth.currentUser),1000);
 // 로그인 상태 감지
 onAuthStateChanged(auth,user=>{
   if(user){
-    googleBtn.style.display="none";
-    logoutBtn.style.display="inline-block";
+    googleBtn.style.border='none'; // 로그인 시 테두리 제거
     discordBtn.classList.remove("disabled");
   } else {
-    googleBtn.style.display="inline-block";
-    logoutBtn.style.display="none";
+    googleBtn.style.border='1px solid #ccc'; // 로그인 전 테두리 표시
     discordBtn.classList.add("disabled");
   }
 });
@@ -139,33 +123,18 @@ onAuthStateChanged(auth,user=>{
 // 구글 로그인
 googleBtn.addEventListener("click", async ()=>{
   googleBtn.disabled = true;
-  loginMsg.textContent = "";
   const provider = new GoogleAuthProvider();
   try{
     await signInWithPopup(auth, provider);
-    loginMsg.textContent="로그인 성공! 디스코드 버튼 활성화됨.";
   }catch(err){
-    loginMsg.textContent="로그인 실패: "+err.message;
+    console.error("로그인 실패:", err.message);
     googleBtn.disabled=false;
-  }
-});
-
-// 로그아웃
-logoutBtn.addEventListener("click", async ()=>{
-  try{
-    await signOut(auth);
-    loginMsg.textContent="로그아웃 완료";
-  }catch(err){
-    loginMsg.textContent="로그아웃 오류: "+err.message;
   }
 });
 
 // 디스코드 버튼
 discordBtn.addEventListener("click", ()=>{
-  if(discordBtn.classList.contains('disabled')){
-    loginMsg.textContent="로그인 후 참여하기 버튼이 활성화됩니다!";
-    return;
-  }
+  if(discordBtn.classList.contains('disabled')) return;
   window.open("https://discord.gg/yEym2KZ9BU","_blank");
 });
 </script>
