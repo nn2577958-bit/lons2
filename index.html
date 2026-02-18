@@ -23,31 +23,6 @@ body {
   padding:0;
 }
 
-h2 {
-  color:white;
-  font-size:24px;
-  margin-bottom:15px;
-  text-shadow: 0 0 5px rgba(0,0,0,0.7);
-}
-
-button {
-  width:160px;
-  padding:10px;
-  margin:6px 0;
-  border:none;
-  border-radius:6px;
-  font-size:15px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:none;
-  transition: transform 0.2s;
-}
-button:hover { transform: translateY(-2px); }
-button:active { transform: translateY(1px); }
-
-#google-btn { background:#fff; color:#444; }
-#logout-btn { background:#ff9900; color:white; display:none; }
-
 #status {
   color:white;
   font-weight:bold;
@@ -66,6 +41,24 @@ button:active { transform: translateY(1px); }
   100% { opacity:0.3; }
 }
 
+button {
+  width:140px;
+  padding:8px;
+  margin:6px 5px;
+  border:none;
+  border-radius:6px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:none;
+  transition: transform 0.2s;
+}
+button:hover { transform: translateY(-2px); }
+button:active { transform: translateY(1px); }
+
+#google-btn { background:#fff; color:#444; display:inline-block; }
+#logout-btn { background:#ff9900; color:white; display:none; }
+
 #login-msg {
   color:#ff4444;
   margin-bottom:10px;
@@ -80,8 +73,10 @@ button:active { transform: translateY(1px); }
   <div id="status">🟢 온라인</div>
   <div id="login-msg"></div>
 
-  <button id="google-btn"><i class="fab fa-google"></i> 로그인</button>
-  <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
+  <div>
+    <button id="google-btn"><i class="fab fa-google"></i> 로그인</button>
+    <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
+  </div>
 </div>
 
 <script type="module">
@@ -119,7 +114,7 @@ function updateStatus(){
 setInterval(updateStatus, 1000);
 
 // 로그인 상태 감지
-onAuthStateChanged(auth,user=>{
+onAuthStateChanged(auth, user=>{
   if(user){
     googleBtn.style.display="none";
     logoutBtn.style.display="inline-block";
