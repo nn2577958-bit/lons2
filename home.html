@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 LONS2 커뮤니티 홈</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+body {
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+              url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
+}
+
+.container {
+  text-align:center;
+  background:none;
+  padding:0;
+}
+
+h1 {
+  color:white;
+  font-size:30px;
+  margin-bottom:20px;
+  text-shadow: 0 0 5px rgba(0,0,0,0.7);
+}
+
+button {
+  width:220px;
+  padding:14px;
+  margin:10px 0;
+  border:none;
+  border-radius:8px;
+  font-size:18px;
+  font-weight:600;
+  cursor:pointer;
+  transition: transform 0.2s;
+  box-shadow:none;
+}
+
+button:hover { transform: translateY(-2px); }
+button:active { transform: translateY(1px); }
+
+#purchase-btn { background:#ff9900; color:white; }
+#discord-btn { background:#7289DA; color:white; }
+#discord-btn.disabled { opacity:0.6; cursor:not-allowed; }
+
+#admin-status {
+  color:white;
+  font-weight:bold;
+  margin-bottom:15px;
+  padding:6px 12px;
+  border-radius:8px;
+  display:inline-block;
+  line-height:1.4;
+  animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+  0% { opacity:0.3; }
+  50% { opacity:1; }
+  100% { opacity:0.3; }
+}
+
+#login-msg {
+  color:#ff4444;
+  margin-bottom:10px;
+  font-weight:500;
+  text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎮 LONS2 커뮤니티에 오신 것을 환영합니다!</h1>
+  <div id="admin-status">🟢 온라인</div>
+  <div id="login-msg"></div>
+
+  <button id="purchase-btn"><i class="fas fa-cart-shopping"></i> 구매하기</button>
+  <button id="discord-btn" class="disabled"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
+  authDomain: "lons2-74bfa.firebaseapp.com",
+  projectId: "lons2-74bfa",
+  storageBucket: "lons2-74bfa.firebasestorage.app",
+  messagingSenderId: "734178165313",
+  appId: "1:734178165313:web:395ed759777ec61f4b3cc0",
+  measurementId: "G-LC2JJD493M"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
+
+const discordBtn = document.getElementById("discord-btn");
+const adminStatus = document.getElementById("admin-status");
+
+// 온라인 상태 + 깜빡임 + 시계 갱신
+function updateOnlineClock(){
+  const now = new Date();
+  const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
+  adminStatus.textContent = `🟢 온라인 | ${kst}`;
+}
+setInterval(updateOnlineClock, 1000);
+
+// 로그인 상태 감지: 디스코드 버튼 활성화
+onAuthStateChanged(auth, user=>{
+  if(user){
+    discordBtn.classList.remove("disabled");
+  } else {
+    discordBtn.classList.add("disabled");
+  }
+});
+
+// 구매하기 버튼 클릭
+document.getElementById("purchase-btn").addEventListener("click", ()=>{
+  alert("구매 페이지로 이동 준비 중...");
+});
+
+// 디스코드 버튼 클릭
+discordBtn.addEventListener("click", ()=>{
+  if(discordBtn.classList.contains('disabled')){
+    alert("로그인 후 참여하기 버튼이 활성화됩니다!");
+    return;
+  }
+  window.open("https://discord.gg/yEym2KZ9BU","_blank");
+});
+</script>
+
+</body>
+</html>
