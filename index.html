@@ -13,42 +13,24 @@ body {
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
 }
 .container { text-align:center; }
-
 button {
-  width:150px; padding:12px; margin:8px 0;
-  border:none; border-radius:8px; font-size:15px; font-weight:600;
-  cursor:pointer; transition: transform 0.2s;
-  animation: blink 1.2s infinite alternate;
+  width:140px; padding:10px; margin:6px 0;
+  border:none; border-radius:6px; font-size:14px; font-weight:600;
+  cursor:pointer; transition:transform 0.2s; background:#fff; color:#444;
+  animation: blink 1.5s infinite alternate;
 }
 button:hover { transform:translateY(-2px); }
-button:active { transform:translateY(1px); }
-
-#signup-btn { background:#4CAF50; color:white; }
-#login-btn { background:#2196F3; color:white; }
-
-@keyframes blink {
-  0% { opacity:0.5; }
-  50% { opacity:1; }
-  100% { opacity:0.5; }
-}
-
-.modal {
-  display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%;
+.modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%;
   background:rgba(0,0,0,0.5); justify-content:center; align-items:center;
 }
-.modal-content {
-  background:#fff; padding:20px; border-radius:12px; width:320px; max-width:90%; text-align:center; position:relative;
-}
+.modal-content { background:#fff; padding:20px; border-radius:12px; width:320px; max-width:90%; text-align:center; position:relative; }
 .close { position:absolute; right:15px; top:10px; font-size:20px; cursor:pointer; }
 input { width:90%; padding:8px; margin:6px 0; border-radius:6px; border:1px solid #ccc; }
-
 #msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
-#status {
-  color:white; font-weight:bold; margin-bottom:12px;
-  padding:6px 12px; border-radius:8px;
+#status { color:white; font-weight:bold; margin-bottom:12px; padding:6px 12px; border-radius:8px;
   display:inline-block; line-height:1.4; animation: blink 1s infinite alternate;
 }
-#modal-msg { margin-top:10px; font-weight:600; color:#333; }
+@keyframes blink { 0% { opacity:0.3; } 50% { opacity:1; } 100% { opacity:0.3; } }
 </style>
 </head>
 <body>
@@ -68,7 +50,6 @@ input { width:90%; padding:8px; margin:6px 0; border-radius:6px; border:1px soli
     <input type="email" id="signup-email" placeholder="이메일">
     <input type="password" id="signup-pw" placeholder="비밀번호">
     <button id="signup-submit">가입하기</button>
-    <div id="signup-msg"></div>
   </div>
 </div>
 
@@ -80,13 +61,13 @@ input { width:90%; padding:8px; margin:6px 0; border-radius:6px; border:1px soli
     <input type="email" id="login-email" placeholder="이메일">
     <input type="password" id="login-pw" placeholder="비밀번호">
     <button id="login-submit">로그인</button>
-    <div id="login-msg"></div>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 // Firebase 초기화
 const firebaseConfig = {
@@ -99,17 +80,17 @@ const firebaseConfig = {
   measurementId: "G-LC2JJD493M"
 };
 
-initializeApp(firebaseConfig);
-const auth = getAuth();
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
 
-// 요소
+// 모달, 버튼
 const signupBtn = document.getElementById('signup-btn');
 const loginBtn = document.getElementById('login-btn');
 const signupModal = document.getElementById('signup-modal');
 const loginModal = document.getElementById('login-modal');
 const closeBtns = document.querySelectorAll('.close');
-const signupMsg = document.getElementById('signup-msg');
-const loginMsg = document.getElementById('login-msg');
+const msg = document.getElementById('msg');
 const status = document.getElementById('status');
 
 // 온라인 시계
@@ -118,27 +99,27 @@ function updateStatus(){
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
   status.textContent = `🟢 온라인 | ${kst}`;
 }
-setInterval(updateStatus,1000);
+setInterval(updateStatus, 1000);
 
 // 모달 열기
-signupBtn.onclick = ()=> { signupModal.style.display='flex'; signupMsg.textContent=''; }
-loginBtn.onclick = ()=> { loginModal.style.display='flex'; loginMsg.textContent=''; }
+signupBtn.onclick = ()=> signupModal.style.display='flex';
+loginBtn.onclick = ()=> loginModal.style.display='flex';
 
 // 모달 닫기
 closeBtns.forEach(b=> b.onclick = ()=> { signupModal.style.display='none'; loginModal.style.display='none'; });
-window.onclick = e => { if(e.target==signupModal||e.target==loginModal) e.target.style.display='none'; };
+window.onclick = e => { if(e.target==signupModal || e.target==loginModal) e.target.style.display='none'; };
 
 // 회원가입
 document.getElementById('signup-submit').onclick = async ()=>{
   const email = document.getElementById('signup-email').value;
   const pw = document.getElementById('signup-pw').value;
-  signupMsg.textContent="";
+  msg.textContent="";
   try{
     await createUserWithEmailAndPassword(auth,email,pw);
-    signupMsg.textContent="회원가입 완료! 재로그인 해주세요.";
-    setTimeout(()=>signupModal.style.display='none',500);
+    signupModal.style.display='none';
+    alert("회원가입 되셨습니다. 재로그인 해주세요."); // 모달 메시지
   }catch(err){
-    signupMsg.textContent="회원가입 실패: 이메일 형식과 비밀번호를 확인해주세요.";
+    alert("회원가입 실패: 올바른 이메일과 비밀번호를 입력해주세요.");
   }
 };
 
@@ -146,21 +127,22 @@ document.getElementById('signup-submit').onclick = async ()=>{
 document.getElementById('login-submit').onclick = async ()=>{
   const email = document.getElementById('login-email').value;
   const pw = document.getElementById('login-pw').value;
-  loginMsg.textContent="";
+  msg.textContent="";
   try{
     await signInWithEmailAndPassword(auth,email,pw);
-    loginMsg.textContent="로그인 성공! 잠시 후 홈으로 이동합니다.";
     loginModal.style.display='none';
+    alert("로그인 되셨습니다. 잠시 후 홈으로 이동합니다.");
     setTimeout(()=>window.location.href="home.html",1500);
   }catch(err){
-    loginMsg.textContent="로그인 실패: 이메일과 비밀번호를 확인해주세요.";
+    alert("로그인 실패: 이메일 또는 비밀번호가 올바르지 않습니다.");
   }
 };
 
-// 로그인 상태 체크
+// 자동 이동 제거: 가입 후 바로 이동 X
 onAuthStateChanged(auth,user=>{
-  if(user){ setTimeout(()=>window.location.href="home.html",1500); }
+  // 여기는 자동 이동 제거
 });
 </script>
+
 </body>
 </html>
