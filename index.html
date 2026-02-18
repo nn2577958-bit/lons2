@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>라니 MALL - 로그인</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous"/>
 <style>
 body {
   margin:0;
@@ -22,6 +22,24 @@ body {
   background:none;
   padding:0;
 }
+
+button {
+  width:140px;
+  padding:8px;
+  margin:6px 0;
+  border:none;
+  border-radius:6px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:none;
+  transition: transform 0.2s;
+}
+button:hover { transform: translateY(-2px); }
+button:active { transform: translateY(1px); }
+
+#google-btn { background:#fff; color:#444; }
+#logout-btn { background:#ff9900; color:white; display:none; }
 
 #status {
   color:white;
@@ -41,24 +59,6 @@ body {
   100% { opacity:0.3; }
 }
 
-button {
-  width:140px;
-  padding:8px;
-  margin:6px 5px;
-  border:none;
-  border-radius:6px;
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:none;
-  transition: transform 0.2s;
-}
-button:hover { transform: translateY(-2px); }
-button:active { transform: translateY(1px); }
-
-#google-btn { background:#fff; color:#444; }
-#logout-btn { background:#ff9900; color:white; display:none; }
-
 #login-msg {
   color:#ff4444;
   margin-bottom:10px;
@@ -73,10 +73,8 @@ button:active { transform: translateY(1px); }
   <div id="status">🟢 온라인</div>
   <div id="login-msg"></div>
 
-  <div>
-    <button id="google-btn"><i class="fab fa-google"></i> 로그인</button>
-    <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
-  </div>
+  <button id="google-btn"><i class="fab fa-google"></i> 로그인</button>
+  <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
 </div>
 
 <script type="module">
@@ -105,27 +103,26 @@ const logoutBtn = document.getElementById("logout-btn");
 const loginMsg = document.getElementById("login-msg");
 const status = document.getElementById("status");
 
-// 온라인 상태 + 깜빡임 + 시계 갱신
+// 온라인 상태 + 깜빡임
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
   status.textContent = `🟢 온라인 | ${kst}`;
 }
-setInterval(updateStatus, 1000);
+setInterval(updateStatus,1000);
 
 // 로그인 상태 감지
 onAuthStateChanged(auth,user=>{
   if(user){
     googleBtn.style.display="none";
     logoutBtn.style.display="inline-block";
-
-    // 로그인 성공 팝업 + 1.5초 후 home 이동
-    loginMsg.textContent = "로그인 성공! 잠시 후 이동됩니다!";
-    setTimeout(()=>{ window.location.href="home.html"; },1500);
+    // 로그인 후 1.5초 후 홈으로 이동
+    setTimeout(()=>{
+      window.location.href="/lons2/home.html";
+    },1500);
   } else {
     googleBtn.style.display="inline-block";
     logoutBtn.style.display="none";
-    loginMsg.textContent = "로그인되지 않았습니다.";
   }
 });
 
@@ -136,7 +133,7 @@ googleBtn.addEventListener("click", async ()=>{
   const provider = new GoogleAuthProvider();
   try{
     await signInWithPopup(auth, provider);
-    googleBtn.disabled = false;
+    loginMsg.textContent="로그인 성공! 홈으로 이동합니다...";
   }catch(err){
     loginMsg.textContent="로그인 실패: "+err.message;
     googleBtn.disabled=false;
@@ -147,7 +144,10 @@ googleBtn.addEventListener("click", async ()=>{
 logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
-    loginMsg.textContent="로그아웃 완료";
+    loginMsg.textContent="로그아웃 완료! 로그인 화면으로 이동합니다.";
+    setTimeout(()=>{
+      window.location.href="/lons2/index.html";
+    },500);
   }catch(err){
     loginMsg.textContent="로그아웃 오류: "+err.message;
   }
