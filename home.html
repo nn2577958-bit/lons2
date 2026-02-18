@@ -34,7 +34,6 @@ body {
   animation: blink 1s infinite alternate;
 }
 
-/* 깜빡임 애니메이션 */
 @keyframes blink {
   0% { opacity:0.3; }
   50% { opacity:1; }
@@ -42,9 +41,9 @@ body {
 }
 
 button {
-  width:160px;
+  width:140px;
   padding:10px;
-  margin:10px 0;
+  margin:6px 0;
   border:none;
   border-radius:6px;
   font-size:14px;
@@ -57,6 +56,7 @@ button:hover { transform: translateY(-2px); }
 button:active { transform: translateY(1px); }
 
 #purchase-btn { background:#28a745; color:white; }
+#logout-btn { background:#ff9900; color:white; }
 #login-msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
 </style>
 </head>
@@ -66,11 +66,12 @@ button:active { transform: translateY(1px); }
   <div id="status">🟢 온라인</div>
   <div id="login-msg"></div>
   <button id="purchase-btn"><i class="fas fa-cart-shopping"></i> 구매하기</button>
+  <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 // Firebase 설정
@@ -92,8 +93,9 @@ const auth = getAuth(app);
 const status = document.getElementById("status");
 const loginMsg = document.getElementById("login-msg");
 const purchaseBtn = document.getElementById("purchase-btn");
+const logoutBtn = document.getElementById("logout-btn");
 
-// 온라인 상태 + 깜빡임 + 시계
+// 방문자 온라인 상태 + 깜빡임
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
@@ -101,22 +103,38 @@ function updateStatus(){
 }
 setInterval(updateStatus,1000);
 
-// 로그인 상태 감지
+// 로그인 상태 감지 + 버튼 활성화/비활성
 onAuthStateChanged(auth,user=>{
   if(user){
-    loginMsg.textContent="로그인됨";
+    loginMsg.textContent = "로그인됨";
     purchaseBtn.disabled = false;
+    logoutBtn.style.display = "inline-block";
   } else {
-    loginMsg.textContent="로그인되지 않음";
+    loginMsg.textContent = "로그인되지 않음";
     purchaseBtn.disabled = true;
+    logoutBtn.style.display = "none";
+    // 로그아웃 상태면 자동으로 로그인 화면(index.html)으로 이동
+    window.location.href = "index.html";
   }
 });
 
-// 구매하기 버튼 클릭
+// 구매하기 버튼
 purchaseBtn.addEventListener("click", ()=>{
-  alert("구매 페이지로 이동합니다!");
-  // 실제 결제 페이지 링크로 이동
+  alert("결제 페이지로 이동합니다!");
+  // 실제 결제 페이지 URL 넣기
   // window.location.href = "payment.html";
+});
+
+// 로그아웃 버튼
+logoutBtn.addEventListener("click", async ()=>{
+  try{
+    await signOut(auth);
+    loginMsg.textContent="로그아웃 완료";
+    // 로그아웃 후 index.html로 이동
+    setTimeout(()=>window.location.href="index.html", 500);
+  }catch(err){
+    loginMsg.textContent="로그아웃 오류: " + err.message;
+  }
 });
 </script>
 
