@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL</title>
+<title>라니 MALL - 회원</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 body {
@@ -34,7 +34,6 @@ body {
   animation: blink 1s infinite alternate;
 }
 
-/* 깜빡임 애니메이션 */
 @keyframes blink {
   0% { opacity:0.3; }
   50% { opacity:1; }
@@ -56,9 +55,16 @@ button {
 button:hover { transform: translateY(-2px); }
 button:active { transform: translateY(1px); }
 
-#google-btn { background:#fff; color:#444; }
+#signup-btn { background:#4caf50; color:white; }
+#login-btn { background:#2196f3; color:white; }
 #logout-btn { background:#ff9900; color:white; display:none; }
-#login-msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
+
+#login-msg {
+  color:#ff4444;
+  margin-bottom:10px;
+  font-weight:500;
+  text-align:center;
+}
 </style>
 </head>
 <body>
@@ -67,16 +73,17 @@ button:active { transform: translateY(1px); }
   <div id="status">🟢 온라인</div>
   <div id="login-msg"></div>
 
-  <button id="google-btn"><i class="fab fa-google"></i> 로그인</button>
+  <button id="signup-btn"><i class="fas fa-user-plus"></i> 회원가입</button>
+  <button id="login-btn"><i class="fas fa-sign-in-alt"></i> 로그인</button>
   <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
-// 🔹 Firebase 설정
+// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -91,12 +98,13 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-const googleBtn = document.getElementById("google-btn");
+const signupBtn = document.getElementById("signup-btn");
+const loginBtn = document.getElementById("login-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const loginMsg = document.getElementById("login-msg");
 const status = document.getElementById("status");
 
-// 방문자 항상 온라인 표시 + 깜빡임
+// 온라인 표시 깜빡임
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
@@ -104,31 +112,35 @@ function updateStatus(){
 }
 setInterval(updateStatus, 1000);
 
-// 로그인 상태 감지
-onAuthStateChanged(auth,user=>{
-  if(user){
-    googleBtn.style.display="none";
-    logoutBtn.style.display="inline-block";
-
-    // 로그인 후 1.5초 뒤 home.html 이동
-    setTimeout(()=>{ window.location.href="home.html"; }, 1500);
-  } else {
-    googleBtn.style.display="inline-block";
-    logoutBtn.style.display="none";
+// 회원가입
+signupBtn.addEventListener("click", async ()=>{
+  const email = prompt("가입할 이메일을 입력하세요:");
+  if(!email) return;
+  const password = prompt("비밀번호를 입력하세요 (6자리 이상):");
+  if(!password || password.length<6){
+    alert("6자리 이상 비밀번호를 입력해야 합니다.");
+    return;
+  }
+  try{
+    await createUserWithEmailAndPassword(auth,email,password);
+    loginMsg.textContent="회원가입 성공! 자동 로그인 됩니다.";
+  }catch(err){
+    loginMsg.textContent="회원가입 실패: "+err.message;
   }
 });
 
-// 구글 로그인
-googleBtn.addEventListener("click", async ()=>{
-  googleBtn.disabled = true;
-  loginMsg.textContent = "";
-  const provider = new GoogleAuthProvider();
+// 로그인
+loginBtn.addEventListener("click", async ()=>{
+  const email = prompt("이메일 입력:");
+  if(!email) return;
+  const password = prompt("비밀번호 입력:");
+  if(!password) return;
   try{
-    await signInWithPopup(auth, provider);
+    await signInWithEmailAndPassword(auth,email,password);
     loginMsg.textContent="로그인 성공!";
+    setTimeout(()=>{ window.location.href="home.html"; }, 1500);
   }catch(err){
     loginMsg.textContent="로그인 실패: "+err.message;
-    googleBtn.disabled=false;
   }
 });
 
@@ -137,11 +149,25 @@ logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
     loginMsg.textContent="로그아웃 완료";
-
-    // 로그아웃 시 index.html로 강제 이동
+    logoutBtn.style.display="none";
+    loginBtn.style.display="inline-block";
+    signupBtn.style.display="inline-block";
     setTimeout(()=>{ window.location.href="index.html"; }, 500);
   }catch(err){
     loginMsg.textContent="로그아웃 오류: "+err.message;
+  }
+});
+
+// 로그인 상태 확인
+onAuthStateChanged(auth,user=>{
+  if(user){
+    loginBtn.style.display="none";
+    signupBtn.style.display="none";
+    logoutBtn.style.display="inline-block";
+  }else{
+    loginBtn.style.display="inline-block";
+    signupBtn.style.display="inline-block";
+    logoutBtn.style.display="none";
   }
 });
 </script>
