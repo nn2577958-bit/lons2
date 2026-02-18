@@ -15,13 +15,17 @@ body {
   align-items:center;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
-  /* 이미지 제거, 그라데이션 배경 적용 */
-  background: linear-gradient(135deg, #1c1c1c, #4a4a4a);
+  /* 배경: 이미지 + 그라데이션 오버레이 */
+  background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+                    url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg');
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
 }
 
 .container {
   width:380px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9));
+  background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9));
   padding:35px 25px;
   border-radius:15px;
   box-shadow:0 8px 25px rgba(0,0,0,0.35);
@@ -97,7 +101,6 @@ button i { margin-right:8px; color:#DB4437; }
 </div>
 
 <script type="module">
-// Firebase 초기화
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
@@ -124,23 +127,21 @@ const loginMsg = document.getElementById("login-msg");
 let opacity = 1;
 let fadingOut = true;
 
-// 관리자 상태 + KST 시계
-function updateAdminClock(user){
+// 항상 온라인 + 시계 표시
+function updateAdminClock(){
   const now = new Date();
   const kstString = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  let isOnline = user?.email === ADMIN_EMAIL;
-  adminStatus.innerHTML = `${isOnline?"🟢 관리자 온라인":"🔴 관리자 오프라인"}<br>${kstString}`;
+  adminStatus.innerHTML = `🟢 관리자 온라인<br>${kstString}`;
 
-  // 깜박임
+  // 깜박임 효과
   if(fadingOut){ opacity -= 0.05; if(opacity<=0){ opacity=0; fadingOut=false;} }
   else { opacity += 0.05; if(opacity>=1){ opacity=1; fadingOut=true;} }
   adminStatus.style.opacity = opacity;
 }
-setInterval(()=>updateAdminClock(auth.currentUser),1000);
+setInterval(updateAdminClock,1000);
 
 // 로그인 상태 감지
 onAuthStateChanged(auth,user=>{
-  updateAdminClock(user);
   if(user){
     googleBtn.style.display="none";
     logoutBtn.style.display="inline-block";
@@ -180,7 +181,7 @@ logoutBtn.addEventListener("click", async ()=>{
 
 // 디스코드 버튼
 discordBtn.addEventListener("click", ()=>{
-  if(discordBtn.classList.contains("disabled")){
+  if(discordBtn.classList.contains('disabled')){
     loginMsg.textContent="로그인 후 참여하기 버튼 활성화됩니다!";
     return;
   }
