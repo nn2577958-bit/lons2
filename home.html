@@ -7,10 +7,11 @@
 <style>
 body {
   margin:0; height:100vh;
-  display:flex; justify-content:center; align-items:center;
+  display:flex; justify-content:center; align-items:flex-start;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
+  padding-top:50px;
 }
 .container { text-align:center; background:none; padding:0; }
 button { width:140px; padding:8px; margin:6px 4px; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; }
@@ -28,7 +29,7 @@ button { width:140px; padding:8px; margin:6px 4px; border:none; border-radius:6p
 <body>
 
 <div class="container">
-  <div id="status">🟢 온라인</div>
+  <div id="status">🟢 온라인</div><br>
   <button id="buy-btn">구매하기</button>
   <button id="logout-btn">로그아웃</button>
 </div>
