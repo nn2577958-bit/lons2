@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL - Home</title>
+<title>라니 MALL - HOME</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 body {
@@ -23,6 +23,24 @@ body {
   padding:0;
 }
 
+button {
+  width:140px;
+  padding:10px;
+  margin:6px;
+  border:none;
+  border-radius:6px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:none;
+  transition: transform 0.2s;
+}
+button:hover { transform: translateY(-2px); }
+button:active { transform: translateY(1px); }
+
+#purchase-btn { background:#28a745; color:white; }
+#logout-btn { background:#ff9900; color:white; }
+
 #status {
   color:white;
   font-weight:bold;
@@ -40,55 +58,11 @@ body {
   100% { opacity:0.3; }
 }
 
-button {
-  width:140px;
-  padding:8px;
-  margin:6px 0;
-  border:none;
-  border-radius:6px;
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:none;
-  transition: transform 0.2s;
-}
-button:hover { transform: translateY(-2px); }
-button:active { transform: translateY(1px); }
-
-#buy-btn { background:#ff5722; color:white; }
-#logout-btn { background:#ff9900; color:white; }
-
-#login-msg {
+#msg {
   color:#ff4444;
   margin-bottom:10px;
   font-weight:500;
   text-align:center;
-}
-
-/* 팝업 스타일 */
-#product-popup {
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: rgba(0,0,0,0.6);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:1000;
-}
-
-#popup-content {
-  background:#fff;
-  padding:20px;
-  border-radius:10px;
-  width:280px;
-  text-align:center;
-}
-
-#popup-content h3 { margin-bottom:15px; }
-#popup-content button {
-  width:120px;
-  margin:6px;
 }
 </style>
 </head>
@@ -96,22 +70,10 @@ button:active { transform: translateY(1px); }
 
 <div class="container">
   <div id="status">🟢 온라인</div>
-  <div id="login-msg"></div>
+  <div id="msg"></div>
 
-  <button id="buy-btn"><i class="fas fa-cart-plus"></i> 구매하기</button>
+  <button id="purchase-btn"><i class="fas fa-shopping-cart"></i> 구매하기</button>
   <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
-</div>
-
-<!-- 상품 선택 팝업 -->
-<div id="product-popup">
-  <div id="popup-content">
-    <h3>상품을 선택하세요</h3>
-    <button id="product1-btn">상품 1</button>
-    <button id="product2-btn">상품 2</button>
-    <div style="margin-top:12px;">
-      <button id="close-popup">닫기</button>
-    </div>
-  </div>
 </div>
 
 <script type="module">
@@ -134,60 +96,44 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-const status = document.getElementById("status");
-const buyBtn = document.getElementById("buy-btn");
+const purchaseBtn = document.getElementById("purchase-btn");
 const logoutBtn = document.getElementById("logout-btn");
-const loginMsg = document.getElementById("login-msg");
+const msg = document.getElementById("msg");
+const status = document.getElementById("status");
 
-const popup = document.getElementById("product-popup");
-const closePopup = document.getElementById("close-popup");
-const product1Btn = document.getElementById("product1-btn");
-const product2Btn = document.getElementById("product2-btn");
-
-// 온라인 상태 + 깜빡임
+// 방문자 상태 + 깜빡임
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  status.textContent = `🟢 온라인 | ${kst}`;
+  const user = auth.currentUser;
+  status.textContent = `${user ? "🟢 로그인됨" : "🟢 온라인"} | ${kst}`;
 }
-setInterval(updateStatus,1000);
+setInterval(updateStatus, 1000);
 
-// 로그인 확인
-onAuthStateChanged(auth,user=>{
+// 로그인 상태 체크: 로그아웃 시 index.html로 이동
+onAuthStateChanged(auth, user=>{
   if(!user){
     window.location.href = "index.html";
   }
 });
 
-// 로그아웃
+// 구매하기 버튼 클릭
+purchaseBtn.addEventListener("click", ()=>{
+  alert("상품 구매 페이지로 이동합니다!");
+  // 실제 상품 페이지 이동 시 URL 교체
+  window.open("https://discord.gg/yEym2KZ9BU", "_blank");
+});
+
+// 로그아웃 버튼
 logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
-    loginMsg.textContent="로그아웃 완료";
-    setTimeout(()=>{ window.location.href="index.html"; }, 500);
+    msg.textContent="로그아웃 완료! 잠시 후 로그인 화면으로 이동합니다.";
+    setTimeout(()=>window.location.href="index.html", 1500);
   }catch(err){
-    loginMsg.textContent="로그아웃 오류: "+err.message;
+    msg.textContent="로그아웃 오류: "+err.message;
   }
 });
-
-// 구매하기 → 팝업 열기
-buyBtn.addEventListener("click", ()=>{
-  popup.style.display="flex";
-});
-
-// 팝업 닫기
-closePopup.addEventListener("click", ()=>{
-  popup.style.display="none";
-});
-
-// 상품 선택 → 디스코드 이동
-function openDiscord(){
-  window.open("https://discord.gg/yEym2KZ9BU","_blank");
-  popup.style.display="none";
-}
-
-product1Btn.addEventListener("click", openDiscord);
-product2Btn.addEventListener("click", openDiscord);
 </script>
 
 </body>
