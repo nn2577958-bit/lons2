@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎮 LONS2 커뮤니티</title>
+<title>🎮 LONS2 로그인</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 body {
@@ -19,13 +19,13 @@ body {
 
 .container {
   text-align:center;
-  background:none; /* 외곽 박스 제거 */
-  padding:0; /* 내부 패딩 제거 */
+  background:none;
+  padding:0;
 }
 
-h2 {
+h1 {
   color:white;
-  font-size:26px;
+  font-size:28px;
   margin-bottom:20px;
   text-shadow: 0 0 5px rgba(0,0,0,0.7);
 }
@@ -34,13 +34,13 @@ button {
   width:220px;
   padding:14px;
   margin:10px 0;
-  border:none; /* 테두리 제거 */
+  border:none;
   border-radius:8px;
   font-size:18px;
   font-weight:600;
   cursor:pointer;
   transition: transform 0.2s;
-  box-shadow:none; /* 그림자 제거 */
+  box-shadow:none;
 }
 
 button:hover { transform: translateY(-2px); }
@@ -61,7 +61,6 @@ button:active { transform: translateY(1px); }
   animation: blink 1s infinite alternate;
 }
 
-/* 깜빡임 애니메이션 */
 @keyframes blink {
   0% { opacity:0.3; }
   50% { opacity:1; }
@@ -79,8 +78,8 @@ button:active { transform: translateY(1px); }
 <body>
 
 <div class="container">
-  <h2>🎮 LONS2 커뮤니티</h2>
-  <div id="admin-status">🟢 온라인</div>
+  <h1>🎮 LONS2 커뮤니티 로그인</h1>
+  <div id="admin-status">🔴 오프라인</div>
   <div id="login-msg"></div>
 
   <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
@@ -89,10 +88,9 @@ button:active { transform: translateY(1px); }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
-// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -103,7 +101,6 @@ const firebaseConfig = {
   measurementId: "G-LC2JJD493M"
 };
 
-// Firebase 초기화
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
@@ -113,19 +110,22 @@ const discordBtn = document.getElementById("discord-btn");
 const loginMsg = document.getElementById("login-msg");
 const adminStatus = document.getElementById("admin-status");
 
-// 온라인 상태 + 깜빡임 + 시계 갱신
-function updateOnlineClock(){
+// 온라인 상태 + 시계 깜빡임
+function updateStatus(user){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  adminStatus.textContent = `🟢 온라인 | ${kst}`;
+  adminStatus.textContent = user ? `🟢 온라인 | ${kst}` : `🔴 오프라인 | ${kst}`;
 }
-setInterval(updateOnlineClock, 1000);
+setInterval(()=>updateStatus(auth.currentUser),1000);
 
 // 로그인 상태 감지
-onAuthStateChanged(auth, user=>{
+onAuthStateChanged(auth,user=>{
+  updateStatus(user);
   if(user){
     googleBtn.style.display="none";
     discordBtn.classList.remove("disabled");
+    // 로그인 후 1초 후 home.html 이동
+    setTimeout(()=>{ window.location.href="home.html"; }, 1000);
   } else {
     googleBtn.style.display="inline-block";
     discordBtn.classList.add("disabled");
@@ -139,7 +139,7 @@ googleBtn.addEventListener("click", async ()=>{
   const provider = new GoogleAuthProvider();
   try{
     await signInWithPopup(auth, provider);
-    loginMsg.textContent = "로그인 성공! 디스코드 버튼 활성화됨.";
+    loginMsg.textContent = "로그인 성공! 잠시 후 홈으로 이동합니다...";
   }catch(err){
     loginMsg.textContent = "로그인 실패: " + err.message;
     googleBtn.disabled=false;
@@ -155,6 +155,5 @@ discordBtn.addEventListener("click", ()=>{
   window.open("https://discord.gg/yEym2KZ9BU","_blank");
 });
 </script>
-
 </body>
 </html>
