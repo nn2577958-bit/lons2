@@ -8,32 +8,27 @@
 <style>
 body {
   margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
-}
-
-.container {
-  text-align:center;
-  background:none;
-  padding:0;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:20px;
+  box-sizing:border-box;
+  color:white;
 }
 
 #status {
-  color:white;
   font-weight:bold;
   margin-bottom:12px;
   padding:6px 12px;
   border-radius:8px;
-  display:inline-block;
-  line-height:1.4;
   animation: blink 1s infinite alternate;
 }
 
+/* 깜빡임 */
 @keyframes blink {
   0% { opacity:0.3; }
   50% { opacity:1; }
@@ -42,8 +37,8 @@ body {
 
 button {
   width:140px;
-  padding:10px;
-  margin:6px 0;
+  padding:8px;
+  margin:6px;
   border:none;
   border-radius:6px;
   font-size:14px;
@@ -55,23 +50,56 @@ button {
 button:hover { transform: translateY(-2px); }
 button:active { transform: translateY(1px); }
 
-#purchase-btn { background:#28a745; color:white; }
-#logout-btn { background:#ff9900; color:white; }
-#login-msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
+#google-btn { background:#fff; color:#444; }
+#logout-btn { background:#ff9900; color:white; display:none; }
+
+#login-msg { color:#ff4444; margin-bottom:10px; text-align:center; }
+
+#products-container {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:20px;
+  gap:12px;
+}
+
+.product-card {
+  width:140px;
+  background:rgba(255,255,255,0.9);
+  color:#000;
+  border-radius:8px;
+  padding:8px;
+  text-align:center;
+  font-size:13px;
+}
+.product-card img {
+  width:120px;
+  border-radius:6px;
+}
+.product-card button {
+  width:100%;
+  background:#7289DA;
+  color:white;
+  margin-top:6px;
+}
+.product-card button:hover { background:#5b6eae; }
+
 </style>
 </head>
 <body>
 
-<div class="container">
-  <div id="status">🟢 온라인</div>
-  <div id="login-msg"></div>
-  <button id="purchase-btn"><i class="fas fa-cart-shopping"></i> 구매하기</button>
+<div id="status">🟢 온라인</div>
+<div id="login-msg"></div>
+<div>
+  <button id="google-btn"><i class="fab fa-google"></i> 로그인</button>
   <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
 </div>
 
+<div id="products-container"></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 // Firebase 설정
@@ -85,17 +113,17 @@ const firebaseConfig = {
   measurementId: "G-LC2JJD493M"
 };
 
-// Firebase 초기화
+// 초기화
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-const status = document.getElementById("status");
-const loginMsg = document.getElementById("login-msg");
-const purchaseBtn = document.getElementById("purchase-btn");
+const googleBtn = document.getElementById("google-btn");
 const logoutBtn = document.getElementById("logout-btn");
+const loginMsg = document.getElementById("login-msg");
+const status = document.getElementById("status");
 
-// 방문자 온라인 상태 + 깜빡임
+// 방문자 온라인 표시
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
@@ -103,40 +131,67 @@ function updateStatus(){
 }
 setInterval(updateStatus,1000);
 
-// 로그인 상태 감지 + 버튼 활성화/비활성
+// 로그인 상태 감지
 onAuthStateChanged(auth,user=>{
   if(user){
-    loginMsg.textContent = "로그인됨";
-    purchaseBtn.disabled = false;
-    logoutBtn.style.display = "inline-block";
+    googleBtn.style.display="none";
+    logoutBtn.style.display="inline-block";
   } else {
-    loginMsg.textContent = "로그인되지 않음";
-    purchaseBtn.disabled = true;
-    logoutBtn.style.display = "none";
-    // 로그아웃 상태면 자동으로 로그인 화면(index.html)으로 이동
-    window.location.href = "index.html";
+    googleBtn.style.display="inline-block";
+    logoutBtn.style.display="none";
   }
 });
 
-// 구매하기 버튼
-purchaseBtn.addEventListener("click", ()=>{
-  alert("결제 페이지로 이동합니다!");
-  // 실제 결제 페이지 URL 넣기
-  // window.location.href = "payment.html";
+// 구글 로그인
+googleBtn.addEventListener("click", async ()=>{
+  googleBtn.disabled = true;
+  loginMsg.textContent = "";
+  const provider = new GoogleAuthProvider();
+  try{
+    await signInWithPopup(auth, provider);
+    loginMsg.textContent="로그인 성공! 1.5초 후 홈 화면으로 이동합니다.";
+    setTimeout(()=>{ window.location.href="home.html"; },1500);
+  }catch(err){
+    loginMsg.textContent="로그인 실패: "+err.message;
+    googleBtn.disabled=false;
+  }
 });
 
-// 로그아웃 버튼
+// 로그아웃
 logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
     loginMsg.textContent="로그아웃 완료";
-    // 로그아웃 후 index.html로 이동
-    setTimeout(()=>window.location.href="index.html", 500);
   }catch(err){
-    loginMsg.textContent="로그아웃 오류: " + err.message;
+    loginMsg.textContent="로그아웃 오류: "+err.message;
   }
 });
-</script>
 
+// 상품 목록 예시
+const products = [
+  { id:1, name:"티셔츠", price:25000, img:"https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp" },
+  { id:2, name:"머그컵", price:12000, img:"https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp" }
+];
+
+// 상품 카드 생성 + 디스코드 연동
+const container = document.getElementById("products-container");
+products.forEach(p=>{
+  const card = document.createElement("div");
+  card.className = "product-card";
+  card.innerHTML = `
+    <img src="${p.img}" alt="${p.name}" />
+    <h4>${p.name}</h4>
+    <p>${p.price.toLocaleString()}원</p>
+    <button>구매하기</button>
+  `;
+  const btn = card.querySelector("button");
+  btn.addEventListener("click", ()=>{
+    window.open("https://discord.gg/yEym2KZ9BU","_blank");
+    alert(`${p.name} 구매 안내를 디스코드에서 확인하세요!`);
+  });
+  container.appendChild(card);
+});
+
+</script>
 </body>
 </html>
