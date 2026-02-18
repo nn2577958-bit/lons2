@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL - HOME</title>
+<title>라니 MALL - 홈</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 body {
@@ -26,7 +26,7 @@ body {
 button {
   width:140px;
   padding:10px;
-  margin:6px;
+  margin:6px 0;
   border:none;
   border-radius:6px;
   font-size:14px;
@@ -64,16 +64,49 @@ button:active { transform: translateY(1px); }
   font-weight:500;
   text-align:center;
 }
+
+/* 모달 스타일 */
+.modal-bg {
+  position:fixed;
+  top:0; left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.6);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.modal {
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  text-align:center;
+  min-width:260px;
+}
+
+.modal button {
+  width:120px;
+  margin:6px;
+}
 </style>
 </head>
 <body>
 
 <div class="container">
-  <div id="status">🟢 로그인됨</div>
+  <div id="status">🟢 온라인</div>
   <div id="msg"></div>
-
   <button id="purchase-btn"><i class="fas fa-shopping-cart"></i> 구매하기</button>
   <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
+</div>
+
+<!-- 상품 모달 -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h3>상품 선택</h3>
+    <button id="product1-btn">상품 1</button>
+    <button id="product2-btn">상품 2</button>
+    <br><br>
+    <button id="close-modal">취소</button>
+  </div>
 </div>
 
 <script type="module">
@@ -81,6 +114,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
+// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -100,37 +134,54 @@ const logoutBtn = document.getElementById("logout-btn");
 const msg = document.getElementById("msg");
 const status = document.getElementById("status");
 
-// 상태 표시
+const modalBg = document.getElementById("modal-bg");
+const product1Btn = document.getElementById("product1-btn");
+const product2Btn = document.getElementById("product2-btn");
+const closeModalBtn = document.getElementById("close-modal");
+
+// 방문자 온라인 표시 + 깜빡임
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  const user = auth.currentUser;
-  status.textContent = user ? `🟢 로그인됨 | ${kst}` : `🔴 오프라인 | ${kst}`;
+  status.textContent = `🟢 온라인 | ${kst}`;
 }
-setInterval(updateStatus,1000);
+setInterval(updateStatus, 1000);
 
-// 로그인 여부 확인: 로그아웃 상태면 index로 이동
-onAuthStateChanged(auth,user=>{
+// 접근 차단: 로그인 안 된 경우 index.html로 이동
+onAuthStateChanged(auth, user=>{
   if(!user){
-    window.location.href="index.html";
+    window.location.href = "index.html";
   }
-});
-
-// 구매하기 버튼
-purchaseBtn.addEventListener("click", ()=>{
-  alert("상품 구매 페이지로 이동합니다!");
-  window.open("https://discord.gg/yEym2KZ9BU","_blank");
 });
 
 // 로그아웃
 logoutBtn.addEventListener("click", async ()=>{
   try{
     await signOut(auth);
-    msg.textContent="로그아웃 완료! 잠시 후 로그인 화면으로 이동합니다.";
-    setTimeout(()=>window.location.href="index.html",1500);
+    window.location.href="index.html";
   }catch(err){
     msg.textContent="로그아웃 오류: "+err.message;
   }
+});
+
+// 구매하기 버튼 -> 모달 표시
+purchaseBtn.addEventListener("click", ()=>{
+  modalBg.style.display="flex";
+});
+
+// 모달 닫기
+closeModalBtn.addEventListener("click", ()=>{
+  modalBg.style.display="none";
+});
+
+// 상품 버튼 클릭 -> 디스코드 링크 열기
+product1Btn.addEventListener("click", ()=>{
+  window.open("https://discord.gg/yEym2KZ9BU","_blank");
+  modalBg.style.display="none";
+});
+product2Btn.addEventListener("click", ()=>{
+  window.open("https://discord.gg/yEym2KZ9BU","_blank");
+  modalBg.style.display="none";
 });
 </script>
 
