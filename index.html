@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL - 로그인</title>
+<title>라니 MALL - 로그인 / 회원가입</title>
 <style>
 body {
   margin:0; height:100vh;
@@ -19,30 +19,51 @@ button {
   cursor:pointer; transition:transform 0.2s; background:#fff; color:#444;
 }
 button:hover { transform:translateY(-2px); }
-#msg { color:#ff4444; font-weight:500; margin-bottom:10px; }
-#status {
-  color:white; font-weight:bold; margin-bottom:12px; padding:6px 12px;
-  border-radius:8px; display:inline-block; line-height:1.4;
-  animation: blink 1s infinite alternate;
+.modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.5); justify-content:center; align-items:center;
 }
-@keyframes blink {
-  0% {opacity:0.3;} 50%{opacity:1;} 100%{opacity:0.3;}
-}
+.modal-content { background:#fff; padding:20px; border-radius:12px; width:320px; max-width:90%; text-align:center; position:relative; }
+.close { position:absolute; right:15px; top:10px; font-size:20px; cursor:pointer; }
+input { width:90%; padding:8px; margin:6px 0; border-radius:6px; border:1px solid #ccc; }
+#msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <div id="status">🟢 온라인</div>
-  <div id="msg"></div>
+  <button id="signup-btn">회원가입</button>
   <button id="login-btn">로그인</button>
+  <div id="msg"></div>
+</div>
+
+<!-- 회원가입 모달 -->
+<div id="signup-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>회원가입</h3>
+    <input type="email" id="signup-email" placeholder="이메일">
+    <input type="password" id="signup-pw" placeholder="비밀번호">
+    <button id="signup-submit">가입하기</button>
+  </div>
+</div>
+
+<!-- 로그인 모달 -->
+<div id="login-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>로그인</h3>
+    <input type="email" id="login-email" placeholder="이메일">
+    <input type="password" id="login-pw" placeholder="비밀번호">
+    <button id="login-submit">로그인</button>
+  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
+// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -57,39 +78,53 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
+// 모달, 버튼
+const signupBtn = document.getElementById('signup-btn');
 const loginBtn = document.getElementById('login-btn');
+const signupModal = document.getElementById('signup-modal');
+const loginModal = document.getElementById('login-modal');
+const closeBtns = document.querySelectorAll('.close');
 const msg = document.getElementById('msg');
-const status = document.getElementById('status');
 
-// 항상 온라인 표시
-function updateStatus(){
-  const now = new Date();
-  const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  status.textContent = `🟢 온라인 | ${kst}`;
-}
-setInterval(updateStatus,1000);
+// 회원가입/로그인 열기
+signupBtn.onclick = ()=> signupModal.style.display='flex';
+loginBtn.onclick = ()=> loginModal.style.display='flex';
 
-// 구글 로그인
-loginBtn.addEventListener('click', async ()=>{
-  loginBtn.disabled = true;
+// 닫기
+closeBtns.forEach(b=> b.onclick = ()=> { signupModal.style.display='none'; loginModal.style.display='none'; });
+window.onclick = e => { if(e.target==signupModal || e.target==loginModal) { e.target.style.display='none'; } };
+
+// 회원가입
+document.getElementById('signup-submit').onclick = async ()=>{
+  const email = document.getElementById('signup-email').value;
+  const pw = document.getElementById('signup-pw').value;
   msg.textContent="";
-  const provider = new GoogleAuthProvider();
   try{
-    await signInWithPopup(auth, provider);
-    msg.textContent="로그인 되셨습니다. 잠시 후 이동됩니다.";
+    await createUserWithEmailAndPassword(auth,email,pw);
+    msg.textContent="회원가입 완료! 잠시 후 홈으로 이동합니다.";
+    setTimeout(()=>window.location.href="home.html",1500);
+  }catch(err){
+    msg.textContent="회원가입 실패: "+err.message;
+  }
+};
+
+// 로그인
+document.getElementById('login-submit').onclick = async ()=>{
+  const email = document.getElementById('login-email').value;
+  const pw = document.getElementById('login-pw').value;
+  msg.textContent="";
+  try{
+    await signInWithEmailAndPassword(auth,email,pw);
+    msg.textContent="로그인 되셨습니다. 잠시 후 이동합니다.";
     setTimeout(()=>window.location.href="home.html",1500);
   }catch(err){
     msg.textContent="로그인 실패: "+err.message;
-    loginBtn.disabled=false;
   }
-});
+};
 
-// 로그인 상태 확인
+// 로그인 상태 체크
 onAuthStateChanged(auth,user=>{
-  if(user){
-    msg.textContent="로그인 되셨습니다. 잠시 후 이동됩니다.";
-    setTimeout(()=>window.location.href="home.html",1500);
-  }
+  if(user){ setTimeout(()=>window.location.href="home.html",1500); }
 });
 </script>
 
