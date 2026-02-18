@@ -3,37 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎮 LONS2 커뮤니티</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<title> LONS </title>
 <style>
-body { font-family:'Segoe UI',sans-serif; margin:0; padding:0; background:#111; color:white;}
-.container { max-width:800px; margin:40px auto; padding:20px; background:#1c1c1c; border-radius:12px; text-align:center; }
-h1,h2 { margin-bottom:15px; text-align:center; }
-button { padding:10px 16px; border:none; border-radius:6px; cursor:pointer; background:#28a745; color:white; font-weight:600; min-width:150px; }
-#login-msg { color:#ff4444; margin-bottom:10px; }
-#login-section { display:flex; flex-direction:column; align-items:center; gap:10px; }
-#login-section button { text-align:center; }
+body{ font-family:'Segoe UI',sans-serif; margin:0; padding:0; background:#111; color:white;}
+.container{ max-width:600px; margin:50px auto; padding:20px; background:#1c1c1c; border-radius:12px; text-align:center;}
+h1,h2{ margin-bottom:15px; }
+button{ padding:10px 16px; border:none; border-radius:6px; cursor:pointer; background:#28a745; color:white; font-weight:600; margin:5px;}
+#login-msg{ color:#ffaa00; margin:10px 0;}
+#admin-status{ font-weight:bold; margin:15px 0;}
+a{ color:#4CAF50; text-decoration:none; font-weight:bold;}
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>🎮 LONS2 커뮤니티</h1>
+  <h1> LONS </h1>
 
   <div id="login-section">
-    <button id="login-btn"><i class="fab fa-google"></i> 구글 로그인</button>
+    <button id="login-btn">구글 로그인</button>
     <button id="logout-btn" style="display:none;">로그아웃</button>
     <div id="login-msg"></div>
+    <div id="admin-status">관리자 상태: 🔴 오프라인</div>
+    <div><a href="https://discord.gg/yEym2KZ9BU" target="_blank">💬 디스코드 바로가기</a></div>
   </div>
 </div>
 
 <script type="module">
-import { auth } from './firebase.js';
+import { auth, db } from './firebase.js';
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const loginBtn = document.getElementById('login-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const loginMsg = document.getElementById('login-msg');
+const adminStatus = document.getElementById('admin-status');
+
+const ADMIN_EMAIL = "nn2577958@gmail.com";
+let currentUser = null;
 
 // 로그인
 loginBtn.addEventListener('click', async () => {
@@ -41,29 +47,49 @@ loginBtn.addEventListener('click', async () => {
   try {
     await signInWithPopup(auth, provider);
     loginMsg.textContent = "로그인 성공!";
-  } catch (err) {
+    if(auth.currentUser?.email === ADMIN_EMAIL){
+      await setDoc(doc(db, "status", "admin"), { isOnline:true, lastChanged:serverTimestamp() });
+    }
+  } catch(err) {
     loginMsg.textContent = "로그인 실패: " + err.message;
   }
 });
 
 // 로그아웃
 logoutBtn.addEventListener('click', async () => {
-  try {
-    await signOut(auth);
-    loginMsg.textContent = "로그아웃 완료";
-  } catch (err) {
-    loginMsg.textContent = "로그아웃 실패: " + err.message;
+  if(currentUser?.email === ADMIN_EMAIL){
+    await setDoc(doc(db,"status","admin"), { isOnline:false, lastChanged:serverTimestamp() });
   }
+  await signOut(auth);
+  loginMsg.textContent = "로그아웃 완료";
 });
 
 // 로그인 상태 반영
-onAuthStateChanged(auth, user => {
-  if (!user) {
-    loginBtn.style.display = "inline-block";
-    logoutBtn.style.display = "none";
-  } else {
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "inline-block";
+onAuthStateChanged(auth,user=>{
+  currentUser = user;
+  if(!user){
+    loginBtn.style.display="inline-block";
+    logoutBtn.style.display="none";
+  } else{
+    loginBtn.style.display="none";
+    logoutBtn.style.display="inline-block";
+  }
+});
+
+// 관리자 상태 실시간 구독 (방문자도 확인)
+onSnapshot(doc(db,"status","admin"), snapshot=>{
+  const data = snapshot.data();
+  if(data){
+    const isOnline = data.isOnline;
+    let lastChanged = data.lastChanged?.toDate();
+    if(lastChanged){
+      // 한국 시간(KST) 변환
+      lastChanged = new Date(lastChanged.getTime() + 9*60*60*1000);
+      const timeStr = lastChanged.toLocaleString('ko-KR', {hour12:false});
+      adminStatus.textContent = `관리자 상태: ${isOnline?"🟢 온라인":"🔴 오프라인"} (최종: ${timeStr})`;
+    } else{
+      adminStatus.textContent = `관리자 상태: ${isOnline?"🟢 온라인":"🔴 오프라인"}`;
+    }
   }
 });
 </script>
