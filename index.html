@@ -4,17 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Title -->
-<title>디스코드 봇/홈페이지 의뢰 | 라니 MALL 24시 호스팅</title>
+<title>라니 MALL | 일반 회원가입 & 로그인</title>
 
-<!-- Google 소유권 인증 -->
-<meta name="google-site-verification" content="d4f383510583e632">
+<meta name="description" content="라니 MALL 일반 회원가입 페이지입니다. 이메일 없이 아이디와 비밀번호로 가입하고 로그인 가능합니다.">
+<meta name="keywords" content="라니, 회원가입, 로그인, 아이디, 비밀번호, Discord, 게임, 호스팅">
 
-<!-- SEO -->
-<meta name="description" content="디스코드 봇 제작, 홈페이지/게임 의뢰와 24시 호스팅 서비스를 제공하는 라니 MALL 로그인 페이지입니다. 이메일/비밀번호로 접속하세요.">
-<meta name="keywords" content="디스코드, 봇, 의뢰, 홈페이지, 호스팅, 24시, 게임, 라니, 로그인, 회원가입">
-
-<!-- 파비콘 -->
 <link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-b555cb64-84f5-4ab4-b235-73d0d2be6482.png" type="image/png">
 
 <style>
@@ -27,10 +21,9 @@ body {
 }
 .container { text-align:center; max-width:360px; }
 button {
-  width:140px; padding:10px; margin:6px 0;
+  width:160px; padding:12px; margin:6px 0;
   border:none; border-radius:6px; font-size:14px; font-weight:600;
-  cursor:pointer; transition:transform 0.2s; background:#fff; color:#444;
-  animation: blink 1.5s infinite alternate;
+  cursor:pointer; background:#fff; color:#444; transition:transform 0.2s;
 }
 button:hover { transform:translateY(-2px); }
 .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%;
@@ -40,21 +33,17 @@ button:hover { transform:translateY(-2px); }
 .close { position:absolute; right:15px; top:10px; font-size:20px; cursor:pointer; }
 input { width:90%; padding:8px; margin:6px 0; border-radius:6px; border:1px solid #ccc; }
 #msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
-#status { color:white; font-weight:bold; margin-bottom:12px; padding:6px 12px; border-radius:8px;
-  display:inline-block; line-height:1.4; animation: blink 1s infinite alternate;
-}
-@keyframes blink { 0% { opacity:0.3; } 50% { opacity:1; } 100% { opacity:0.3; } }
-h1, h2 { color:#fff; margin-bottom:12px; }
-h1 { font-size:22px; font-weight:700; }
-h2 { font-size:18px; font-weight:600; }
+#status { color:white; font-weight:bold; margin-bottom:12px; padding:6px 12px; border-radius:8px; display:inline-block; }
+h1 { color:#fff; font-size:22px; font-weight:700; margin-bottom:12px; }
+h2 { color:#fff; font-size:18px; font-weight:600; margin-bottom:12px; }
 p { color:#fff; margin-bottom:12px; line-height:1.4; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>라니 MALL | 디스코드 봇/홈페이지 의뢰 & 24시 호스팅</h1>
-  <p>디스코드 봇 제작과 의뢰, 홈페이지/게임 호스팅을 24시간 지원합니다. 이메일과 비밀번호로 로그인 후 서비스를 이용하세요.</p>
+  <h1>라니 MALL | 일반 회원가입</h1>
+  <p>아이디와 비밀번호만으로 가입하고 로그인 가능합니다.</p>
   <div id="status">🟢 온라인</div>
   <div id="msg"></div>
   <button id="signup-btn">회원가입</button>
@@ -66,8 +55,8 @@ p { color:#fff; margin-bottom:12px; line-height:1.4; }
   <div class="modal-content">
     <span class="close">&times;</span>
     <h2>회원가입</h2>
-    <input type="email" id="signup-email" placeholder="이메일">
-    <input type="password" id="signup-pw" placeholder="비밀번호">
+    <input type="text" id="signup-id" placeholder="아이디">
+    <input type="password" id="signup-pw" placeholder="비밀번호 (6자리 이상)">
     <button id="signup-submit">가입하기</button>
   </div>
 </div>
@@ -77,7 +66,7 @@ p { color:#fff; margin-bottom:12px; line-height:1.4; }
   <div class="modal-content">
     <span class="close">&times;</span>
     <h2>로그인</h2>
-    <input type="email" id="login-email" placeholder="이메일">
+    <input type="text" id="login-id" placeholder="아이디">
     <input type="password" id="login-pw" placeholder="비밀번호">
     <button id="login-submit">로그인</button>
   </div>
@@ -85,9 +74,10 @@ p { color:#fff; margin-bottom:12px; line-height:1.4; }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
+// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -102,6 +92,7 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
+// 요소 가져오기
 const signupBtn = document.getElementById('signup-btn');
 const loginBtn = document.getElementById('login-btn');
 const signupModal = document.getElementById('signup-modal');
@@ -110,6 +101,7 @@ const closeBtns = document.querySelectorAll('.close');
 const msg = document.getElementById('msg');
 const status = document.getElementById('status');
 
+// 온라인 시계
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
@@ -117,40 +109,49 @@ function updateStatus(){
 }
 setInterval(updateStatus, 1000);
 
+// 모달 열기/닫기
 signupBtn.onclick = ()=> signupModal.style.display='flex';
 loginBtn.onclick = ()=> loginModal.style.display='flex';
-
 closeBtns.forEach(b=> b.onclick = ()=> { signupModal.style.display='none'; loginModal.style.display='none'; });
 window.onclick = e => { if(e.target==signupModal || e.target==loginModal) e.target.style.display='none'; };
 
+// 회원가입
 document.getElementById('signup-submit').onclick = async ()=>{
-  const email = document.getElementById('signup-email').value;
-  const pw = document.getElementById('signup-pw').value;
+  const id = document.getElementById('signup-id').value.trim();
+  const pw = document.getElementById('signup-pw').value.trim();
   msg.textContent="";
+  if(id.length<1 || pw.length<6){ alert("아이디와 비밀번호를 올바르게 입력하세요 (비밀번호 6자리 이상)."); return; }
+  
+  // 이메일 없이 Firebase용 dummy 이메일 생성
+  const dummyEmail = id + "@dummy.com";
+  
   try{
-    await createUserWithEmailAndPassword(auth,email,pw);
+    await createUserWithEmailAndPassword(auth,dummyEmail,pw);
     signupModal.style.display='none';
-    alert("회원가입 되셨습니다. 재로그인 해주세요.");
+    alert("회원가입 성공! 로그인 해주세요.");
   }catch(err){
-    alert("회원가입 실패: 올바른 이메일과 비밀번호를 입력해주세요.");
+    alert("회원가입 실패: "+err.message);
   }
 };
 
+// 로그인
 document.getElementById('login-submit').onclick = async ()=>{
-  const email = document.getElementById('login-email').value;
-  const pw = document.getElementById('login-pw').value;
+  const id = document.getElementById('login-id').value.trim();
+  const pw = document.getElementById('login-pw').value.trim();
   msg.textContent="";
+  if(id.length<1 || pw.length<6){ alert("아이디와 비밀번호를 올바르게 입력하세요."); return; }
+  
+  const dummyEmail = id + "@dummy.com";
+  
   try{
-    await signInWithEmailAndPassword(auth,email,pw);
+    await signInWithEmailAndPassword(auth,dummyEmail,pw);
     loginModal.style.display='none';
-    alert("로그인 되셨습니다. 잠시 후 홈으로 이동합니다.");
+    alert("로그인 성공! 홈으로 이동합니다.");
     setTimeout(()=>window.location.href="home.html",1500);
   }catch(err){
-    alert("로그인 실패: 이메일 또는 비밀번호가 올바르지 않습니다.");
+    alert("로그인 실패: "+err.message);
   }
 };
-
-onAuthStateChanged(auth,user=>{});
 </script>
 
 </body>
