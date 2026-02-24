@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>라니 MALL - 홈</title>
 <style>
+/* 전체 바디 */
 body {
   margin:0;
   min-height:100vh;
@@ -14,83 +15,99 @@ body {
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
-  padding-top:40px;
+  padding:40px 0;
   box-sizing:border-box;
 }
+
+/* 컨테이너 */
 .container {
   text-align:center;
-  max-width:400px;
-  width:90%;
-  padding:20px 16px;
-  background:rgba(0,0,0,0.35);
+  width:100%;
+  max-width:440px;
+  padding:20px;
+  background: rgba(0,0,0,0.35);
   border-radius:12px;
+  box-sizing:border-box;
 }
+
+/* 온라인 상태 */
 #status {
   color:white;
   font-weight:bold;
-  margin-bottom:16px;
+  margin-bottom:12px;
   padding:6px 12px;
   border-radius:8px;
   display:block;
 }
-button {
-  width:180px;
-  padding:12px;
-  margin:8px auto;
-  display:block;
+
+/* 로그아웃 버튼 작게 */
+#logout-btn {
+  background:#d50000;
+  color:white;
+  padding:8px;
+  width:120px;
+  margin-bottom:20px;
   border:none;
-  border-radius:8px;
-  font-size:16px;
+  border-radius:6px;
   font-weight:600;
   cursor:pointer;
-  background:#fff;
-  color:#444;
   transition: transform 0.2s;
 }
-button:hover { transform:translateY(-2px); }
+#logout-btn:hover { transform:translateY(-2px); }
+
+/* 상품 그리드 */
+.products {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));
+  gap:12px;
+}
 
 /* 상품 카드 */
-.products {
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:20px;
-}
 .product {
   display:flex;
   flex-direction:column;
   align-items:center;
-  width:90px;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.95);
   border-radius:8px;
-  padding:8px;
+  padding:10px;
   transition: transform 0.2s;
+  box-sizing:border-box;
 }
+.product:hover { transform:translateY(-3px); }
+
+/* 이미지 크기 고정 */
 .product img {
   width:100%;
-  height:80px;
+  height:100px;
   object-fit:cover;
   border-radius:6px;
   margin-bottom:6px;
 }
-.product button {
-  font-size:12px;
-  padding:4px 6px;
-  width:100%;
-  box-sizing:border-box;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.product:hover {
-  transform:translateY(-3px);
-}
 
-/* 로그아웃 버튼 */
-#logout-btn {
-  background:#d50000;
+/* 버튼 길이 통일 */
+.product button {
+  width:100%;
+  font-size:13px;
+  padding:6px 0;
+  border:none;
+  border-radius:6px;
+  background:#444;
   color:white;
+  cursor:pointer;
+  transition: background 0.2s;
+}
+.product button:hover { background:#666; }
+
+/* 반응형: 모바일에서는 2~3열 */
+@media screen and (max-width:400px){
+  .products {
+    grid-template-columns:repeat(2, 1fr);
+    gap:10px;
+  }
+  #logout-btn {
+    width:100px;
+    padding:6px;
+  }
 }
 </style>
 </head>
@@ -100,7 +117,6 @@ button:hover { transform:translateY(-2px); }
   <div id="status">🟢 온라인</div>
   <button id="logout-btn">로그아웃</button>
 
-  <!-- 상품 카드 -->
   <div class="products">
     <div class="product">
       <img src="https://cdn.phototourl.com/uploads/2026-02-18-687292e6-f45e-46fa-bf3b-5e31ddfd8403.webp" alt="상품1">
@@ -153,7 +169,6 @@ setInterval(updateStatus, 1000);
 // 상품 선택 함수
 window.buyProduct = function(name){
   alert(`${name} 선택! 잠시 후 결제 화면으로 이동합니다.`);
-  // 실제 결제 페이지 링크로 변경 가능
   window.open("https://discord.gg/yEym2KZ9BU","_blank");
 };
 
