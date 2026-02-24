@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관리자 페이지</title>
+
+<style>
+body {
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#111;
+  font-family:'Segoe UI', sans-serif;
+  color:white;
+}
+.container {
+  text-align:center;
+  background:#222;
+  padding:30px;
+  border-radius:12px;
+  width:320px;
+}
+button {
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border:none;
+  border-radius:6px;
+  font-weight:600;
+  cursor:pointer;
+}
+.online { background:#00c853; color:white; }
+.offline { background:#d50000; color:white; }
+.logout { background:#555; color:white; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>관리자 페이지</h2>
+  <p id="current-status">상태 불러오는 중...</p>
+
+  <button class="online" id="set-online">🟢 온라인</button>
+  <button class="offline" id="set-offline">🔴 오프라인</button>
+  <button class="logout" id="logout">로그아웃</button>
+</div>
+
+<script type="module">
+
+// 🔥 firebase.js에서 이미 initializeApp 되어있다고 가정
+import { auth, db } from "./firebase.js";
+
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+const statusRef = doc(db, "status", "online");
+const statusText = document.getElementById("current-status");
+
+// 🔐 관리자 체크
+onAuthStateChanged(auth, async (user) => {
+
+  if (!user || user.email !== "nn2577958@gmail.com") {
+    alert("관리자만 접근 가능합니다.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  // 현재 상태 불러오기
+  const snap = await getDoc(statusRef);
+
+  if (snap.exists()) {
+    statusText.textContent = "현재 상태: " + (snap.data().state || "알 수 없음");
+  } else {
+    statusText.textContent = "상태 데이터 없음";
+  }
+});
+
+// 상태 변경
+document.getElementById("set-online").onclick = async () => {
+  await setDoc(statusRef, { state: "온라인" });
+  statusText.textContent = "현재 상태: 온라인";
+};
+
+document.getElementById("set-offline").onclick = async () => {
+  await setDoc(statusRef, { state: "오프라인" });
+  statusText.textContent = "현재 상태: 오프라인";
+};
+
+// 로그아웃
+document.getElementById("logout").onclick = async () => {
+  await signOut(auth);
+  window.location.href = "index.html";
+};
+
+</script>
+
+</body>
+</html>
