@@ -6,30 +6,14 @@
 <title>관리자 페이지</title>
 <style>
 body {
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#111;
-  font-family:'Segoe UI', sans-serif;
-  color:white;
+  margin:0; height:100vh; display:flex; justify-content:center; align-items:center;
+  background:#111; font-family:'Segoe UI', sans-serif; color:white;
 }
 .container {
-  text-align:center;
-  background:#222;
-  padding:30px;
-  border-radius:12px;
-  width:320px;
+  text-align:center; background:#222; padding:30px; border-radius:12px; width:320px;
 }
 button {
-  width:100%;
-  padding:12px;
-  margin:8px 0;
-  border:none;
-  border-radius:6px;
-  font-weight:600;
-  cursor:pointer;
+  width:100%; padding:12px; margin:8px 0; border:none; border-radius:6px; font-weight:600; cursor:pointer;
 }
 .online { background:#00c853; color:white; }
 .offline { background:#d50000; color:white; }
@@ -41,7 +25,6 @@ button {
 <div class="container">
   <h2>관리자 페이지</h2>
   <p id="current-status">상태 불러오는 중...</p>
-
   <button class="online" id="set-online">🟢 온라인</button>
   <button class="offline" id="set-offline">🔴 오프라인</button>
   <button class="logout" id="logout">로그아웃</button>
@@ -71,7 +54,7 @@ const db = getFirestore(app);
 const statusRef = doc(db, "status", "online");
 const statusText = document.getElementById("current-status");
 
-// 로그인 체크 + 관리자 확인
+// 관리자 접근 체크
 onAuthStateChanged(auth, async user => {
   if(!user || user.email !== "nn2577958@gmail.com"){
     alert("관리자만 접근 가능합니다.");
@@ -80,24 +63,19 @@ onAuthStateChanged(auth, async user => {
   }
 
   // 실시간 상태 표시
-  onSnapshot(statusRef, snap=>{
+  onSnapshot(statusRef, snap => {
     if(snap.exists()){
       statusText.textContent = "현재 상태: " + (snap.data().state || "알 수 없음");
     } else {
       statusText.textContent = "상태 데이터 없음";
-      // 문서가 없으면 초기값 생성
       setDoc(statusRef, { state: "오프라인" });
     }
   });
 });
 
 // 상태 변경
-document.getElementById("set-online").onclick = async () => {
-  await setDoc(statusRef, { state: "온라인" });
-};
-document.getElementById("set-offline").onclick = async () => {
-  await setDoc(statusRef, { state: "오프라인" });
-};
+document.getElementById("set-online").onclick = async () => { await setDoc(statusRef, { state: "온라인" }); };
+document.getElementById("set-offline").onclick = async () => { await setDoc(statusRef, { state: "오프라인" }); };
 
 // 로그아웃
 document.getElementById("logout").onclick = async () => {
