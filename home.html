@@ -20,8 +20,7 @@ button {
   cursor:pointer; background:#fff; color:#444; transition:transform 0.2s;
 }
 button:hover { transform:translateY(-2px); }
-#status { color:white; font-weight:bold; margin-bottom:12px; padding:6px 12px; border-radius:8px; display:inline-block; line-height:1.4; animation: blink 1s infinite alternate; }
-@keyframes blink {0%{opacity:0.3;}50%{opacity:1;}100%{opacity:0.3;}}
+#status { color:white; font-weight:bold; margin-bottom:12px; padding:6px 12px; border-radius:8px; display:inline-block; line-height:1.4; }
 .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
 .modal-content { background:#fff; padding:20px; border-radius:12px; width:320px; max-width:90%; text-align:center; position:relative; }
 .close { position:absolute; right:15px; top:10px; font-size:20px; cursor:pointer; }
@@ -34,7 +33,7 @@ button:hover { transform:translateY(-2px); }
 <body>
 
 <div class="container">
-  <div id="status">온라인 | 불러오는 중...</div><br>
+  <div id="status">온라인 | --:--:--</div><br>
   <button id="buy-btn">구매하기</button>
   <button id="logout-btn">로그아웃</button>
 </div>
@@ -54,10 +53,7 @@ button:hover { transform:translateY(-2px); }
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, doc, onSnapshot, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
-// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -68,10 +64,8 @@ const firebaseConfig = {
   measurementId: "G-LC2JJD493M"
 };
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
-const db = getFirestore(app);
+initializeApp(firebaseConfig);
+const auth = getAuth();
 
 const buyBtn = document.getElementById('buy-btn');
 const logoutBtn = document.getElementById('logout-btn');
@@ -79,28 +73,17 @@ const status = document.getElementById('status');
 const modal = document.getElementById('product-modal');
 const closeModal = document.querySelector('.close');
 
-const statusRef = doc(db, "status", "online");
-
 // 로그인 체크
-onAuthStateChanged(auth, async user => {
+onAuthStateChanged(auth, user => {
   if(!user){ window.location.href="index.html"; return; }
 
-  // Firestore 문서 없으면 초기값 생성
-  const snap = await getDoc(statusRef);
-  if(!snap.exists()){ await setDoc(statusRef, { state: "온라인" }); }
-
-  // Firestore 상태 + 시계 업데이트
-  function updateStatus(snapData){
-    const time = new Date().toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-    if(snapData && snapData.exists()){
-      status.textContent = `🟢 ${snapData.data().state} | ${time}`;
-    } else {
-      status.textContent = `🟢 온라인 | ${time}`;
-    }
+  // 항상 온라인 + 현재 시각 표시
+  function updateClock(){
+    const now = new Date().toLocaleTimeString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
+    status.textContent = `🟢 온라인 | ${now}`;
   }
-
-  onSnapshot(statusRef, snap => updateStatus(snap));
-  setInterval(()=>updateStatus(null), 1000);
+  updateClock();
+  setInterval(updateClock, 1000);
 });
 
 // 로그아웃
