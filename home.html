@@ -14,16 +14,14 @@ body {
   padding-top:50px;
 }
 .container { text-align:center; background:none; padding:0; }
-
-/* 버튼 중앙 정렬 및 크기 키움 */
 button {
-  width:180px;       /* 버튼 가로 확대 */
-  padding:12px;      /* 버튼 세로 확대 */
-  margin:12px auto;  /* 위/아래 12px, 좌우 중앙 정렬 */
-  display:block;     /* 중앙 정렬 적용 */
+  width:180px;
+  padding:12px;
+  margin:12px auto;
+  display:block;
   border:none;
   border-radius:8px;
-  font-size:16px;    /* 글씨 크기 증가 */
+  font-size:16px;
   font-weight:600;
   cursor:pointer;
   background:#fff;
@@ -35,7 +33,6 @@ button:hover { transform:translateY(-2px); }
 #status { color:white; font-weight:bold; margin-bottom:12px; padding:6px 12px; border-radius:8px; display:inline-block; line-height:1.4; animation: blink 1s infinite alternate; }
 @keyframes blink {0%{opacity:0.3;}50%{opacity:1;}100%{opacity:0.3;}}
 
-/* 모달 스타일 */
 .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
 .modal-content { background:#fff; padding:20px; border-radius:12px; width:320px; max-width:90%; text-align:center; position:relative; }
 .close { position:absolute; right:15px; top:10px; font-size:20px; cursor:pointer; }
@@ -48,7 +45,7 @@ button:hover { transform:translateY(-2px); }
 <body>
 
 <div class="container">
-  <div id="status">🟢 온라인</div><br>
+  <div id="status">상태 불러오는 중...</div><br>
   <button id="buy-btn">구매하기</button>
   <button id="logout-btn">로그아웃</button>
 </div>
@@ -77,6 +74,7 @@ button:hover { transform:translateY(-2px); }
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 const firebaseConfig = {
@@ -92,6 +90,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 const buyBtn = document.getElementById('buy-btn');
 const logoutBtn = document.getElementById('logout-btn');
@@ -99,16 +98,21 @@ const status = document.getElementById('status');
 const modal = document.getElementById('product-modal');
 const closeModal = document.querySelector('.close');
 
-function updateStatus(){
-  const now = new Date();
-  const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  status.textContent = `🟢 온라인 | ${kst}`;
-}
-setInterval(updateStatus,1000);
+// 로그인 체크 + Firestore 상태 실시간 표시
+onAuthStateChanged(auth, user => {
+  if(!user){
+    window.location.href="index.html";
+    return;
+  }
 
-// 로그인 상태 확인
-onAuthStateChanged(auth,user=>{
-  if(!user){ window.location.href="index.html"; }
+  const statusRef = doc(db, "status", "online");
+  onSnapshot(statusRef, (snap) => {
+    if(snap.exists()){
+      status.textContent = `🟢 ${snap.data().state} | ${new Date().toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"})}`;
+    } else {
+      status.textContent = `🟢 상태 불러오기 실패 | ${new Date().toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"})}`;
+    }
+  });
 });
 
 // 로그아웃
@@ -117,7 +121,7 @@ logoutBtn.addEventListener("click", async ()=>{
   window.location.href="index.html";
 });
 
-// 모달
+// 구매 모달
 buyBtn.addEventListener("click", ()=> modal.style.display='flex');
 closeModal.onclick = ()=> modal.style.display='none';
 window.onclick = e => { if(e.target==modal) modal.style.display='none'; }
