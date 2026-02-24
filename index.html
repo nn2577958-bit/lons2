@@ -4,24 +4,65 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>라니 MALL | 디스코드 봇·디자인 의뢰 & 프로필 제작 | 상담/문의 24시</title>
-<meta name="description" content="라니 MALL에서 디스코드 봇 제작, 디자인/프로필 제작, 상담 및 문의, 24시 지원까지 가능한 회원 로그인 페이지입니다.">
-<meta name="keywords" content="디스코드, 디스코드 의뢰, 봇, 제작, 상담, 문의, 24시, 디자인, 프로필, 로그인">
+<title>라니몰 | 디스코드 봇·디자인 의뢰 & 프로필 제작 | 상담/문의 24시</title>
+<meta name="description" content="라니몰 에서 디스코드 봇 제작, 디자인/프로필 제작, 상담 및 문의, 24시 지원까지 가능한 회원 로그인 페이지입니다.">
+<meta name="keywords" content="디스코드, 디스코드 의뢰, 봇, 제작, 상담, 문의, 24시, 디자인, 프로필, 로그인, 봇, 외주, 게임">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://nn2577958-bit.github.io/lons2/">
 <link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-b555cb64-84f5-4ab4-b235-73d0d2be6482.png" type="image/png">
 
 <style>
-body { margin:0; height:100vh; display:flex; justify-content:center; align-items:center; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+body {
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
 }
-.container { text-align:center; max-width:360px; padding:16px; background:rgba(0,0,0,0.35); border-radius:12px; }
-button { width:200px; padding:12px; margin:12px 0; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; background:#fff; color:#444; transition:transform 0.2s; }
+.container {
+  text-align:center;
+  max-width:360px;
+  padding:16px;
+  background:rgba(0,0,0,0.35);
+  border-radius:12px;
+}
+button {
+  width:200px;
+  padding:12px;
+  margin:12px 0;
+  border:none;
+  border-radius:6px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  background:#fff;
+  color:#444;
+  transition:transform 0.2s;
+}
 button:hover { transform:translateY(-2px); }
-#msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
-#status { color:white; font-weight:bold; margin-bottom:12px; padding:6px 12px; border-radius:8px; display:inline-block; }
-h1 { color:#fff; font-size:22px; font-weight:700; margin-bottom:12px; }
+#msg {
+  color:#ff4444;
+  margin-bottom:10px;
+  font-weight:500;
+  text-align:center;
+}
+#status {
+  color:white;
+  font-weight:bold;
+  margin-bottom:12px;
+  padding:6px 12px;
+  border-radius:8px;
+  display:inline-block;
+}
+h1 {
+  color:#fff;
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:12px;
+}
 p { color:#fff; margin-bottom:12px; line-height:1.4; }
 </style>
 </head>
@@ -64,7 +105,8 @@ function updateStatus(){
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
   status.textContent = `🟢 온라인 | ${kst}`;
 }
-setInterval(updateStatus, 1000);
+updateStatus(); // 바로 표시
+setInterval(updateStatus, 1000); // 1초마다 갱신
 
 // Google 로그인
 const msg = document.getElementById('msg');
@@ -72,10 +114,9 @@ document.getElementById('google-login-btn').onclick = async () => {
   msg.textContent = "";
   try {
     const result = await signInWithPopup(auth, provider);
-    // 로그인 성공 메시지: 이름 없이 간단하게
     console.log("로그인 성공:", result.user.email);
     alert("로그인 성공! 홈으로 이동합니다.");
-    setTimeout(()=>window.location.href="home.html", 1500);
+    setTimeout(()=>window.location.href="home.html", 1000);
   } catch (err) {
     console.error("로그인 실패:", err.code, err.message);
     msg.textContent = "로그인 실패: " + err.message;
