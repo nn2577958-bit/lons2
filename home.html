@@ -67,13 +67,12 @@ const status = document.getElementById('status');
 const modal = document.getElementById('product-modal');
 const closeModal = document.querySelector('.close');
 
-// 로그인 체크 + 관리자 자동 이동
 onAuthStateChanged(auth, async user => {
   if(!user){ window.location.href="index.html"; return; }
 
   // 관리자 계정이면 admin.html로 이동
   if(user.email === "nn2577958@gmail.com"){
-    window.location.href = "admin.html";
+    window.location.href="admin.html";
     return;
   }
 
@@ -84,7 +83,7 @@ onAuthStateChanged(auth, async user => {
   if(!snap.exists()){ await setDoc(statusRef, { state: "오프라인" }); }
 
   // 실시간 상태 표시
-  onSnapshot(statusRef, (snap)=>{
+  onSnapshot(statusRef, snap => {
     if(snap.exists()){
       status.textContent = `🟢 ${snap.data().state} | ${new Date().toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"})}`;
     } else {
@@ -93,13 +92,11 @@ onAuthStateChanged(auth, async user => {
   });
 });
 
-// 로그아웃
 logoutBtn.addEventListener("click", async ()=>{
   await signOut(auth);
   window.location.href="index.html";
 });
 
-// 구매 모달
 buyBtn.addEventListener("click", ()=> modal.style.display='flex');
 closeModal.onclick = ()=> modal.style.display='none';
 window.onclick = e => { if(e.target==modal) modal.style.display='none'; }
