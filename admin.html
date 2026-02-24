@@ -49,7 +49,7 @@ button {
 </div>
 
 <script type="module">
-// 🔹 Firebase 초기화 (여기서 바로)
+// 🔹 Firebase 초기화
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
@@ -71,7 +71,7 @@ const db = getFirestore(app);
 const statusText = document.getElementById("current-status");
 const statusRef = doc(db, "status", "online");
 
-// 🔐 관리자 체크
+// 🔐 관리자 계정 체크 및 상태 불러오기
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     alert("로그인이 필요합니다.");
@@ -91,8 +91,7 @@ onAuthStateChanged(auth, async (user) => {
     if (snap.exists()) {
       statusText.textContent = "현재 상태: " + (snap.data().state || "알 수 없음");
     } else {
-      statusText.textContent = "상태 데이터 없음";
-      // 없으면 초기값 생성
+      // 문서 없으면 초기값 생성
       await setDoc(statusRef, { state: "오프라인" });
       statusText.textContent = "현재 상태: 오프라인";
     }
@@ -112,7 +111,7 @@ document.getElementById("set-offline").onclick = async () => {
   statusText.textContent = "현재 상태: 오프라인";
 };
 
-// 로그아웃
+// 로그아웃 버튼
 document.getElementById("logout").onclick = async () => {
   await signOut(auth);
   window.location.href = "index.html";
