@@ -74,7 +74,7 @@ button:hover { transform:translateY(-2px); }
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getFirestore, doc, onSnapshot, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 const firebaseConfig = {
@@ -99,13 +99,21 @@ const modal = document.getElementById('product-modal');
 const closeModal = document.querySelector('.close');
 
 // 로그인 체크 + Firestore 상태 실시간 표시
-onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth, async user => {
   if(!user){
     window.location.href="index.html";
     return;
   }
 
   const statusRef = doc(db, "status", "online");
+
+  // 문서 존재 여부 확인 후 없으면 기본값 생성
+  const snap = await getDoc(statusRef);
+  if(!snap.exists()){
+    await setDoc(statusRef, { state: "오프라인" });
+  }
+
+  // 실시간 상태 표시
   onSnapshot(statusRef, (snap) => {
     if(snap.exists()){
       status.textContent = `🟢 ${snap.data().state} | ${new Date().toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"})}`;
