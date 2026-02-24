@@ -49,41 +49,64 @@ button {
 </div>
 
 <script type="module">
+// 🔹 Firebase 초기화 (여기서 바로)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// 🔥 firebase.js에서 이미 initializeApp 되어있다고 가정
-import { auth, db } from "./firebase.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
+  authDomain: "lons2-74bfa.firebaseapp.com",
+  projectId: "lons2-74bfa",
+  storageBucket: "lons2-74bfa.firebasestorage.app",
+  messagingSenderId: "734178165313",
+  appId: "1:734178165313:web:395ed759777ec61f4b3cc0",
+  measurementId: "G-LC2JJD493M"
+};
 
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-const statusRef = doc(db, "status", "online");
 const statusText = document.getElementById("current-status");
+const statusRef = doc(db, "status", "online");
 
 // 🔐 관리자 체크
 onAuthStateChanged(auth, async (user) => {
-
-  if (!user || user.email !== "nn2577958@gmail.com") {
-    alert("관리자만 접근 가능합니다.");
+  if (!user) {
+    alert("로그인이 필요합니다.");
     window.location.href = "index.html";
     return;
   }
 
-  // 현재 상태 불러오기
-  const snap = await getDoc(statusRef);
+  if (user.email !== "nn2577958@gmail.com") {
+    alert("관리자만 접근 가능합니다.");
+    window.location.href = "home.html";
+    return;
+  }
 
-  if (snap.exists()) {
-    statusText.textContent = "현재 상태: " + (snap.data().state || "알 수 없음");
-  } else {
-    statusText.textContent = "상태 데이터 없음";
+  // Firestore에서 상태 불러오기
+  try {
+    const snap = await getDoc(statusRef);
+    if (snap.exists()) {
+      statusText.textContent = "현재 상태: " + (snap.data().state || "알 수 없음");
+    } else {
+      statusText.textContent = "상태 데이터 없음";
+      // 없으면 초기값 생성
+      await setDoc(statusRef, { state: "오프라인" });
+      statusText.textContent = "현재 상태: 오프라인";
+    }
+  } catch(err) {
+    console.error(err);
+    statusText.textContent = "상태 불러오기 실패: " + err.message;
   }
 });
 
-// 상태 변경
+// 상태 변경 버튼
 document.getElementById("set-online").onclick = async () => {
   await setDoc(statusRef, { state: "온라인" });
   statusText.textContent = "현재 상태: 온라인";
 };
-
 document.getElementById("set-offline").onclick = async () => {
   await setDoc(statusRef, { state: "오프라인" });
   statusText.textContent = "현재 상태: 오프라인";
@@ -94,7 +117,6 @@ document.getElementById("logout").onclick = async () => {
   await signOut(auth);
   window.location.href = "index.html";
 };
-
 </script>
 
 </body>
