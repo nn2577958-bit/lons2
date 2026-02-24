@@ -15,18 +15,20 @@ body {
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
   padding-top:40px;
+  box-sizing:border-box;
 }
 .container {
   text-align:center;
-  background: rgba(0,0,0,0.35);
-  padding: 20px 30px;
-  border-radius: 12px;
-  max-width: 360px;
+  max-width:400px;
+  width:90%;
+  padding:20px 16px;
+  background:rgba(0,0,0,0.35);
+  border-radius:12px;
 }
 #status {
   color:white;
   font-weight:bold;
-  margin-bottom: 16px;
+  margin-bottom:16px;
   padding:6px 12px;
   border-radius:8px;
   display:block;
@@ -47,33 +49,26 @@ button {
 }
 button:hover { transform:translateY(-2px); }
 
-/* 로그아웃 버튼 스타일 */
-#logout-btn {
-  background:#d50000;
-  color:white;
-  margin-bottom:12px;
-}
-
 /* 상품 카드 */
 .products {
   display:flex;
   justify-content:space-between;
+  flex-wrap:wrap;
   gap:10px;
   margin-top:20px;
-  flex-wrap:wrap;
 }
 .product {
   display:flex;
   flex-direction:column;
   align-items:center;
-  width:100px;
+  width:90px;
   background: rgba(255,255,255,0.9);
   border-radius:8px;
   padding:8px;
   transition: transform 0.2s;
 }
 .product img {
-  width:80px;
+  width:100%;
   height:80px;
   object-fit:cover;
   border-radius:6px;
@@ -82,9 +77,20 @@ button:hover { transform:translateY(-2px); }
 .product button {
   font-size:12px;
   padding:4px 6px;
+  width:100%;
+  box-sizing:border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .product:hover {
   transform:translateY(-3px);
+}
+
+/* 로그아웃 버튼 */
+#logout-btn {
+  background:#d50000;
+  color:white;
 }
 </style>
 </head>
@@ -108,6 +114,10 @@ button:hover { transform:translateY(-2px); }
       <img src="https://cdn.phototourl.com/uploads/2026-02-18-687292e6-f45e-46fa-bf3b-5e31ddfd8403.webp" alt="상품3">
       <button onclick="buyProduct('상품 3')">상품 3</button>
     </div>
+    <div class="product">
+      <img src="https://cdn.phototourl.com/uploads/2026-02-18-687292e6-f45e-46fa-bf3b-5e31ddfd8403.webp" alt="상품4">
+      <button onclick="buyProduct('상품 4')">상품 4</button>
+    </div>
   </div>
 </div>
 
@@ -130,6 +140,7 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
+// 온라인 시간 표시
 const statusElem = document.getElementById('status');
 function updateStatus(){
   const now = new Date();
@@ -139,25 +150,26 @@ function updateStatus(){
 updateStatus();
 setInterval(updateStatus, 1000);
 
+// 상품 선택 함수
+window.buyProduct = function(name){
+  alert(`${name} 선택! 잠시 후 결제 화면으로 이동합니다.`);
+  // 실제 결제 페이지 링크로 변경 가능
+  window.open("https://discord.gg/yEym2KZ9BU","_blank");
+};
+
 // 로그아웃
-document.getElementById('logout-btn').onclick = async () => {
+const logoutBtn = document.getElementById('logout-btn');
+logoutBtn.onclick = async () => {
   await signOut(auth);
   window.location.href="index.html";
 };
 
-// 상품 결제 알림
-window.buyProduct = function(name){
-  alert(`${name} 선택! 잠시 후 결제 화면으로 이동합니다.`);
-  window.open("https://discord.gg/yEym2KZ9BU","_blank"); // 현재는 Discord 링크
-};
-
-// 로그인 상태 체크
+// 로그인 체크
 onAuthStateChanged(auth, user => {
   if(!user){
-    window.location.href = "index.html";
+    window.location.href="index.html";
   }
 });
 </script>
-
 </body>
 </html>
