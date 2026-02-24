@@ -7,13 +7,14 @@
 <style>
 body {
   margin:0;
-  height:100vh;
+  min-height:100vh;
   display:flex;
   justify-content:center;
-  align-items:center;
+  align-items:flex-start;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
+  padding-top:40px;
 }
 .container {
   text-align:center;
@@ -33,7 +34,7 @@ body {
 button {
   width:180px;
   padding:12px;
-  margin:12px auto;
+  margin:8px auto;
   display:block;
   border:none;
   border-radius:8px;
@@ -46,12 +47,20 @@ button {
 }
 button:hover { transform:translateY(-2px); }
 
+/* 로그아웃 버튼 스타일 */
+#logout-btn {
+  background:#d50000;
+  color:white;
+  margin-bottom:12px;
+}
+
 /* 상품 카드 */
 .products {
   display:flex;
   justify-content:space-between;
   gap:10px;
   margin-top:20px;
+  flex-wrap:wrap;
 }
 .product {
   display:flex;
@@ -83,7 +92,7 @@ button:hover { transform:translateY(-2px); }
 
 <div class="container">
   <div id="status">🟢 온라인</div>
-  <button id="buy-btn">구매하기</button>
+  <button id="logout-btn">로그아웃</button>
 
   <!-- 상품 카드 -->
   <div class="products">
@@ -130,18 +139,25 @@ function updateStatus(){
 updateStatus();
 setInterval(updateStatus, 1000);
 
-const buyBtn = document.getElementById('buy-btn');
-window.buyProduct = function(name){
-  alert(`${name} 선택! 잠시 후 결제 화면으로 이동합니다.`);
-  window.open("https://discord.gg/yEym2KZ9BU","_blank");
+// 로그아웃
+document.getElementById('logout-btn').onclick = async () => {
+  await signOut(auth);
+  window.location.href="index.html";
 };
 
-// 로그아웃 기능 (원하면 추가)
+// 상품 결제 알림
+window.buyProduct = function(name){
+  alert(`${name} 선택! 잠시 후 결제 화면으로 이동합니다.`);
+  window.open("https://discord.gg/yEym2KZ9BU","_blank"); // 현재는 Discord 링크
+};
+
+// 로그인 상태 체크
 onAuthStateChanged(auth, user => {
   if(!user){
     window.location.href = "index.html";
   }
 });
 </script>
+
 </body>
 </html>
