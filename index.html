@@ -17,16 +17,11 @@ body { margin:0; height:100vh; display:flex; justify-content:center; align-items
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
 }
 .container { text-align:center; max-width:360px; padding:16px; background:rgba(0,0,0,0.35); border-radius:12px; }
-button { width:160px; padding:12px; margin:6px 0; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; background:#fff; color:#444; transition:transform 0.2s; }
+button { width:200px; padding:12px; margin:12px 0; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; background:#fff; color:#444; transition:transform 0.2s; }
 button:hover { transform:translateY(-2px); }
-.modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;}
-.modal-content { background:#fff; padding:20px; border-radius:12px; width:320px; max-width:90%; text-align:center; position:relative; }
-.close { position:absolute; right:15px; top:10px; font-size:20px; cursor:pointer; }
-input { width:90%; padding:8px; margin:6px 0; border-radius:6px; border:1px solid #ccc; }
 #msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
 #status { color:white; font-weight:bold; margin-bottom:12px; padding:6px 12px; border-radius:8px; display:inline-block; }
 h1 { color:#fff; font-size:22px; font-weight:700; margin-bottom:12px; }
-h2 { color:#444; font-size:18px; font-weight:600; margin-bottom:12px; }
 p { color:#fff; margin-bottom:12px; line-height:1.4; }
 </style>
 </head>
@@ -34,38 +29,16 @@ p { color:#fff; margin-bottom:12px; line-height:1.4; }
 
 <div class="container">
   <h1>라니 MALL | 디스코드 봇·디자인 의뢰 & 프로필 제작</h1>
-  <p>디스코드 봇 제작, 디자인/프로필 제작, 상담 및 문의, 24시 지원까지 가능한 라니 MALL 회원가입 페이지입니다.</p>
+  <p>디스코드 봇 제작, 디자인/프로필 제작, 상담 및 문의, 24시 지원까지 가능한 라니 MALL 회원 로그인 페이지입니다.</p>
   <div id="status">🟢 온라인</div>
   <div id="msg"></div>
-  <button id="signup-btn">회원가입</button>
-  <button id="login-btn">로그인</button>
-</div>
-
-<!-- 회원가입 모달 -->
-<div id="signup-modal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>회원가입</h2>
-    <input type="text" id="signup-id" placeholder="아이디">
-    <input type="password" id="signup-pw" placeholder="비밀번호 (6자리 이상)">
-    <button id="signup-submit">가입하기</button>
-  </div>
-</div>
-
-<!-- 로그인 모달 -->
-<div id="login-modal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>로그인</h2>
-    <input type="text" id="login-id" placeholder="아이디">
-    <input type="password" id="login-pw" placeholder="비밀번호">
-    <button id="login-submit">로그인</button>
-  </div>
+  <!-- Google 로그인 버튼 -->
+  <button id="google-login-btn">Google 계정으로 로그인</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 // Firebase 설정
@@ -82,16 +55,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
-
-const signupBtn = document.getElementById('signup-btn');
-const loginBtn = document.getElementById('login-btn');
-const signupModal = document.getElementById('signup-modal');
-const loginModal = document.getElementById('login-modal');
-const closeBtns = document.querySelectorAll('.close');
-const msg = document.getElementById('msg');
-const status = document.getElementById('status');
+const provider = new GoogleAuthProvider();
 
 // 온라인 시간 표시
+const status = document.getElementById('status');
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
@@ -99,51 +66,20 @@ function updateStatus(){
 }
 setInterval(updateStatus, 1000);
 
-// 모달 열기/닫기
-signupBtn.onclick = ()=> signupModal.style.display='flex';
-loginBtn.onclick = ()=> loginModal.style.display='flex';
-closeBtns.forEach(b=> b.onclick = ()=> { signupModal.style.display='none'; loginModal.style.display='none'; });
-window.onclick = e => { if(e.target==signupModal || e.target==loginModal) e.target.style.display='none'; };
-
-// 회원가입
-document.getElementById('signup-submit').onclick = async ()=>{
-  const id = document.getElementById('signup-id').value.trim();
-  const pw = document.getElementById('signup-pw').value.trim();
-  msg.textContent="";
-  if(id.length<1 || pw.length<6){ alert("아이디와 비밀번호를 올바르게 입력하세요 (6자리 이상)."); return; }
-
-  const dummyEmail = id+"@dummy.com";
-
-  try{
-    await signInWithEmailAndPassword(auth,dummyEmail,pw);
-    alert("이미 존재하는 아이디입니다.");
-  }catch(e){
-    try{
-      await createUserWithEmailAndPassword(auth,dummyEmail,pw);
-      signupModal.style.display='none';
-      alert("회원가입 성공! 로그인 해주세요.");
-    }catch(err){
-      alert("회원가입 실패: "+err.message);
-    }
-  }
-};
-
-// 로그인
-document.getElementById('login-submit').onclick = async ()=>{
-  const id = document.getElementById('login-id').value.trim();
-  const pw = document.getElementById('login-pw').value.trim();
-  msg.textContent="";
-  if(id.length<1 || pw.length<6){ alert("아이디와 비밀번호를 올바르게 입력하세요."); return; }
-
-  const dummyEmail = id+"@dummy.com";
-
-  try{
-    await signInWithEmailAndPassword(auth,dummyEmail,pw);
-    loginModal.style.display='none';
-    alert("로그인 성공! 홈으로 이동합니다.");
-    setTimeout(()=>window.location.href="home.html",1500);
-  }catch(err){
-    alert("로그인 실패: "+err.message);
+// Google 로그인
+const msg = document.getElementById('msg');
+document.getElementById('google-login-btn').onclick = async () => {
+  msg.textContent = "";
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    console.log("로그인 성공:", user.email);
+    alert(`로그인 성공! 환영합니다, ${user.displayName || user.email}`);
+    // 필요 시 Firestore/DB 연동 가능
+    setTimeout(()=>window.location.href="home.html", 1500);
+  } catch (err) {
+    console.error("로그인 실패:", err.code, err.message);
+    msg.textContent = "로그인 실패: " + err.message;
   }
 };
 </script>
