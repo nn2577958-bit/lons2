@@ -27,23 +27,18 @@ body {
   border-radius:16px;
 }
 
-#status {
+#status, #welcome {
   color:white;
+  margin-bottom:15px;
   font-weight:bold;
-  margin-bottom:12px;
-}
-
-#welcome {
-  color:white;
-  margin-bottom:20px;
 }
 
 .product {
   background:white;
   color:black;
-  padding:12px;
-  border-radius:10px;
-  margin-bottom:10px;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:12px;
 }
 
 .product button {
@@ -52,6 +47,8 @@ body {
   border:none;
   border-radius:6px;
   cursor:pointer;
+  background:#1976d2;
+  color:white;
 }
 
 #logout-btn {
@@ -79,10 +76,11 @@ body {
 </div>
 
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-/* Firebase 설정 */
+/* Firebase 설정 (index와 동일해야 함) */
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -105,17 +103,30 @@ const products = [
   { name: "서버 커스텀 세팅", price: "₩80,000" }
 ];
 
-/* 상품 출력 */
+/* 상품 렌더링 */
 function renderProducts() {
   productList.innerHTML = "";
+
   products.forEach(product => {
     const div = document.createElement("div");
     div.className = "product";
-    div.innerHTML = `
-      <h3>${product.name}</h3>
-      <p>${product.price}</p>
-      <button onclick="alert('문의는 디스코드로 주세요')">구매하기</button>
-    `;
+
+    const title = document.createElement("h3");
+    title.textContent = product.name;
+
+    const price = document.createElement("p");
+    price.textContent = product.price;
+
+    const btn = document.createElement("button");
+    btn.textContent = "구매하기";
+    btn.addEventListener("click", () => {
+      alert(product.name + " 문의는 디스코드로 주세요.");
+    });
+
+    div.appendChild(title);
+    div.appendChild(price);
+    div.appendChild(btn);
+
     productList.appendChild(div);
   });
 }
@@ -131,13 +142,13 @@ onAuthStateChanged(auth, (user) => {
 });
 
 /* 로그아웃 */
-document.getElementById('logout-btn').onclick = async () => {
+document.getElementById("logout-btn").addEventListener("click", async () => {
   await signOut(auth);
   window.location.replace("index.html");
-};
+});
 
 /* 온라인 시간 */
-const statusElem = document.getElementById('status');
+const statusElem = document.getElementById("status");
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
