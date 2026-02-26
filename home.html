@@ -17,16 +17,16 @@ body {
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 40px 20px;
+  align-items: center;
+  padding: 30px 20px;
   color: white;
   overflow-x: hidden;
 }
 
 .container {
   width: 100%;
-  max-width: 1200px;
-  padding: 30px;
+  max-width: 900px;
+  padding: 24px;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(12px);
   border-radius: 20px;
@@ -34,7 +34,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  gap: 24px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
 
@@ -57,7 +57,7 @@ body {
 }
 
 #welcome {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   background: linear-gradient(135deg, #fff, #f0f0f0);
   -webkit-background-clip: text;
@@ -69,8 +69,8 @@ body {
 
 #product-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
   width: 100%;
 }
 
@@ -78,7 +78,7 @@ body {
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 24px;
+  padding: 20px;
   border-radius: 16px;
   text-align: center;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -108,23 +108,30 @@ body {
 }
 
 .product h3 {
-  margin: 0 0 12px 0;
-  font-size: 20px;
+  margin: 0 0 8px 0;
+  font-size: 18px;
   font-weight: 700;
   color: #fff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .product p {
-  margin: 0 0 20px 0;
-  font-size: 18px;
+  margin: 0 0 12px 0;
+  font-size: 16px;
   font-weight: 600;
   color: #4caf50;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+.product small {
+  color: rgba(255,255,255,0.8);
+  display: block;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
 .product button {
-  padding: 12px 24px;
+  padding: 10px 20px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -151,13 +158,13 @@ body {
 #logout-btn {
   background: linear-gradient(135deg, #d32f2f, #b71c1c);
   color: white;
-  padding: 14px 32px;
-  width: 220px;
+  padding: 12px 28px;
+  width: 200px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 15px;
   transition: all 0.2s;
   box-shadow: 0 6px 20px rgba(211, 0, 0, 0.3);
 }
@@ -170,23 +177,27 @@ body {
 
 /* 반응형 */
 @media (max-width: 768px) {
+  body {
+    padding: 20px 15px;
+  }
+  
   .container {
     padding: 20px;
-    margin: 20px;
+    margin: 10px;
     border-radius: 16px;
   }
   
   #welcome {
-    font-size: 20px;
+    font-size: 18px;
   }
   
   #product-list {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
   }
   
   .product {
-    padding: 20px;
+    padding: 18px;
   }
 }
 
@@ -194,20 +205,6 @@ body {
 .loading {
   opacity: 0.6;
   pointer-events: none;
-}
-
-.loading::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 24px;
-  height: 24px;
-  margin: -12px 0 0 -12px;
-  border: 2px solid transparent;
-  border-top: 2px solid #fff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -238,12 +235,12 @@ const productList = document.getElementById("product-list");
 const logoutBtn = document.getElementById("logout-btn");
 
 const products = [
-  { name: "🚀 디스코드 봇 개발", price: "₩50,000", desc: "고성능 멀티봇" },
-  { name: "☁️ 프리미엄 호스팅", price: "₩30,000", desc: "99.9% 가동률" },
-  { name: "⚙️ 서버 커스터마이징", price: "₩80,000", desc: "완전 맞춤형" },
-  { name: "🎨 UI/UX 디자인", price: "₩60,000", desc: "현대적 디자인" },
-  { name: "🔒 보안 강화", price: "₩40,000", desc: "DDoS 방어 포함" },
-  { name: "📱 모바일 앱", price: "₩120,000", desc: "네이티브 개발" }
+  { name: "🚀 디스코드 봇 개발", price: "₩25,000", desc: "고성능 멀티봇" },
+  { name: "☁️ 프리미엄 호스팅", price: "₩15,000", desc: "99.9% 가동률" },
+  { name: "⚙️ 서버 커스터마이징", price: "₩40,000", desc: "완전 맞춤형" },
+  { name: "🎨 UI/UX 디자인", price: "₩30,000", desc: "현대적 디자인" },
+  { name: "🔒 보안 강화", price: "₩20,000", desc: "DDoS 방어 포함" },
+  { name: "📱 모바일 앱", price: "₩60,000", desc: "네이티브 개발" }
 ];
 
 function renderProducts() {
@@ -253,12 +250,11 @@ function renderProducts() {
   products.forEach((p, index) => {
     const div = document.createElement("div");
     div.className = "product";
-    div.style.animationDelay = `${index * 0.1}s`;
     
     div.innerHTML = `
       <h3>${p.name}</h3>
       <p>${p.price}</p>
-      <small style="color: rgba(255,255,255,0.8); display:block; margin-bottom:16px;">${p.desc}</small>
+      <small>${p.desc}</small>
       <button onclick="handleInquiry('${p.name}')">문의하기</button>
     `;
     
@@ -289,7 +285,6 @@ function updateStatus() {
   document.getElementById("status").textContent = `🟢 온라인 | ${kst}`;
 }
 
-// 초기화
 onAuthStateChanged(auth, (user) => {
   if (user) {
     welcome.textContent = `환영합니다, ${user.email.split('@')[0]}님! 👋`;
@@ -301,11 +296,9 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// 로그아웃
 logoutBtn.onclick = async () => {
   logoutBtn.disabled = true;
   logoutBtn.textContent = "로그아웃 중...";
-  
   try {
     await signOut(auth);
   } catch (error) {
@@ -313,7 +306,6 @@ logoutBtn.onclick = async () => {
   }
 };
 
-// 키보드 단축키
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") logoutBtn.click();
 });
