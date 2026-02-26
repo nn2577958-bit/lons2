@@ -4,43 +4,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>라니 MALL - 홈</title>
+
 <style>
-/* 전체 바디 */
 body {
   margin:0;
   min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:flex-start;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family:'Segoe UI', sans-serif;
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
   padding:40px 0;
-  box-sizing:border-box;
 }
 
-/* 컨테이너 */
 .container {
   text-align:center;
   width:100%;
-  max-width:440px;
+  max-width:460px;
   padding:20px;
   background: rgba(0,0,0,0.35);
-  border-radius:12px;
-  box-sizing:border-box;
+  border-radius:16px;
 }
 
-/* 온라인 상태 */
 #status {
   color:white;
   font-weight:bold;
   margin-bottom:12px;
-  padding:6px 12px;
-  border-radius:8px;
-  display:block;
 }
 
-/* 로그아웃 버튼 작게 */
 #logout-btn {
   background:#d50000;
   color:white;
@@ -48,143 +40,194 @@ body {
   width:120px;
   margin-bottom:20px;
   border:none;
-  border-radius:6px;
-  font-weight:600;
+  border-radius:8px;
   cursor:pointer;
-  transition: transform 0.2s;
 }
-#logout-btn:hover { transform:translateY(-2px); }
 
 /* 상품 그리드 */
 .products {
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));
-  gap:12px;
+  grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+  gap:14px;
 }
 
-/* 상품 카드 */
+/* 카드 디자인 업그레이드 */
 .product {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  background: rgba(255,255,255,0.95);
-  border-radius:8px;
-  padding:10px;
-  transition: transform 0.2s;
-  box-sizing:border-box;
+  background:white;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,0.15);
+  transition:all 0.25s ease;
+  position:relative;
 }
-.product:hover { transform:translateY(-3px); }
 
-/* 이미지 크기 고정 */
+.product:hover {
+  transform:translateY(-6px);
+  box-shadow:0 12px 25px rgba(0,0,0,0.25);
+}
+
 .product img {
   width:100%;
-  height:100px;
+  height:130px;
   object-fit:cover;
-  border-radius:6px;
-  margin-bottom:6px;
 }
 
-/* 버튼 길이 통일 */
+.product-info {
+  padding:10px;
+}
+
+.product-name {
+  font-weight:600;
+  font-size:14px;
+  margin-bottom:4px;
+}
+
+.product-price {
+  color:#ff5722;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
 .product button {
   width:100%;
-  font-size:13px;
-  padding:6px 0;
+  padding:6px;
   border:none;
-  border-radius:6px;
-  background:#444;
+  border-radius:8px;
+  background:#111;
   color:white;
   cursor:pointer;
-  transition: background 0.2s;
+  transition:0.2s;
 }
-.product button:hover { background:#666; }
 
-/* 반응형: 모바일에서는 2~3열 */
-@media screen and (max-width:400px){
-  .products {
-    grid-template-columns:repeat(2, 1fr);
-    gap:10px;
-  }
-  #logout-btn {
-    width:100px;
-    padding:6px;
-  }
+.product button:hover {
+  background:#333;
+}
+
+/* 품절 표시 */
+.soldout-badge {
+  position:absolute;
+  top:8px;
+  left:8px;
+  background:#d50000;
+  color:white;
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:6px;
+}
+
+.soldout button {
+  background:#999 !important;
+  cursor:not-allowed;
 }
 </style>
 </head>
+
 <body>
 
 <div class="container">
   <div id="status">🟢 온라인</div>
   <button id="logout-btn">로그아웃</button>
 
-  <div class="products">
-    <div class="product">
-      <img src="https://cdn.phototourl.com/uploads/2026-02-18-687292e6-f45e-46fa-bf3b-5e31ddfd8403.webp" alt="상품1">
-      <button onclick="buyProduct('상품 1')">상품 1</button>
-    </div>
-    <div class="product">
-      <img src="https://cdn.phototourl.com/uploads/2026-02-18-687292e6-f45e-46fa-bf3b-5e31ddfd8403.webp" alt="상품2">
-      <button onclick="buyProduct('상품 2')">상품 2</button>
-    </div>
-    <div class="product">
-      <img src="https://cdn.phototourl.com/uploads/2026-02-18-687292e6-f45e-46fa-bf3b-5e31ddfd8403.webp" alt="상품3">
-      <button onclick="buyProduct('상품 3')">상품 3</button>
-    </div>
-    <div class="product">
-      <img src="https://cdn.phototourl.com/uploads/2026-02-18-687292e6-f45e-46fa-bf3b-5e31ddfd8403.webp" alt="상품4">
-      <button onclick="buyProduct('상품 4')">상품 4</button>
-    </div>
-  </div>
+  <!-- JS가 자동 생성 -->
+  <div class="products" id="product-list"></div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
-  authDomain: "lons2-74bfa.firebaseapp.com",
-  projectId: "lons2-74bfa",
-  storageBucket: "lons2-74bfa.firebasestorage.app",
-  messagingSenderId: "734178165313",
-  appId: "1:734178165313:web:395ed759777ec61f4b3cc0",
-  measurementId: "G-LC2JJD493M"
+  apiKey: "API키",
+  authDomain: "도메인",
+  projectId: "프로젝트ID",
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-// 온라인 시간 표시
+// 🟢 온라인 시간
 const statusElem = document.getElementById('status');
 function updateStatus(){
   const now = new Date();
-  const kst = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
+  const kst = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
   statusElem.textContent = `🟢 온라인 | ${kst}`;
 }
 updateStatus();
-setInterval(updateStatus, 1000);
+setInterval(updateStatus,1000);
 
-// 상품 선택 함수
-window.buyProduct = function(name){
-  alert(`${name} 선택! 잠시 후 결제 화면으로 이동합니다.`);
-  window.open("https://discord.gg/yEym2KZ9BU","_blank");
-};
+// ============================
+// 상품 배열 (여기서 관리)
+// ============================
+const products = [
+  {
+    name:"프리미엄 이용권",
+    price:15000,
+    img:"https://via.placeholder.com/300x200?text=Premium",
+    link:"https://google.com",
+    soldout:false
+  },
+  {
+    name:"VIP 패키지",
+    price:30000,
+    img:"https://via.placeholder.com/300x200?text=VIP",
+    link:"https://naver.com",
+    soldout:true
+  },
+  {
+    name:"이벤트 상품",
+    price:9900,
+    img:"https://via.placeholder.com/300x200?text=Event",
+    link:"https://daum.net",
+    soldout:false
+  }
+];
+
+// ============================
+// 상품 자동 생성
+// ============================
+const productList = document.getElementById("product-list");
+
+products.forEach(product=>{
+  const div=document.createElement("div");
+  div.className="product";
+
+  if(product.soldout){
+    div.classList.add("soldout");
+  }
+
+  div.innerHTML=`
+    ${product.soldout ? '<div class="soldout-badge">품절</div>' : ''}
+    <img src="${product.img}">
+    <div class="product-info">
+      <div class="product-name">${product.name}</div>
+      <div class="product-price">${product.price.toLocaleString()}원</div>
+      <button>${product.soldout ? "품절" : "구매하기"}</button>
+    </div>
+  `;
+
+  if(!product.soldout){
+    div.querySelector("button").onclick=()=>{
+      alert(`${product.name} 선택!`);
+      window.open(product.link,"_blank");
+    };
+  }
+
+  productList.appendChild(div);
+});
 
 // 로그아웃
-const logoutBtn = document.getElementById('logout-btn');
-logoutBtn.onclick = async () => {
+document.getElementById('logout-btn').onclick=async()=>{
   await signOut(auth);
   window.location.href="index.html";
 };
 
 // 로그인 체크
-onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth,user=>{
   if(!user){
     window.location.href="index.html";
   }
 });
 </script>
+
 </body>
 </html>
