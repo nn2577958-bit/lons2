@@ -5,108 +5,226 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>라니 MALL - 홈</title>
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
-  margin:0;
-  min-height:100vh;
-  font-family:'Segoe UI', sans-serif;
-  background: url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
-  background-size: cover;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding:40px 0;
-  color:white;
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+              url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  color: white;
+  overflow-x: hidden;
 }
 
 .container {
-  width:100%;
-  max-width:1100px;
-  padding:20px;
-  background: rgba(0,0,0,0.35);
-  border-radius:16px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:20px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
 
-/* 상단 상태 */
+.header {
+  text-align: center;
+  width: 100%;
+}
+
 #status {
-  font-weight:bold;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:6px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  background: rgba(76, 175, 80, 0.2);
+  border-radius: 20px;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
+
 #welcome {
-  font-weight:bold;
-  margin-bottom:15px;
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff, #f0f0f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
-/* 그리드 상품 영역 */
 #product-list {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap:20px;
-  width:100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
 }
 
-/* 카드 스타일 */
 .product {
-  background: rgba(255,255,255,0.15);
-  padding:15px;
-  border-radius:12px;
-  text-align:center;
-  backdrop-filter: blur(8px);
-  transition: transform 0.2s, box-shadow 0.2s;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 24px;
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.product::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #4caf50, transparent);
+  transition: left 0.3s;
+}
+
+.product:hover::before {
+  left: 100%;
 }
 
 .product:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border-color: rgba(76, 175, 80, 0.4);
 }
 
 .product h3 {
-  margin:0 0 8px 0;
-  font-weight:bold;
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .product p {
-  margin:0 0 10px 0;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #4caf50;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* 문의 버튼 */
 .product button {
-  padding:6px 12px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  background:#1976d2;
-  color:white;
-  font-weight:bold;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #1976d2, #1565c0);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
-/* 로그아웃 버튼 */
+.product button:hover {
+  background: linear-gradient(135deg, #1565c0, #0d47a1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+}
+
+.product button:active {
+  transform: translateY(0);
+}
+
 #logout-btn {
-  background:#d50000;
-  color:white;
-  padding:10px;
-  width:200px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  margin-top:10px;
-  font-weight:bold;
+  background: linear-gradient(135deg, #d32f2f, #b71c1c);
+  color: white;
+  padding: 14px 32px;
+  width: 220px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.2s;
+  box-shadow: 0 6px 20px rgba(211, 0, 0, 0.3);
+}
+
+#logout-btn:hover {
+  background: linear-gradient(135deg, #b71c1c, #7f0000);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(211, 0, 0, 0.4);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    margin: 20px;
+    border-radius: 16px;
+  }
+  
+  #welcome {
+    font-size: 20px;
+  }
+  
+  #product-list {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .product {
+    padding: 20px;
+  }
+}
+
+/* 로딩 애니메이션 */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border: 2px solid transparent;
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <div id="status">🟢 온라인</div>
-  <div id="welcome">로그인 확인 중...</div>
+  <div class="header">
+    <div id="status">🟢 온라인</div>
+    <h1 id="welcome">로그인 확인 중...</h1>
+  </div>
 
-  <div id="product-list"></div>
+  <div id="product-list" class="loading"></div>
 
   <button id="logout-btn">로그아웃</button>
 </div>
@@ -115,64 +233,90 @@ body {
 import { auth } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-/* HTML 요소 */
 const welcome = document.getElementById("welcome");
 const productList = document.getElementById("product-list");
+const logoutBtn = document.getElementById("logout-btn");
 
-/* 예시 상품 */
 const products = [
-  { name: "디스코드 봇", price: "₩50,000" },
-  { name: "호스팅", price: "₩30,000" },
-  { name: "서버 커스텀", price: "₩80,000" }
+  { name: "🚀 디스코드 봇 개발", price: "₩50,000", desc: "고성능 멀티봇" },
+  { name: "☁️ 프리미엄 호스팅", price: "₩30,000", desc: "99.9% 가동률" },
+  { name: "⚙️ 서버 커스터마이징", price: "₩80,000", desc: "완전 맞춤형" },
+  { name: "🎨 UI/UX 디자인", price: "₩60,000", desc: "현대적 디자인" },
+  { name: "🔒 보안 강화", price: "₩40,000", desc: "DDoS 방어 포함" },
+  { name: "📱 모바일 앱", price: "₩120,000", desc: "네이티브 개발" }
 ];
 
-/* 상품 렌더링 */
 function renderProducts() {
   productList.innerHTML = "";
-  products.forEach(p => {
+  productList.classList.remove("loading");
+  
+  products.forEach((p, index) => {
     const div = document.createElement("div");
     div.className = "product";
-
-    const title = document.createElement("h3");
-    title.textContent = p.name;
-
-    const price = document.createElement("p");
-    price.textContent = p.price;
-
-    const btn = document.createElement("button");
-    btn.textContent = "문의";
-    btn.onclick = () => alert(`${p.name} 문의는 디스코드로 주세요.`);
-
-    div.append(title, price, btn);
+    div.style.animationDelay = `${index * 0.1}s`;
+    
+    div.innerHTML = `
+      <h3>${p.name}</h3>
+      <p>${p.price}</p>
+      <small style="color: rgba(255,255,255,0.8); display:block; margin-bottom:16px;">${p.desc}</small>
+      <button onclick="handleInquiry('${p.name}')">문의하기</button>
+    `;
+    
     productList.appendChild(div);
   });
 }
 
-/* 로그인 상태 확인 후 렌더링 */
-onAuthStateChanged(auth, user => {
-  if(user){
-    welcome.textContent = `환영합니다, ${user.email}`;
+function handleInquiry(productName) {
+  const message = `🎯 ${productName}에 대해 문의드립니다!\n\n문의사항: `;
+  navigator.clipboard.writeText(message).then(() => {
+    alert(`📋 "${productName}" 문의 메시지가 클립보드에 복사되었습니다!\n디스코드로 붙여넣기 하세요.`);
+  });
+}
+
+let statusInterval;
+function updateStatus() {
+  const now = new Date();
+  const kst = now.toLocaleString("ko-KR", {
+    hour12: false,
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+  document.getElementById("status").textContent = `🟢 온라인 | ${kst}`;
+}
+
+// 초기화
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    welcome.textContent = `환영합니다, ${user.email.split('@')[0]}님! 👋`;
     renderProducts();
+    statusInterval = setInterval(updateStatus, 1000);
+    updateStatus();
   } else {
     window.location.href = "index.html";
   }
 });
 
-/* 로그아웃 */
-document.getElementById("logout-btn").onclick = async () => {
-  await signOut(auth);
-  window.location.href = "index.html";
+// 로그아웃
+logoutBtn.onclick = async () => {
+  logoutBtn.disabled = true;
+  logoutBtn.textContent = "로그아웃 중...";
+  
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("로그아웃 오류:", error);
+  }
 };
 
-/* 온라인 상태 표시 */
-const statusElem = document.getElementById("status");
-function updateStatus(){
-  const now = new Date();
-  const kst = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
-  statusElem.textContent = `🟢 온라인 | ${kst}`;
-}
-updateStatus();
-setInterval(updateStatus,1000);
+// 키보드 단축키
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") logoutBtn.click();
+});
 </script>
 </body>
 </html>
