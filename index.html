@@ -3,60 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>디스코드 봇·디자인 의뢰 & 프로필 제작 | 상담/문의 24시</title>
-<meta name="description" content="디스코드 봇 제작, 디자인/프로필 제작, 상담 및 문의, 24시 지원까지 가능한 회원 로그인 페이지입니다.">
-<meta name="keywords" content="디스코드, 디스코드 의뢰, 봇, 제작, 상담, 문의, 24시, 디자인, 프로필, 로그인, 봇, 외주, 게임">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://nn2577958-bit.github.io/lons2/">
-<link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-b555cb64-84f5-4ab4-b235-73d0d2be6482.png" type="image/png">
+<title>라니 MALL 로그인</title>
 
 <style>
-/* 기존 스타일 그대로 유지 */
-body {
+body{
   margin:0;
   height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family:'Segoe UI', sans-serif;
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
 }
-.container {
+
+.container{
   text-align:center;
-  max-width:360px;
-  padding:16px;
-  background:rgba(0,0,0,0.35);
-  border-radius:12px;
+  background:rgba(0,0,0,0.4);
+  padding:30px;
+  border-radius:16px;
+  width:320px;
 }
-button {
+
+h1{ color:white; }
+button{
   width:200px;
   padding:12px;
-  margin:12px 0;
   border:none;
-  border-radius:6px;
-  font-size:14px;
-  font-weight:600;
+  border-radius:8px;
+  font-weight:bold;
   cursor:pointer;
-  background:#fff;
-  color:#444;
 }
-#msg { color:#ff4444; margin-bottom:10px; }
-#status { color:white; font-weight:bold; margin-bottom:12px; }
-h1 { color:#fff; font-size:22px; }
-p { color:#fff; }
 </style>
 </head>
 
 <body>
 
 <div class="container">
-  <h1>MALL | 디스코드 봇·디자인 의뢰 & 프로필 제작</h1>
-  <p>디스코드 봇 제작, 디자인/프로필 제작, 상담 및 문의, 24시 지원까지 가능한 라니 MALL 회원 로그인 페이지입니다.</p>
-  <div id="status">🟢 온라인</div>
-  <div id="msg"></div>
-  <button id="google-login-btn">Google 계정으로 로그인</button>
+  <h1>라니 MALL</h1>
+  <button id="google-login-btn">Google 로그인</button>
 </div>
 
 <script type="module">
@@ -65,42 +50,31 @@ import {
   getAuth, 
   GoogleAuthProvider, 
   signInWithRedirect,
-  getRedirectResult,
-  onAuthStateChanged
+  getRedirectResult
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-  
+
+/* 🔥 Analytics 완전 제거 버전 */
+
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
   projectId: "lons2-74bfa",
   storageBucket: "lons2-74bfa.firebasestorage.app",
   messagingSenderId: "734178165313",
-  appId: "1:734178165313:web:395ed759777ec61f4b3cc0",
-  measurementId: "G-LC2JJD493M"
+  appId: "1:734178165313:web:395ed759777ec61f4b3cc0"
 };
 
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-const msg = document.getElementById("msg");
-
-/* 온라인 시간 */
-const status = document.getElementById('status');
-function updateStatus(){
-  const now = new Date();
-  const kst = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
-  status.textContent = `🟢 온라인 | ${kst}`;
-}
-updateStatus();
-setInterval(updateStatus,1000);
 
 /* 로그인 버튼 */
-document.getElementById('google-login-btn').onclick = async () => {
-  await signInWithRedirect(auth, provider);
-};
+document.getElementById("google-login-btn").addEventListener("click", () => {
+  console.log("로그인 시도");
+  signInWithRedirect(auth, provider);
+});
 
-/* 🔥 리다이렉트 후 처리 */
+/* 리다이렉트 후 처리 */
 getRedirectResult(auth)
   .then((result) => {
     if (result?.user) {
@@ -109,15 +83,9 @@ getRedirectResult(auth)
     }
   })
   .catch((error) => {
-    msg.textContent = "로그인 실패: " + error.message;
+    console.error("로그인 오류:", error.message);
   });
 
-/* 이미 로그인 상태면 바로 홈 이동 */
-onAuthStateChanged(auth, (user)=>{
-  if(user){
-    window.location.replace("home.html");
-  }
-});
 </script>
 
 </body>
