@@ -43,7 +43,7 @@ button {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 /* Firebase 설정 */
 const firebaseConfig = {
@@ -59,27 +59,19 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-/* 로그인 버튼 클릭 */
-document.getElementById("google-login-btn").addEventListener("click", () => {
-  signInWithRedirect(auth, provider);
+/* 이미 로그인 상태면 바로 홈 이동 */
+onAuthStateChanged(auth, user => {
+  if (user) window.location.href = "home.html";
 });
 
-/* 리다이렉트 후 로그인 결과 처리 */
-getRedirectResult(auth)
-  .then((result) => {
-    if (result?.user) {
-      // 로그인 완료 시 바로 홈으로 이동
-      window.location.href = "home.html";
-    }
-  })
-  .catch((error) => {
-    console.error("로그인 리다이렉트 오류:", error);
-  });
-
-/* 이미 로그인 되어 있으면 바로 홈 이동 */
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    window.location.href = "home.html";
+/* 로그인 버튼 클릭 */
+document.getElementById("google-login-btn").addEventListener("click", async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    if (result.user) window.location.href = "home.html";
+  } catch (err) {
+    console.error("로그인 오류:", err);
+    alert("로그인 실패: " + err.message);
   }
 });
 </script>
