@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL</title>
+<title>라니 MALL - 홈</title>
 <style>
 * {box-sizing:border-box;margin:0;padding:0}
 body {
@@ -70,7 +70,7 @@ body {
 import { auth } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-const welcome = document.getElementById("welcome");
+const welcomeEl = document.getElementById("welcome");
 const productList = document.getElementById("product-list");
 const logoutBtn = document.getElementById("logout-btn");
 
@@ -83,11 +83,11 @@ const products = [
   {name:"📱 모바일 앱",price:"₩60,000",desc:"네이티브 개발"}
 ];
 
-// 문의 함수 (오류 없는 버전)
+// 🔥 DISCORD 정보 포함한 문의 메시지
 window.handleInquiry = function(productName) {
-  const message = `🎯 ${productName}에 대해 문의드립니다!\n\n문의사항: `;
+  const message = `🎯 ${productName}\n💰 ${productName.match(/₩\d+[,]?/g)?.[0] || "가격문의"}\n\n👤 Discord: soyugwon\n🔗 https://discord.gg/yEym2KZ9BU\n\n문의사항: `;
   navigator.clipboard.writeText(message).then(() => {
-    alert(`📋 "${productName}" 문의 메시지 복사완료!\n디스코드로 붙여넣기`);
+    alert(`📋 "${productName}" 문의 + Discord 정보 복사완료!\nsoyugwon님께 바로 전송`);
   }).catch(() => {
     prompt("디스코드로 보내세요:", message);
   });
@@ -111,21 +111,16 @@ function renderProducts() {
 let statusInterval;
 function updateStatus() {
   const now = new Date().toLocaleString("ko-KR", {
-    hour12: false,
-    timeZone: "Asia/Seoul",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
+    hour12: false, timeZone: "Asia/Seoul",
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", second: "2-digit"
   });
   document.getElementById("status").textContent = `🟢 온라인 | ${now}`;
 }
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    welcome.textContent = `환영합니다, ${user.email.split('@')[0]}님! 👋`;
+    welcomeEl.textContent = `환영합니다, ${user.email.split('@')[0]}님! 👋`;
     renderProducts();
     statusInterval = setInterval(updateStatus, 1000);
     updateStatus();
