@@ -5,14 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>라니 MALL - 홈</title>
 <style>
-body { margin:0; min-height:100vh; display:flex; justify-content:center; align-items:flex-start; font-family:'Segoe UI', sans-serif; background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat; padding:40px 0; }
-.container { text-align:center; width:100%; max-width:500px; padding:20px; background: rgba(0,0,0,0.35); border-radius:16px; }
+body {
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  font-family:'Segoe UI', sans-serif;
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+              url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
+  padding:40px 0;
+}
+.container {
+  text-align:center;
+  width:100%;
+  max-width:500px;
+  padding:20px;
+  background: rgba(0,0,0,0.35);
+  border-radius:16px;
+}
 #status, #welcome { color:white; margin-bottom:15px; font-weight:bold; }
 .product { background:white; color:black; padding:15px; border-radius:12px; margin-bottom:12px; }
 .product button { margin-top:8px; padding:6px 10px; border:none; border-radius:6px; cursor:pointer; background:#1976d2; color:white; }
 #logout-btn { background:#d50000; color:white; padding:8px; width:120px; margin-top:20px; border:none; border-radius:8px; cursor:pointer; }
-input { padding:6px; margin:4px; border-radius:6px; border:none; width:120px; }
-#add-product-btn { padding:6px 10px; margin-top:8px; cursor:pointer; border-radius:6px; border:none; background:#4caf50; color:white; }
+input { padding:6px; margin:4px; border-radius:6px; border:none; width:120px; display:none; }
+#add-product-btn { padding:6px 10px; margin-top:8px; cursor:pointer; border-radius:6px; border:none; background:#4caf50; color:white; display:none; }
 </style>
 </head>
 <body>
@@ -37,11 +54,25 @@ import { collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic
 
 const welcome = document.getElementById("welcome");
 const productList = document.getElementById("product-list");
+const inputName = document.getElementById("product-name");
+const inputPrice = document.getElementById("product-price");
+const addBtn = document.getElementById("add-product-btn");
+
+/* 관리자 이메일 설정 */
+const adminEmails = ["nn2577958@gmail.com"]; // ← 실제 관리자 이메일로 변경
 
 /* 로그인 상태 확인 */
 onAuthStateChanged(auth, async user => {
   if(user){
     welcome.textContent = `환영합니다, ${user.email}`;
+
+    // 관리자면 상품 추가 UI 표시
+    if(adminEmails.includes(user.email)){
+      inputName.style.display = "inline-block";
+      inputPrice.style.display = "inline-block";
+      addBtn.style.display = "inline-block";
+    }
+
     await loadProducts();
   } else {
     window.location.href = "index.html";
@@ -57,25 +88,29 @@ async function loadProducts(){
     const p = doc.data();
     const div = document.createElement("div");
     div.className = "product";
+
     const title = document.createElement("h3"); title.textContent = p.name;
     const price = document.createElement("p"); price.textContent = p.price;
-    const btn = document.createElement("button");
+    const btn = document.createElement("button"); 
+    btn.textContent = "문의"; 
     btn.onclick = () => alert(`${p.name} 문의는 디스코드로 주세요.`);
-    btn.textContent = "문의";
+
     div.append(title, price, btn);
     productList.appendChild(div);
   });
 }
 
 /* Firestore 상품 추가 */
-document.getElementById("add-product-btn").onclick = async () => {
-  const name = document.getElementById("product-name").value;
-  const price = document.getElementById("product-price").value;
+addBtn.onclick = async () => {
+  const name = inputName.value.trim();
+  const price = inputPrice.value.trim();
   if(name && price){
     await addDoc(collection(db, "products"), { name, price, createdAt: new Date() });
-    document.getElementById("product-name").value = "";
-    document.getElementById("product-price").value = "";
+    inputName.value = "";
+    inputPrice.value = "";
     await loadProducts();
+  } else {
+    alert("상품명과 가격을 입력해주세요.");
   }
 };
 
