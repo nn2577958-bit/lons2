@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>라니 MALL - 홈</title>
-
 <style>
 body {
   margin:0;
@@ -76,11 +75,9 @@ body {
 </div>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-/* Firebase 설정 (index와 동일해야 함) */
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -96,17 +93,14 @@ const auth = getAuth(app);
 const welcome = document.getElementById("welcome");
 const productList = document.getElementById("product-list");
 
-/* 🔥 상품 배열 */
 const products = [
   { name: "디스코드 봇 제작", price: "₩50,000" },
   { name: "프로필 디자인 제작", price: "₩30,000" },
   { name: "서버 커스텀 세팅", price: "₩80,000" }
 ];
 
-/* 상품 렌더링 */
 function renderProducts() {
   productList.innerHTML = "";
-
   products.forEach(product => {
     const div = document.createElement("div");
     div.className = "product";
@@ -119,19 +113,13 @@ function renderProducts() {
 
     const btn = document.createElement("button");
     btn.textContent = "구매하기";
-    btn.addEventListener("click", () => {
-      alert(product.name + " 문의는 디스코드로 주세요.");
-    });
+    btn.addEventListener("click", () => alert(`${product.name} 문의는 디스코드로 주세요.`));
 
-    div.appendChild(title);
-    div.appendChild(price);
-    div.appendChild(btn);
-
+    div.append(title, price, btn);
     productList.appendChild(div);
   });
 }
 
-/* 로그인 확인 */
 onAuthStateChanged(auth, (user) => {
   if (user) {
     welcome.textContent = `환영합니다, ${user.email}`;
@@ -141,13 +129,11 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-/* 로그아웃 */
 document.getElementById("logout-btn").addEventListener("click", async () => {
   await signOut(auth);
   window.location.replace("index.html");
 });
 
-/* 온라인 시간 */
 const statusElem = document.getElementById("status");
 function updateStatus(){
   const now = new Date();
@@ -156,7 +142,6 @@ function updateStatus(){
 }
 updateStatus();
 setInterval(updateStatus,1000);
-
 </script>
 
 </body>
