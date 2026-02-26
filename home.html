@@ -10,24 +10,86 @@ body {
   min-height:100vh;
   display:flex;
   justify-content:center;
-  align-items:flex-start;
   font-family:'Segoe UI', sans-serif;
-  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-              url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
-  padding:40px 0;
+  background: url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
+  background-size: cover;
 }
+
 .container {
-  text-align:center;
   width:100%;
-  max-width:500px;
+  max-width:360px;
   padding:20px;
+  text-align:center;
+  margin-top:40px;
+  color:white;
   background: rgba(0,0,0,0.35);
   border-radius:16px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
 }
-#status, #welcome { color:white; margin-bottom:15px; font-weight:bold; }
-.product { background:white; color:black; padding:15px; border-radius:12px; margin-bottom:12px; }
-.product button { margin-top:8px; padding:6px 10px; border:none; border-radius:6px; cursor:pointer; background:#1976d2; color:white; }
-#logout-btn { background:#d50000; color:white; padding:8px; width:120px; margin-top:20px; border:none; border-radius:8px; cursor:pointer; }
+
+#status {
+  font-weight:bold;
+  margin-bottom:10px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
+}
+
+#welcome {
+  font-weight:bold;
+  margin-bottom:15px;
+}
+
+/* 카드 스타일 */
+.product {
+  background: rgba(255,255,255,0.15);
+  padding:15px;
+  border-radius:12px;
+  backdrop-filter: blur(8px);
+  text-align:center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.product h3 {
+  margin:0 0 8px 0;
+  font-weight:bold;
+}
+
+.product p {
+  margin:0 0 10px 0;
+}
+
+/* 문의 버튼 */
+.product button {
+  padding:6px 12px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  background:#1976d2;
+  color:white;
+  font-weight:bold;
+}
+
+/* 로그아웃 버튼 */
+#logout-btn {
+  background:#d50000;
+  color:white;
+  padding:8px;
+  width:100%;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  margin-top:10px;
+  font-weight:bold;
+}
 </style>
 </head>
 <body>
