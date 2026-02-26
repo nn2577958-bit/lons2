@@ -16,7 +16,6 @@ body {
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
   padding:40px 0;
 }
-
 .container {
   text-align:center;
   width:100%;
@@ -25,13 +24,11 @@ body {
   background: rgba(0,0,0,0.35);
   border-radius:16px;
 }
-
 #status, #welcome {
   color:white;
   margin-bottom:15px;
   font-weight:bold;
 }
-
 .product {
   background:white;
   color:black;
@@ -39,7 +36,6 @@ body {
   border-radius:12px;
   margin-bottom:12px;
 }
-
 .product button {
   margin-top:8px;
   padding:6px 10px;
@@ -49,7 +45,6 @@ body {
   background:#1976d2;
   color:white;
 }
-
 #logout-btn {
   background:#d50000;
   color:white;
@@ -60,11 +55,21 @@ body {
   border-radius:8px;
   cursor:pointer;
 }
+/* 업로더 */
+#uploader {
+  margin-top:20px;
+  background:rgba(255,255,255,0.9);
+  padding:15px;
+  border-radius:12px;
+  text-align:left;
+}
+#uploader input, #uploader button {
+  margin-top:8px;
+}
 </style>
 </head>
 
 <body>
-
 <div class="container">
   <div id="status">🟢 온라인</div>
   <div id="welcome">로그인 확인 중...</div>
@@ -72,13 +77,21 @@ body {
   <div id="product-list"></div>
 
   <button id="logout-btn">로그아웃</button>
+
+  <!-- 업로더 -->
+  <div id="uploader">
+    <h3>상품 업로드</h3>
+    <input type="text" id="product-name" placeholder="상품 이름" />
+    <input type="text" id="product-price" placeholder="가격 (₩)" />
+    <button id="upload-btn">업로드</button>
+  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-/* Firebase 설정 */
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -90,46 +103,43 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 const welcome = document.getElementById("welcome");
 const productList = document.getElementById("product-list");
 
-const products = [
-  { name: "디스코드 봇 제작", price: "₩50,000" },
-  { name: "프로필 디자인 제작", price: "₩30,000" },
-  { name: "서버 커스텀 세팅", price: "₩80,000" }
-];
-
-/* 상품 렌더링 */
-function renderProducts() {
+async function loadProducts() {
   productList.innerHTML = "";
-  products.forEach(product => {
-    const div = document.createElement("div");
-    div.className = "product";
+  try {
+    const querySnapshot = await getDocs(collection(db, "products"));
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      const div = document.createElement("div");
+      div.className = "product";
 
-    const title = document.createElement("h3");
-    title.textContent = product.name;
+      const title = document.createElement("h3");
+      title.textContent = data.name || "이름 없음";
 
-    const price = document.createElement("p");
-    price.textContent = product.price;
+      const price = document.createElement("p");
+      price.textContent = data.price || "₩0";
 
-    const btn = document.createElement("button");
-    btn.textContent = "구매하기";
-    btn.addEventListener("click", () => alert(`${product.name} 문의는 디스코드로 주세요.`));
+      const btn = document.createElement("button");
+      btn.textContent = "구매하기";
+      btn.addEventListener("click", () => alert(`${data.name} 문의는 디스코드로 주세요.`));
 
-    div.appendChild(title);
-    div.appendChild(price);
-    div.appendChild(btn);
-
-    productList.appendChild(div);
-  });
+      div.append(title, price, btn);
+      productList.appendChild(div);
+    });
+  } catch (err) {
+    console.error("상품 불러오기 오류:", err);
+  }
 }
 
 /* 로그인 확인 */
 onAuthStateChanged(auth, (user) => {
   if (user) {
     welcome.textContent = `환영합니다, ${user.email}`;
-    renderProducts();
+    loadProducts();
   } else {
     window.location.replace("index.html");
   }
@@ -149,13 +159,29 @@ document.getElementById("logout-btn").addEventListener("click", async () => {
 const statusElem = document.getElementById("status");
 function updateStatus() {
   const now = new Date();
-  const kst = now.toLocaleString("ko-KR", { hour12: false, timeZone: "Asia/Seoul" });
+  const kst = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
   statusElem.textContent = `🟢 온라인 | ${kst}`;
 }
 updateStatus();
-setInterval(updateStatus, 1000);
+setInterval(updateStatus,1000);
 
+/* 상품 업로드 */
+document.getElementById("upload-btn").addEventListener("click", async () => {
+  const name = document.getElementById("product-name").value.trim();
+  const price = document.getElementById("product-price").value.trim();
+
+  if (!name || !price) return alert("이름과 가격을 입력하세요.");
+
+  try {
+    await addDoc(collection(db, "products"), { name, price });
+    alert("상품 업로드 완료!");
+    document.getElementById("product-name").value = "";
+    document.getElementById("product-price").value = "";
+    loadProducts();
+  } catch (err) {
+    console.error("상품 업로드 실패:", err);
+  }
+});
 </script>
-
 </body>
 </html>
