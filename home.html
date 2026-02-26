@@ -3,95 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL - 홈</title>
+<title>라니 MALL 로그인</title>
 <style>
 body {
   margin:0;
-  min-height:100vh;
+  height:100vh;
   display:flex;
   justify-content:center;
-  align-items:flex-start;
+  align-items:center;
   font-family:'Segoe UI', sans-serif;
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
-  padding:40px 0;
 }
 .container {
   text-align:center;
-  width:100%;
-  max-width:500px;
-  padding:20px;
-  background: rgba(0,0,0,0.35);
+  background:rgba(0,0,0,0.4);
+  padding:30px;
   border-radius:16px;
+  width:320px;
 }
-#status, #welcome {
-  color:white;
-  margin-bottom:15px;
-  font-weight:bold;
-}
-.product {
-  background:white;
-  color:black;
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:12px;
-}
-.product button {
-  margin-top:8px;
-  padding:6px 10px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  background:#1976d2;
-  color:white;
-}
-#logout-btn {
-  background:#d50000;
-  color:white;
-  padding:8px;
-  width:120px;
-  margin-top:20px;
+h1 { color:white; margin-bottom:20px; }
+button {
+  width:200px;
+  padding:12px;
   border:none;
   border-radius:8px;
+  font-weight:bold;
   cursor:pointer;
-}
-/* 업로더 */
-#uploader {
-  margin-top:20px;
-  background:rgba(255,255,255,0.9);
-  padding:15px;
-  border-radius:12px;
-  text-align:left;
-}
-#uploader input, #uploader button {
-  margin-top:8px;
+  background:#4285F4;
+  color:white;
 }
 </style>
 </head>
-
 <body>
 <div class="container">
-  <div id="status">🟢 온라인</div>
-  <div id="welcome">로그인 확인 중...</div>
-
-  <div id="product-list"></div>
-
-  <button id="logout-btn">로그아웃</button>
-
-  <!-- 업로더 -->
-  <div id="uploader">
-    <h3>상품 업로드</h3>
-    <input type="text" id="product-name" placeholder="상품 이름" />
-    <input type="text" id="product-price" placeholder="가격 (₩)" />
-    <button id="upload-btn">업로드</button>
-  </div>
+  <h1>라니 MALL</h1>
+  <button id="google-login-btn">Google 로그인</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
+/* Firebase 설정 */
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
@@ -103,83 +57,21 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-const welcome = document.getElementById("welcome");
-const productList = document.getElementById("product-list");
-
-async function loadProducts() {
-  productList.innerHTML = "";
-  try {
-    const querySnapshot = await getDocs(collection(db, "products"));
-    querySnapshot.forEach(doc => {
-      const data = doc.data();
-      const div = document.createElement("div");
-      div.className = "product";
-
-      const title = document.createElement("h3");
-      title.textContent = data.name || "이름 없음";
-
-      const price = document.createElement("p");
-      price.textContent = data.price || "₩0";
-
-      const btn = document.createElement("button");
-      btn.textContent = "구매하기";
-      btn.addEventListener("click", () => alert(`${data.name} 문의는 디스코드로 주세요.`));
-
-      div.append(title, price, btn);
-      productList.appendChild(div);
-    });
-  } catch (err) {
-    console.error("상품 불러오기 오류:", err);
-  }
-}
-
-/* 로그인 확인 */
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    welcome.textContent = `환영합니다, ${user.email}`;
-    loadProducts();
-  } else {
-    window.location.replace("index.html");
-  }
+/* 이미 로그인 상태면 바로 홈 이동 */
+onAuthStateChanged(auth, user => {
+  if (user) window.location.href = "home.html";
 });
 
-/* 로그아웃 */
-document.getElementById("logout-btn").addEventListener("click", async () => {
+/* 로그인 버튼 클릭 */
+document.getElementById("google-login-btn").addEventListener("click", async () => {
   try {
-    await signOut(auth);
-    window.location.replace("index.html");
+    const result = await signInWithPopup(auth, provider);
+    if (result.user) window.location.href = "home.html";
   } catch (err) {
-    console.error("로그아웃 실패:", err);
-  }
-});
-
-/* 온라인 상태 업데이트 */
-const statusElem = document.getElementById("status");
-function updateStatus() {
-  const now = new Date();
-  const kst = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
-  statusElem.textContent = `🟢 온라인 | ${kst}`;
-}
-updateStatus();
-setInterval(updateStatus,1000);
-
-/* 상품 업로드 */
-document.getElementById("upload-btn").addEventListener("click", async () => {
-  const name = document.getElementById("product-name").value.trim();
-  const price = document.getElementById("product-price").value.trim();
-
-  if (!name || !price) return alert("이름과 가격을 입력하세요.");
-
-  try {
-    await addDoc(collection(db, "products"), { name, price });
-    alert("상품 업로드 완료!");
-    document.getElementById("product-name").value = "";
-    document.getElementById("product-price").value = "";
-    loadProducts();
-  } catch (err) {
-    console.error("상품 업로드 실패:", err);
+    console.error("로그인 오류:", err);
+    alert("로그인 실패: " + err.message);
   }
 });
 </script>
