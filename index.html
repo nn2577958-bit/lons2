@@ -47,7 +47,7 @@ button {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
@@ -67,10 +67,21 @@ document.getElementById("google-login-btn").addEventListener("click", () => {
   signInWithRedirect(auth, provider);
 });
 
-/* 로그인 상태 확인 후 홈 이동 */
+/* 리다이렉트 후 로그인 결과 확인 */
+getRedirectResult(auth)
+  .then((result) => {
+    if (result?.user) {
+      // 로그인 성공 시 홈으로 이동
+      window.location.replace("home.html");
+    }
+  })
+  .catch((error) => {
+    console.error("로그인 오류:", error);
+  });
+
+/* 이미 로그인 상태면 바로 홈 이동 */
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    // 이미 로그인 상태면 바로 home.html로 이동
     window.location.replace("home.html");
   }
 });
