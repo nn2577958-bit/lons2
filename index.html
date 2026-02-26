@@ -6,7 +6,7 @@
 <title>라니 MALL 로그인</title>
 
 <style>
-body{
+body {
   margin:0;
   height:100vh;
   display:flex;
@@ -17,7 +17,7 @@ body{
               url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
 }
 
-.container{
+.container {
   text-align:center;
   background:rgba(0,0,0,0.4);
   padding:30px;
@@ -25,20 +25,21 @@ body{
   width:320px;
 }
 
-h1{ color:white; }
-button{
+h1 { color:white; margin-bottom:20px; }
+button {
   width:200px;
   padding:12px;
   border:none;
   border-radius:8px;
   font-weight:bold;
   cursor:pointer;
+  background:#4285F4;
+  color:white;
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
   <h1>라니 MALL</h1>
   <button id="google-login-btn">Google 로그인</button>
@@ -46,14 +47,7 @@ button{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { 
-  getAuth, 
-  GoogleAuthProvider, 
-  signInWithRedirect,
-  getRedirectResult
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-/* 🔥 Analytics 완전 제거 버전 */
+import { getAuth, GoogleAuthProvider, signInWithRedirect, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
@@ -70,22 +64,16 @@ const provider = new GoogleAuthProvider();
 
 /* 로그인 버튼 */
 document.getElementById("google-login-btn").addEventListener("click", () => {
-  console.log("로그인 시도");
   signInWithRedirect(auth, provider);
 });
 
-/* 리다이렉트 후 처리 */
-getRedirectResult(auth)
-  .then((result) => {
-    if (result?.user) {
-      console.log("로그인 성공:", result.user.email);
-      window.location.replace("home.html");
-    }
-  })
-  .catch((error) => {
-    console.error("로그인 오류:", error.message);
-  });
-
+/* 로그인 상태 확인 후 홈 이동 */
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // 이미 로그인 상태면 바로 home.html로 이동
+    window.location.replace("home.html");
+  }
+});
 </script>
 
 </body>
