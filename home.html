@@ -3,77 +3,97 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL 로그인</title>
+<title>라니 MALL - 홈</title>
 <style>
-body {
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:'Segoe UI', sans-serif;
-  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-              url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
-}
-.container {
-  text-align:center;
-  background:rgba(0,0,0,0.4);
-  padding:30px;
-  border-radius:16px;
-  width:320px;
-}
-h1 { color:white; margin-bottom:20px; }
-button {
-  width:200px;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
-  background:#4285F4;
-  color:white;
-}
+body { margin:0; min-height:100vh; display:flex; justify-content:center; align-items:flex-start; font-family:'Segoe UI', sans-serif; background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat; padding:40px 0; }
+.container { text-align:center; width:100%; max-width:500px; padding:20px; background: rgba(0,0,0,0.35); border-radius:16px; }
+#status, #welcome { color:white; margin-bottom:15px; font-weight:bold; }
+.product { background:white; color:black; padding:15px; border-radius:12px; margin-bottom:12px; }
+.product button { margin-top:8px; padding:6px 10px; border:none; border-radius:6px; cursor:pointer; background:#1976d2; color:white; }
+#logout-btn { background:#d50000; color:white; padding:8px; width:120px; margin-top:20px; border:none; border-radius:8px; cursor:pointer; }
+input { padding:6px; margin:4px; border-radius:6px; border:none; width:120px; }
+#add-product-btn { padding:6px 10px; margin-top:8px; cursor:pointer; border-radius:6px; border:none; background:#4caf50; color:white; }
 </style>
 </head>
 <body>
+
 <div class="container">
-  <h1>라니 MALL</h1>
-  <button id="google-login-btn">Google 로그인</button>
+  <div id="status">🟢 온라인</div>
+  <div id="welcome">로그인 확인 중...</div>
+
+  <div id="product-list"></div>
+
+  <input type="text" id="product-name" placeholder="상품명">
+  <input type="text" id="product-price" placeholder="가격">
+  <button id="add-product-btn">상품 추가</button>
+
+  <button id="logout-btn">로그아웃</button>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { auth, db } from "./firebase.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-/* Firebase 설정 */
-const firebaseConfig = {
-  apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
-  authDomain: "lons2-74bfa.firebaseapp.com",
-  projectId: "lons2-74bfa",
-  storageBucket: "lons2-74bfa.firebasestorage.app",
-  messagingSenderId: "734178165313",
-  appId: "1:734178165313:web:395ed759777ec61f4b3cc0"
-};
+const welcome = document.getElementById("welcome");
+const productList = document.getElementById("product-list");
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-
-/* 이미 로그인 상태면 바로 홈 이동 */
-onAuthStateChanged(auth, user => {
-  if (user) window.location.href = "home.html";
-});
-
-/* 로그인 버튼 클릭 */
-document.getElementById("google-login-btn").addEventListener("click", async () => {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    if (result.user) window.location.href = "home.html";
-  } catch (err) {
-    console.error("로그인 오류:", err);
-    alert("로그인 실패: " + err.message);
+/* 로그인 상태 확인 */
+onAuthStateChanged(auth, async user => {
+  if(user){
+    welcome.textContent = `환영합니다, ${user.email}`;
+    await loadProducts();
+  } else {
+    window.location.href = "index.html";
   }
 });
+
+/* Firestore 상품 불러오기 */
+async function loadProducts(){
+  productList.innerHTML = "";
+  const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+  const snapshot = await getDocs(q);
+  snapshot.forEach(doc => {
+    const p = doc.data();
+    const div = document.createElement("div");
+    div.className = "product";
+    const title = document.createElement("h3"); title.textContent = p.name;
+    const price = document.createElement("p"); price.textContent = p.price;
+    const btn = document.createElement("button");
+    btn.onclick = () => alert(`${p.name} 문의는 디스코드로 주세요.`);
+    btn.textContent = "문의";
+    div.append(title, price, btn);
+    productList.appendChild(div);
+  });
+}
+
+/* Firestore 상품 추가 */
+document.getElementById("add-product-btn").onclick = async () => {
+  const name = document.getElementById("product-name").value;
+  const price = document.getElementById("product-price").value;
+  if(name && price){
+    await addDoc(collection(db, "products"), { name, price, createdAt: new Date() });
+    document.getElementById("product-name").value = "";
+    document.getElementById("product-price").value = "";
+    await loadProducts();
+  }
+};
+
+/* 로그아웃 */
+document.getElementById("logout-btn").onclick = async () => {
+  await signOut(auth);
+  window.location.href = "index.html";
+};
+
+/* 온라인 상태 표시 */
+const statusElem = document.getElementById("status");
+function updateStatus(){
+  const now = new Date();
+  const kst = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
+  statusElem.textContent = `🟢 온라인 | ${kst}`;
+}
+updateStatus();
+setInterval(updateStatus,1000);
 </script>
 </body>
 </html>
