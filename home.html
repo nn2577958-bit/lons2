@@ -28,8 +28,6 @@ body {
 .product { background:white; color:black; padding:15px; border-radius:12px; margin-bottom:12px; }
 .product button { margin-top:8px; padding:6px 10px; border:none; border-radius:6px; cursor:pointer; background:#1976d2; color:white; }
 #logout-btn { background:#d50000; color:white; padding:8px; width:120px; margin-top:20px; border:none; border-radius:8px; cursor:pointer; }
-input { padding:6px; margin:4px; border-radius:6px; border:none; width:120px; display:none; }
-#add-product-btn { padding:6px 10px; margin-top:8px; cursor:pointer; border-radius:6px; border:none; background:#4caf50; color:white; display:none; }
 </style>
 </head>
 <body>
@@ -40,59 +38,39 @@ input { padding:6px; margin:4px; border-radius:6px; border:none; width:120px; di
 
   <div id="product-list"></div>
 
-  <input type="text" id="product-name" placeholder="상품명">
-  <input type="text" id="product-price" placeholder="가격">
-  <button id="add-product-btn">상품 추가</button>
-
   <button id="logout-btn">로그아웃</button>
 </div>
 
 <script type="module">
-import { auth, db } from "./firebase.js";
+import { auth } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
+/* HTML 요소 */
 const welcome = document.getElementById("welcome");
 const productList = document.getElementById("product-list");
-const inputName = document.getElementById("product-name");
-const inputPrice = document.getElementById("product-price");
-const addBtn = document.getElementById("add-product-btn");
 
-/* 관리자 이메일 설정 */
-const adminEmails = ["nn2577958@gmail.com"]; // ← 실제 관리자 이메일로 변경
+/* 예시 상품 */
+const products = [
+  { name: "디스코드 봇", price: "₩50,000" },
+  { name: "호스팅", price: "₩30,000" },
+  { name: "서버 커스텀", price: "₩80,000" }
+];
 
-/* 로그인 상태 확인 */
-onAuthStateChanged(auth, async user => {
-  if(user){
-    welcome.textContent = `환영합니다, ${user.email}`;
-
-    // 관리자면 상품 추가 UI 표시
-    if(adminEmails.includes(user.email)){
-      inputName.style.display = "inline-block";
-      inputPrice.style.display = "inline-block";
-      addBtn.style.display = "inline-block";
-    }
-
-    await loadProducts();
-  } else {
-    window.location.href = "index.html";
-  }
-});
-
-/* Firestore 상품 불러오기 */
-async function loadProducts(){
+/* 상품 렌더링 */
+function renderProducts() {
   productList.innerHTML = "";
-  const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
-  const snapshot = await getDocs(q);
-  snapshot.forEach(doc => {
-    const p = doc.data();
+  products.forEach(p => {
     const div = document.createElement("div");
     div.className = "product";
 
-    const title = document.createElement("h3"); title.textContent = p.name;
-    const price = document.createElement("p"); price.textContent = p.price;
-    const btn = document.createElement("button"); 
-    btn.textContent = "문의"; 
+    const title = document.createElement("h3");
+    title.textContent = p.name;
+
+    const price = document.createElement("p");
+    price.textContent = p.price;
+
+    const btn = document.createElement("button");
+    btn.textContent = "문의";
     btn.onclick = () => alert(`${p.name} 문의는 디스코드로 주세요.`);
 
     div.append(title, price, btn);
@@ -100,19 +78,15 @@ async function loadProducts(){
   });
 }
 
-/* Firestore 상품 추가 */
-addBtn.onclick = async () => {
-  const name = inputName.value.trim();
-  const price = inputPrice.value.trim();
-  if(name && price){
-    await addDoc(collection(db, "products"), { name, price, createdAt: new Date() });
-    inputName.value = "";
-    inputPrice.value = "";
-    await loadProducts();
+/* 로그인 상태 확인 후 렌더링 */
+onAuthStateChanged(auth, user => {
+  if(user){
+    welcome.textContent = `환영합니다, ${user.email}`;
+    renderProducts();
   } else {
-    alert("상품명과 가격을 입력해주세요.");
+    window.location.href = "index.html";
   }
-};
+});
 
 /* 로그아웃 */
 document.getElementById("logout-btn").onclick = async () => {
