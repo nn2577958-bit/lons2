@@ -21,7 +21,7 @@ body {
 .container {
   text-align:center;
   width:100%;
-  max-width:460px;
+  max-width:500px;
   padding:20px;
   background: rgba(0,0,0,0.35);
   border-radius:16px;
@@ -35,7 +35,23 @@ body {
 
 #welcome {
   color:white;
-  margin-bottom:12px;
+  margin-bottom:20px;
+}
+
+.product {
+  background:white;
+  color:black;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+.product button {
+  margin-top:8px;
+  padding:6px 10px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
 }
 
 #logout-btn {
@@ -43,7 +59,7 @@ body {
   color:white;
   padding:8px;
   width:120px;
-  margin-bottom:20px;
+  margin-top:20px;
   border:none;
   border-radius:8px;
   cursor:pointer;
@@ -56,42 +72,62 @@ body {
 <div class="container">
   <div id="status">🟢 온라인</div>
   <div id="welcome">로그인 확인 중...</div>
+
+  <div id="product-list"></div>
+
   <button id="logout-btn">로그아웃</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
-/* 🔥 index.html과 반드시 동일 */
+/* Firebase 설정 */
 const firebaseConfig = {
   apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
   authDomain: "lons2-74bfa.firebaseapp.com",
   projectId: "lons2-74bfa",
   storageBucket: "lons2-74bfa.firebasestorage.app",
   messagingSenderId: "734178165313",
-  appId: "1:734178165313:web:395ed759777ec61f4b3cc0",
-  measurementId: "G-LC2JJD493M"
+  appId: "1:734178165313:web:395ed759777ec61f4b3cc0"
 };
 
 const app = initializeApp(firebaseConfig);
-getAnalytics(app);
 const auth = getAuth(app);
 
 const welcome = document.getElementById("welcome");
+const productList = document.getElementById("product-list");
 
-/* ✅ 세션 복구 대기 후 체크 (튕김 방지 핵심) */
+/* 🔥 상품 배열 */
+const products = [
+  { name: "디스코드 봇 제작", price: "₩50,000" },
+  { name: "프로필 디자인 제작", price: "₩30,000" },
+  { name: "서버 커스텀 세팅", price: "₩80,000" }
+];
+
+/* 상품 출력 */
+function renderProducts() {
+  productList.innerHTML = "";
+  products.forEach(product => {
+    const div = document.createElement("div");
+    div.className = "product";
+    div.innerHTML = `
+      <h3>${product.name}</h3>
+      <p>${product.price}</p>
+      <button onclick="alert('문의는 디스코드로 주세요')">구매하기</button>
+    `;
+    productList.appendChild(div);
+  });
+}
+
+/* 로그인 확인 */
 onAuthStateChanged(auth, (user) => {
-
   if (user) {
-    console.log("로그인 유지:", user.email);
     welcome.textContent = `환영합니다, ${user.email}`;
+    renderProducts();
   } else {
-    console.log("로그인 안됨 → index 이동");
     window.location.replace("index.html");
   }
-
 });
 
 /* 로그아웃 */
@@ -100,7 +136,7 @@ document.getElementById('logout-btn').onclick = async () => {
   window.location.replace("index.html");
 };
 
-/* 온라인 시간 표시 */
+/* 온라인 시간 */
 const statusElem = document.getElementById('status');
 function updateStatus(){
   const now = new Date();
