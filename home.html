@@ -8,39 +8,47 @@
 body {
   margin:0;
   min-height:100vh;
-  display:flex;
-  justify-content:center;
   font-family:'Segoe UI', sans-serif;
   background: url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
   background-size: cover;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:40px 0;
+  color:white;
 }
 
 .container {
   width:100%;
-  max-width:360px;
+  max-width:1100px;
   padding:20px;
-  text-align:center;
-  margin-top:40px;
-  color:white;
   background: rgba(0,0,0,0.35);
   border-radius:16px;
   display:flex;
   flex-direction:column;
-  gap:15px;
+  align-items:center;
+  gap:20px;
 }
 
+/* 상단 상태 */
 #status {
   font-weight:bold;
-  margin-bottom:10px;
   display:flex;
   justify-content:center;
   align-items:center;
   gap:6px;
 }
-
 #welcome {
   font-weight:bold;
   margin-bottom:15px;
+}
+
+/* 그리드 상품 영역 */
+#product-list {
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap:20px;
+  width:100%;
 }
 
 /* 카드 스타일 */
@@ -48,8 +56,8 @@ body {
   background: rgba(255,255,255,0.15);
   padding:15px;
   border-radius:12px;
-  backdrop-filter: blur(8px);
   text-align:center;
+  backdrop-filter: blur(8px);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -82,8 +90,8 @@ body {
 #logout-btn {
   background:#d50000;
   color:white;
-  padding:8px;
-  width:100%;
+  padding:10px;
+  width:200px;
   border:none;
   border-radius:8px;
   cursor:pointer;
