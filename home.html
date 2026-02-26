@@ -3,312 +3,97 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL - 홈</title>
+<title>라니 MALL</title>
 <style>
-* {
-  box-sizing: border-box;
-}
-
+* {box-sizing:border-box;margin:0;padding:0}
 body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
-              url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 30px 20px;
-  color: white;
-  overflow-x: hidden;
+  min-height:100vh;
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.7)),url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover;
+  display:flex;justify-content:center;align-items:center;padding:20px;color:#fff
 }
-
 .container {
-  width: 100%;
-  max-width: 900px;
-  padding: 24px;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  max-width:750px;padding:20px;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);
+  border-radius:16px;border:1px solid rgba(255,255,255,.15);display:flex;flex-direction:column;
+  align-items:center;gap:20px;box-shadow:0 15px 30px rgba(0,0,0,.6)
 }
-
-.header {
-  text-align: center;
-  width: 100%;
-}
-
+.header {text-align:center;width:100%}
 #status {
-  font-size: 14px;
-  font-weight: 600;
-  padding: 8px 16px;
-  background: rgba(76, 175, 80, 0.2);
-  border-radius: 20px;
-  border: 1px solid rgba(76, 175, 80, 0.3);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
+  font-size:12px;font-weight:600;padding:6px 12px;background:rgba(76,175,80,.25);
+  border-radius:16px;border:1px solid rgba(76,175,80,.3);margin-bottom:8px
 }
-
 #welcome {
-  font-size: 20px;
-  font-weight: 700;
-  background: linear-gradient(135deg, #fff, #f0f0f0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0;
-  letter-spacing: -0.5px;
+  font-size:18px;font-weight:700;background:linear-gradient(135deg,#fff,#eee);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0
 }
-
 #product-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  width: 100%;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;width:100%
 }
-
 .product {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  border-radius: 16px;
-  text-align: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);
+  padding:16px;border-radius:12px;text-align:center;transition:all .3s;position:relative;overflow:hidden
 }
-
-.product::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #4caf50, transparent);
-  transition: left 0.3s;
-}
-
-.product:hover::before {
-  left: 100%;
-}
-
 .product:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  border-color: rgba(76, 175, 80, 0.4);
+  transform:translateY(-6px) scale(1.01);box-shadow:0 15px 30px rgba(0,0,0,.4);
+  border-color:rgba(76,175,80,.3)
 }
-
 .product h3 {
-  margin: 0 0 8px 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin:0 0 6px;font-size:16px;font-weight:700;color:#fff;font-size:16px
 }
-
 .product p {
-  margin: 0 0 12px 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: #4caf50;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  margin:0 0 8px;font-size:15px;font-weight:600;color:#4caf50
 }
-
 .product small {
-  color: rgba(255,255,255,0.8);
-  display: block;
-  margin-bottom: 16px;
-  font-size: 14px;
+  color:rgba(255,255,255,.75);display:block;margin-bottom:12px;font-size:13px
 }
-
-.product button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  background: linear-gradient(135deg, #1976d2, #1565c0);
-  color: white;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
-  position: relative;
-  overflow: hidden;
+.product button,.logout-btn {
+  padding:8px 16px;border:none;border-radius:8px;cursor:pointer;background:linear-gradient(135deg,#1976d2,#1565c0);
+  color:#fff;font-weight:600;font-size:13px;transition:all .2s;box-shadow:0 3px 10px rgba(25,118,210,.3)
 }
-
 .product button:hover {
-  background: linear-gradient(135deg, #1565c0, #0d47a1);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+  background:linear-gradient(135deg,#1565c0,#0d47a1);transform:translateY(-1px);box-shadow:0 5px 15px rgba(25,118,210,.4)
 }
-
-.product button:active {
-  transform: translateY(0);
+.logout-btn {
+  background:linear-gradient(135deg,#d32f2f,#b71c1c);width:180px;padding:10px 20px;font-size:14px
 }
-
-#logout-btn {
-  background: linear-gradient(135deg, #d32f2f, #b71c1c);
-  color: white;
-  padding: 12px 28px;
-  width: 200px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 15px;
-  transition: all 0.2s;
-  box-shadow: 0 6px 20px rgba(211, 0, 0, 0.3);
+.logout-btn:hover {
+  background:linear-gradient(135deg,#b71c1c,#7f0000);transform:translateY(-1px);box-shadow:0 6px 20px rgba(211,0,0,.4)
 }
-
-#logout-btn:hover {
-  background: linear-gradient(135deg, #b71c1c, #7f0000);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(211, 0, 0, 0.4);
-}
-
-/* 반응형 */
-@media (max-width: 768px) {
-  body {
-    padding: 20px 15px;
-  }
-  
-  .container {
-    padding: 20px;
-    margin: 10px;
-    border-radius: 16px;
-  }
-  
-  #welcome {
-    font-size: 18px;
-  }
-  
-  #product-list {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  
-  .product {
-    padding: 18px;
-  }
-}
-
-/* 로딩 애니메이션 */
-.loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@media (max-width:768px) {
+  body{padding:15px 10px}
+  .container{padding:16px;max-width:90vw}
+  #welcome{font-size:16px}
+  #product-list{grid-template-columns:1fr;gap:12px}
+  .product{padding:14px}
 }
 </style>
 </head>
 <body>
-
 <div class="container">
   <div class="header">
     <div id="status">🟢 온라인</div>
     <h1 id="welcome">로그인 확인 중...</h1>
   </div>
-
-  <div id="product-list" class="loading"></div>
-
-  <button id="logout-btn">로그아웃</button>
+  <div id="product-list"></div>
+  <button class="logout-btn" id="logout-btn">로그아웃</button>
 </div>
-
 <script type="module">
-import { auth } from "./firebase.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-const welcome = document.getElementById("welcome");
-const productList = document.getElementById("product-list");
-const logoutBtn = document.getElementById("logout-btn");
-
-const products = [
-  { name: "🚀 디스코드 봇 개발", price: "₩25,000", desc: "고성능 멀티봇" },
-  { name: "☁️ 프리미엄 호스팅", price: "₩15,000", desc: "99.9% 가동률" },
-  { name: "⚙️ 서버 커스터마이징", price: "₩40,000", desc: "완전 맞춤형" },
-  { name: "🎨 UI/UX 디자인", price: "₩30,000", desc: "현대적 디자인" },
-  { name: "🔒 보안 강화", price: "₩20,000", desc: "DDoS 방어 포함" },
-  { name: "📱 모바일 앱", price: "₩60,000", desc: "네이티브 개발" }
+import{auth}from"./firebase.js";
+import{onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+const welcome=document.getElementById("welcome"),productList=document.getElementById("product-list"),logoutBtn=document.getElementById("logout-btn");
+const products=[
+  {name:"🚀 디스코드 봇",price:"₩25,000",desc:"고성능 멀티봇"},
+  {name:"☁️ 프리미엄 호스팅",price:"₩15,000",desc:"99.9% 가동률"},
+  {name:"⚙️ 서버 커스터마이징",price:"₩40,000",desc:"완전 맞춤형"},
+  {name:"🎨 UI/UX 디자인",price:"₩30,000",desc:"현대적 디자인"},
+  {name:"🔒 보안 강화",price:"₩20,000",desc:"DDoS 방어"},
+  {name:"📱 모바일 앱",price:"₩60,000",desc:"네이티브 개발"}
 ];
-
-function renderProducts() {
-  productList.innerHTML = "";
-  productList.classList.remove("loading");
-  
-  products.forEach((p, index) => {
-    const div = document.createElement("div");
-    div.className = "product";
-    
-    div.innerHTML = `
-      <h3>${p.name}</h3>
-      <p>${p.price}</p>
-      <small>${p.desc}</small>
-      <button onclick="handleInquiry('${p.name}')">문의하기</button>
-    `;
-    
-    productList.appendChild(div);
-  });
-}
-
-function handleInquiry(productName) {
-  const message = `🎯 ${productName}에 대해 문의드립니다!\n\n문의사항: `;
-  navigator.clipboard.writeText(message).then(() => {
-    alert(`📋 "${productName}" 문의 메시지가 클립보드에 복사되었습니다!\n디스코드로 붙여넣기 하세요.`);
-  });
-}
-
+window.handleInquiry=function(n){const e=`🎯 ${n}에 대해 문의드립니다!\n\n문의사항: `;navigator.clipboard.writeText(e).then(()=>alert(`📋 "${n}" 문의 메시지 복사!\n디스코드로 붙여넣기`)).catch(()=>prompt("디스코드로 보내세요:",e))};
+function renderProducts(){productList.innerHTML="";products.forEach(t=>{const n=document.createElement("div");n.className="product",n.innerHTML=`<h3>${t.name}</h3><p>${t.price}</p><small>${t.desc}</small><button onclick="handleInquiry('${t.name.replace(/'/g,"\\'")}')">문의하기</button>`,productList.appendChild(n)})}
 let statusInterval;
-function updateStatus() {
-  const now = new Date();
-  const kst = now.toLocaleString("ko-KR", {
-    hour12: false,
-    timeZone: "Asia/Seoul",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
-  });
-  document.getElementById("status").textContent = `🟢 온라인 | ${kst}`;
-}
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    welcome.textContent = `환영합니다, ${user.email.split('@')[0]}님! 👋`;
-    renderProducts();
-    statusInterval = setInterval(updateStatus, 1000);
-    updateStatus();
-  } else {
-    window.location.href = "index.html";
-  }
-});
-
-logoutBtn.onclick = async () => {
-  logoutBtn.disabled = true;
-  logoutBtn.textContent = "로그아웃 중...";
-  try {
-    await signOut(auth);
-  } catch (error) {
-    console.error("로그아웃 오류:", error);
-  }
-};
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") logoutBtn.click();
-});
+function updateStatus(){const t=new Date().toLocaleString("ko-KR",{hour12:!1,timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"});document.getElementById("status").textContent=`🟢 온라인 | ${t}`}
+onAuthStateChanged(auth,t=>{t?(welcome.textContent=`환영합니다, ${t.email.split("@")[0]}님! 👋`,renderProducts(),statusInterval=setInterval(updateStatus,1e3),updateStatus()):window.location.href="index.html"}),logoutBtn.onclick=async()=>{logoutBtn.disabled=!0,logoutBtn.textContent="로그아웃 중...",await signOut(auth)},document.addEventListener("keydown",t=>{"Escape"===t.key&&logoutBtn.click()});
 </script>
 </body>
 </html>
