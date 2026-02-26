@@ -12,50 +12,63 @@ body {
   display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;color:#fff;gap:20px
 }
 .container {
-  width:90vw;max-width:700px;padding:20px;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);
-  border-radius:16px;border:1px solid rgba(255,255,255,.15);display:flex;flex-direction:column;gap:20px;
+  width:90vw;max-width:750px;padding:24px;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);
+  border-radius:18px;border:1px solid rgba(255,255,255,.15);display:flex;flex-direction:column;gap:22px;
   box-shadow:0 15px 30px rgba(0,0,0,.6)
 }
 #status {
-  font-size:12px;font-weight:600;padding:6px 12px;background:rgba(76,175,80,.25);border-radius:16px;
+  font-size:13px;font-weight:600;padding:6px 12px;background:rgba(76,175,80,.25);border-radius:16px;
   border:1px solid rgba(76,175,80,.3);align-self:center
 }
 #welcome {
-  font-size:18px;font-weight:700;background:linear-gradient(135deg,#fff,#eee);-webkit-background-clip:text;
+  font-size:20px;font-weight:700;background:linear-gradient(135deg,#fff,#eee);-webkit-background-clip:text;
   -webkit-text-fill-color:transparent;text-align:center
 }
 #product-list {
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;width:100%
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;width:100%
 }
 .product {
-  background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);
-  padding:14px;border-radius:12px;transition:all .3s;position:relative;overflow:hidden
+  background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);
+  padding:18px;border-radius:14px;transition:all .3s;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center; /* 👈 중앙 정렬 컨테이너 */
 }
 .product:hover {
-  transform:translateY(-4px);box-shadow:0 12px 25px rgba(0,0,0,.4);border-color:rgba(76,175,80,.3)
+  transform:translateY(-5px);box-shadow:0 14px 25px rgba(0,0,0,.4);border-color:rgba(76,175,80,.3)
 }
-.product h3 {margin:0 0 4px;font-size:15px;font-weight:700;color:#fff;text-align:center}
-.product p {margin:0 0 2px;font-size:14px;font-weight:600;color:#4caf50}
-.product small {color:rgba(255,255,255,.75);font-size:12px;display:block;text-align:center;margin-bottom:8px}
+.product h3 { 
+  margin:0 0 8px;font-size:16px;font-weight:700;color:#fff;
+  text-align:center; /* 👈 이름 중앙 */
+}
+.product p { 
+  margin:0 0 12px;font-size:15px;font-weight:600;color:#4caf50;
+  text-align:center; /* 👈 가격 중앙 배치 */
+}
+.product small { 
+  color:rgba(255,255,255,.75);font-size:12px;display:block;
+  text-align:center;margin-bottom:12px; /* 👈 설명도 중앙 */
+}
 .product button {
-  width:100%;padding:8px;border:none;border-radius:6px;cursor:pointer;background:linear-gradient(135deg,#1976d2,#1565c0);
-  color:#fff;font-weight:600;font-size:12px;transition:all .2s;box-shadow:0 2px 8px rgba(25,118,210,.3)
+  width:100%;padding:10px;border:none;border-radius:8px;cursor:pointer;background:linear-gradient(135deg,#1976d2,#1565c0);
+  color:#fff;font-weight:600;font-size:13px;transition:all .2s;box-shadow:0 2px 8px rgba(25,118,210,.3)
 }
 .product button:hover {
   background:linear-gradient(135deg,#1565c0,#0d47a1);transform:translateY(-1px);box-shadow:0 4px 12px rgba(25,118,210,.4)
 }
-.logout-btn {
-  background:linear-gradient(135deg,#d32f2f,#b71c1c);color:#fff;padding:10px 20px;width:180px;border:none;
-  border-radius:12px;cursor:pointer;font-weight:600;font-size:14px;transition:all .2s;box-shadow:0 4px 15px rgba(211,0,0,.3);
-  align-self:center
+.btn-row {
+  display:flex;justify-content:center;gap:16px;flex-wrap:wrap
 }
-.logout-btn:hover {
-  background:linear-gradient(135deg,#b71c1c,#7f0000);transform:translateY(-1px);box-shadow:0 6px 20px rgba(211,0,0,.4)
+.logout-btn, .discord-btn {
+  padding:10px 22px;border:none;border-radius:12px;cursor:pointer;font-weight:600;font-size:14px;
+  color:#fff;transition:all .2s;box-shadow:0 4px 15px rgba(0,0,0,.3)
 }
-@media (max-width:768px) {#product-list{grid-template-columns:repeat(2,1fr);gap:10px}}
+.logout-btn {background:linear-gradient(135deg,#d32f2f,#b71c1c)}
+.logout-btn:hover {background:linear-gradient(135deg,#b71c1c,#7f0000);transform:translateY(-1px)}
+.discord-btn {background:linear-gradient(135deg,#5865F2,#404EED)}
+.discord-btn:hover {background:linear-gradient(135deg,#404EED,#2833C4);transform:translateY(-1px)}
+@media (max-width:768px) {#product-list{grid-template-columns:repeat(2,1fr);gap:12px}}
 @media (max-width:480px) {
-  .container{padding:16px;max-width:95vw}#welcome{font-size:16px}
-  #product-list{grid-template-columns:1fr}.product{padding:12px}
+  .container{padding:18px;max-width:95vw}#welcome{font-size:18px}
+  #product-list{grid-template-columns:1fr}.product{padding:16px}
 }
 </style>
 </head>
@@ -64,7 +77,10 @@ body {
   <div id="status">🟢 온라인</div>
   <h1 id="welcome">로그인 확인 중...</h1>
   <div id="product-list"></div>
-  <button class="logout-btn" id="logout-btn">로그아웃</button>
+  <div class="btn-row">
+    <button class="discord-btn" id="discord-btn">💬 아래를 통해 문의 해주세요</button>
+    <button class="logout-btn" id="logout-btn">로그아웃</button>
+  </div>
 </div>
 <script type="module">
 import { auth } from "./firebase.js";
@@ -73,21 +89,53 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 const welcomeEl = document.getElementById("welcome");
 const productList = document.getElementById("product-list");
 const logoutBtn = document.getElementById("logout-btn");
+const discordBtn = document.getElementById("discord-btn");
 
 const products = [
   {name:"🚀 디스코드 봇 개발",price:"₩25,000",desc:"고성능 멀티봇"},
   {name:"☁️ 프리미엄 호스팅",price:"₩15,000",desc:"99.9% 가동률"},
-  {name:"⚙️ 서버 커스터마이징",price:"₩40,000",desc:"완전 맞춤형"},
-  {name:"🎨 UI/UX 디자인",price:"₩30,000",desc:"현대적 디자인"},
-  {name:"🔒 보안 강화",price:"₩20,000",desc:"DDoS 방어 포함"},
-  {name:"📱 모바일 앱",price:"₩60,000",desc:"네이티브 개발"}
 ];
 
-// 🔥 DISCORD 정보 포함한 문의 메시지
+// ✅ 문의 핸들러
 window.handleInquiry = function(productName) {
-  const message = `🎯 ${productName}\n💰 ${productName.match(/₩\d+[,]?/g)?.[0] || "가격문의"}\n\n👤 Discord: soyugwon\n🔗 https://discord.gg/yEym2KZ9BU\n\n문의사항: `;
+  const message = `🎯 ${productName}
+💰 ${productName.match(/₩\d+[,]?/g)?.[0] || "가격문의"}
+
+👤 Discord: soyugwon
+🔗 https://discord.gg/yEym2KZ9BU
+
+👇 아래를 눌러 아이콘 디스코드 버튼`;
+
   navigator.clipboard.writeText(message).then(() => {
-    alert(`📋 "${productName}" 문의 + Discord 정보 복사완료!\nsoyugwon님께 바로 전송`);
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+      position:fixed;top:0;left:0;width:100%;height:100vh;
+      background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;
+      z-index:9999;padding:20px
+    `;
+    modal.innerHTML = `
+      <div style="background:rgba(30,30,40,0.95);backdrop-filter:blur(10px);padding:30px;border-radius:16px;
+                   text-align:center;max-width:320px;width:90%;border:1px solid rgba(255,255,255,0.1)">
+        <h3 style="margin:0 0 15px 0;font-size:18px;">📋 문의 정보 복사완료!</h3>
+        <p style="font-size:14px;margin-bottom:20px;color:#ccc;line-height:1.4;">
+          클립보드에 복사되었습니다.<br>
+          <strong>👇 아래를 눌러 아이콘 디스코드 버튼</strong>
+        </p>
+        <a href="https://discord.gg/yEym2KZ9BU" target="_blank" style="
+          display:inline-block;padding:12px 24px;background:linear-gradient(135deg,#5865F2,#404EED);
+          color:#fff;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;
+          box-shadow:0 4px 15px rgba(88,101,242,0.4);transition:all .2s
+        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+          💬 디스코드로 이동
+        </a>
+        <br><br>
+        <button onclick="this.parentElement.parentElement.remove()" style="
+          padding:8px 18px;border:none;border-radius:8px;background:#444;color:#fff;
+          cursor:pointer;font-size:13px
+        ">닫기</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
   }).catch(() => {
     prompt("디스코드로 보내세요:", message);
   });
@@ -132,12 +180,11 @@ onAuthStateChanged(auth, (user) => {
 logoutBtn.onclick = async () => {
   logoutBtn.disabled = true;
   logoutBtn.textContent = "로그아웃 중...";
-  try {
-    await signOut(auth);
-  } catch (error) {
-    console.error("로그아웃 오류:", error);
-  }
+  try { await signOut(auth); }
+  catch (error) { console.error("로그아웃 오류:", error); }
 };
+
+discordBtn.onclick = () => window.open("https://discord.gg/yEym2KZ9BU", "_blank");
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") logoutBtn.click();
