@@ -12,7 +12,7 @@ body {
   display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;color:#fff;gap:20px
 }
 .container {
-  width:90vw;max-width:750px;padding:24px;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);
+  width:90vw;max-width:850px;padding:24px;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);
   border-radius:18px;border:1px solid rgba(255,255,255,.15);display:flex;flex-direction:column;gap:22px;
   box-shadow:0 15px 30px rgba(0,0,0,.6)
 }
@@ -25,27 +25,27 @@ body {
   -webkit-text-fill-color:transparent;text-align:center
 }
 #product-list {
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;width:100%
+  display:grid;
+  /* 👇 3열 그리드! */
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;width:100%
 }
 .product {
   background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);
   padding:18px;border-radius:14px;transition:all .3s;position:relative;overflow:hidden;
-  display:flex;flex-direction:column;align-items:center; /* 👈 중앙 정렬 컨테이너 */
+  display:flex;flex-direction:column;align-items:center;
 }
 .product:hover {
   transform:translateY(-5px);box-shadow:0 14px 25px rgba(0,0,0,.4);border-color:rgba(76,175,80,.3)
 }
 .product h3 { 
-  margin:0 0 8px;font-size:16px;font-weight:700;color:#fff;
-  text-align:center; /* 👈 이름 중앙 */
+  margin:0 0 8px;font-size:16px;font-weight:700;color:#fff;text-align:center;
 }
 .product p { 
-  margin:0 0 12px;font-size:15px;font-weight:600;color:#4caf50;
-  text-align:center; /* 👈 가격 중앙 배치 */
+  margin:0 0 12px;font-size:15px;font-weight:600;color:#4caf50;text-align:center;
 }
 .product small { 
-  color:rgba(255,255,255,.75);font-size:12px;display:block;
-  text-align:center;margin-bottom:12px; /* 👈 설명도 중앙 */
+  color:rgba(255,255,255,.75);font-size:12px;display:block;text-align:center;margin-bottom:12px;
 }
 .product button {
   width:100%;padding:10px;border:none;border-radius:8px;cursor:pointer;background:linear-gradient(135deg,#1976d2,#1565c0);
@@ -65,10 +65,16 @@ body {
 .logout-btn:hover {background:linear-gradient(135deg,#b71c1c,#7f0000);transform:translateY(-1px)}
 .discord-btn {background:linear-gradient(135deg,#5865F2,#404EED)}
 .discord-btn:hover {background:linear-gradient(135deg,#404EED,#2833C4);transform:translateY(-1px)}
-@media (max-width:768px) {#product-list{grid-template-columns:repeat(2,1fr);gap:12px}}
+@media (min-width:1024px) {
+  #product-list{grid-template-columns:repeat(3,1fr)}  /* 👈 데스크톱 3열 고정 */
+}
+@media (max-width:768px) {
+  #product-list{grid-template-columns:repeat(2,1fr);gap:12px}  /* 👈 태블릿 2열 */
+}
 @media (max-width:480px) {
   .container{padding:18px;max-width:95vw}#welcome{font-size:18px}
-  #product-list{grid-template-columns:1fr}.product{padding:16px}
+  #product-list{grid-template-columns:1fr;gap:12px}  /* 👈 모바일 1열 */
+  .product{padding:16px}
 }
 </style>
 </head>
