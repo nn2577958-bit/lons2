@@ -7,7 +7,7 @@
 
 <!-- 파비콘 -->
 <link rel="icon" type="image/png"
-      href="https://image2url.com/r2/default/images/1772243366610-bb5dcf71-c530-4962-919b-9fb5fff2dfbc.jfif">
+      href="https://cdn.phototourl.com/uploads/2026-02-28-90909391-9783-4299-a370-a3766a19e150.png">
 
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
@@ -15,128 +15,106 @@
 body {
   height:100vh;
   font-family:'Segoe UI',sans-serif;
-  background:#050816;
+  background:#020617;
   display:flex;justify-content:center;align-items:center;
   overflow:hidden;position:relative;color:#fff;
 }
 
-/* 회전하는 원형 배경 */
+/* ==== 애니메이션 배경 레이어 ==== */
+.bg-gradient {
+  position:absolute;
+  inset:-20%;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(96,165,250,0.35), transparent 60%),
+    radial-gradient(circle at 100% 0%, rgba(244,114,182,0.35), transparent 60%),
+    radial-gradient(circle at 50% 100%, rgba(45,212,191,0.4), transparent 55%);
+  filter:blur(18px);
+  opacity:0.9;
+}
+
+/* 회전 네온 링 */
 .bg-orbit {
   position:absolute;
-  width:900px;
-  height:900px;
+  width:950px;
+  height:950px;
   border-radius:50%;
   background:conic-gradient(
     from 0deg,
-    #6366f1,
-    #ec4899,
+    #4f46e5,
     #22c55e,
-    #6366f1
+    #f97316,
+    #ec4899,
+    #4f46e5
   );
-  filter:blur(40px);
-  opacity:0.55;
-  animation:spinOrbit 18s linear infinite;
+  mix-blend-mode:screen;
+  opacity:0.45;
+  animation:spinOrbit 22s linear infinite;
 }
 .bg-orbit::before {
   content:'';
   position:absolute;
-  inset:120px;
+  inset:140px;
   border-radius:50%;
-  background:#050816;
+  background:#020617;
 }
 @keyframes spinOrbit {
   to { transform:rotate(360deg); }
 }
 
-/* 메인 카드: 2열 레이아웃 */
+/* 떠다니는 글로우 점 */
+.particle {
+  position:absolute;
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(248,250,252,0.9), transparent 65%);
+  opacity:0.16;
+  mix-blend-mode:screen;
+  animation:floatParticle 16s ease-in-out infinite alternate;
+}
+.p1 { top:-40px; left:6%;  animation-delay:0s; }
+.p2 { bottom:-80px; right:4%; animation-delay:3s; }
+.p3 { top:50%; left:-60px; transform:translateY(-50%); animation-delay:6s; }
+
+@keyframes floatParticle {
+  0%   { transform:translate3d(0,0,0) scale(1); }
+  50%  { transform:translate3d(-30px,20px,0) scale(1.05); }
+  100% { transform:translate3d(40px,-30px,0) scale(1.08); }
+}
+
+/* ==== 로그인 카드 ==== */
 .card {
-  position:relative; z-index:1;
-  width:100%; max-width:860px;
-  height:70vh; max-height:520px;
-  background:rgba(15,15,30,0.92);
-  backdrop-filter:blur(20px);
-  border-radius:26px;
-  border:1px solid rgba(148,163,184,0.3);
-  box-shadow:0 24px 60px rgba(0,0,0,0.7);
-  display:flex; overflow:hidden;
-}
-
-/* 좌측 비주얼 영역 */
-.card-left {
-  flex:1.1;
-  position:relative;
-  overflow:hidden;
-  background:
-    linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.85)),
-    url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover;
-}
-.card-left::before {
-  content:''; position:absolute; inset:-20%;
-  background:radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 60%);
-  mix-blend-mode:screen; opacity:0.7;
-}
-.left-inner {
-  position:absolute; inset:0;
-  padding:32px 32px 40px;
-  display:flex; flex-direction:column;
-  justify-content:space-between;
-}
-.left-brand {
-  font-size:22px;
-  font-weight:700;
-  letter-spacing:1px;
-}
-.left-title {
-  font-size:30px;
-  font-weight:800;
-  line-height:1.24;
-  margin-bottom:10px;
-}
-.left-desc {
-  font-size:13px;
-  color:rgba(255,255,255,0.8);
-  max-width:260px;
-}
-.left-tag {
-  align-self:flex-start;
-  padding:6px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,0.4);
-  font-size:11px;
-  color:rgba(255,255,255,0.9);
-}
-
-/* 우측 로그인 영역 */
-.card-right {
-  flex:1;
-  background:rgba(7,10,25,0.96);
-  padding:40px 40px 36px;
-  display:flex; flex-direction:column;
-  justify-content:center;
-  position:relative;
-}
-.card-right::before {
-  content:''; position:absolute; inset:0;
-  background:radial-gradient(circle at top right, rgba(102,126,234,0.4), transparent 55%);
-  opacity:0.9;
-}
-.right-inner {
   position:relative; z-index:2;
+  width:100%; max-width:420px;
+  padding:38px 32px 32px;
+  background:rgba(15,23,42,0.92);
+  backdrop-filter:blur(24px);
+  border-radius:24px;
+  border:1px solid rgba(148,163,184,0.65);
+  box-shadow:
+    0 24px 70px rgba(15,23,42,0.95),
+    0 0 30px rgba(56,189,248,0.45);     /* 네온 외곽 글로우 */
+  display:flex; flex-direction:column;
 }
 
+/* 상단 로고/텍스트 */
 .logo {
   font-size:26px;
   font-weight:800;
+  background:linear-gradient(135deg,#e5e7eb,#ffffff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
   margin-bottom:6px;
+  text-shadow:0 0 12px rgba(129,140,248,0.9); /* 로고 네온 느낌 */
 }
 .subtitle {
   font-size:14px;
-  color:rgba(255,255,255,0.85);
+  color:rgba(226,232,240,0.9);
   margin-bottom:6px;
 }
 .hint {
   font-size:12px;
-  color:rgba(255,255,255,0.7);
+  color:rgba(148,163,184,0.9);
   margin-bottom:22px;
 }
 
@@ -152,7 +130,7 @@ body {
   transition:all 0.25s;
   background:linear-gradient(135deg,#4285F4,#34A853);
   color:#fff;
-  box-shadow:0 10px 28px rgba(66,133,244,0.55);
+  box-shadow:0 10px 28px rgba(37,99,235,0.7);
   position:relative;
   overflow:hidden;
   display:flex;
@@ -161,18 +139,20 @@ body {
 }
 .google-btn::before {
   content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.32),transparent);
-  transition:left 0.5s;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.33),transparent);
+  transition:left 0.55s;
 }
 .google-btn:hover {
-  transform:translateY(-3px) rotate(-2deg);
-  box-shadow:0 14px 34px rgba(66,133,244,0.7);
+  transform:translateY(-3px) rotate(-1.5deg);
+  box-shadow:
+    0 16px 40px rgba(37,99,235,0.95),
+    0 0 26px rgba(56,189,248,0.7);   /* 버튼 네온 글로우 */
   background:linear-gradient(135deg,#34A853,#4285F4);
 }
 .google-btn:hover::before { left:100%; }
 .google-btn:active { transform:translateY(-1px) rotate(-1deg); }
 .google-btn:focus-visible {
-  outline:2px solid #fff;
+  outline:2px solid #e5e7eb;
   outline-offset:3px;
 }
 
@@ -198,65 +178,39 @@ body {
 .error {
   margin-top:12px;
   font-size:12px;
-  color:#ffb3b3;
+  color:#fee2e2;
   min-height:16px;
 }
 
-/* 작은 화면에서는 1열로 전환 */
-@media (max-width:768px) {
+/* 반응형 */
+@media (max-width:480px) {
   .card {
-    max-width:420px;
-    height:auto;
-    max-height:none;
-    flex-direction:column;
-  }
-  .card-left {
-    display:none;
-  }
-  .card-right {
-    padding:32px 26px 28px;
+    margin:0 16px;
+    padding:32px 24px 26px;
   }
 }
 </style>
 </head>
 <body>
-  <!-- 회전 배경 -->
+  <!-- 애니메이션 배경 -->
+  <div class="bg-gradient"></div>
   <div class="bg-orbit"></div>
+  <div class="particle p1"></div>
+  <div class="particle p2"></div>
+  <div class="particle p3"></div>
 
   <!-- 로그인 카드 -->
   <div class="card">
-    <!-- 왼쪽 비주얼 -->
-    <div class="card-left">
-      <div class="left-inner">
-        <div>
-          <div class="left-brand">RANI MALL</div>
-        </div>
-        <div>
-          <div class="left-title">오늘의<br>라니픽을 만나보세요.</div>
-          <p class="left-desc">
-            좋아하는 브랜드와 상품을 한 곳에서.
-            Google 계정 하나로 간편하게 시작할 수 있어요.
-          </p>
-        </div>
-        <div class="left-tag">24/7 간편 쇼핑 · 라니 MALL</div>
-      </div>
-    </div>
+    <div class="logo">라니 MALL</div>
+    <div class="subtitle">환영합니다!</div>
+    <div class="hint">Google 계정으로 안전하게 로그인하세요.</div>
 
-    <!-- 오른쪽 로그인 -->
-    <div class="card-right">
-      <div class="right-inner">
-        <div class="logo">라니 MALL</div>
-        <div class="subtitle">환영합니다!</div>
-        <div class="hint">Google 계정으로 안전하게 로그인하세요.</div>
+    <button id="google-login-btn" class="google-btn">
+      <span class="google-icon" aria-hidden="true"></span>
+      <span id="btn-text">Google 로그인</span>
+    </button>
 
-        <button id="google-login-btn" class="google-btn">
-          <span class="google-icon" aria-hidden="true"></span>
-          <span id="btn-text">Google 로그인</span>
-        </button>
-
-        <div id="error-box" class="error"></div>
-      </div>
-    </div>
+    <div id="error-box" class="error"></div>
   </div>
 
 <script type="module">
@@ -267,7 +221,6 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// 이미 로그인 상태면 바로 홈으로
 onAuthStateChanged(auth, user => {
   if (user) window.location.href = "home.html";
 });
