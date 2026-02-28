@@ -289,13 +289,12 @@ const products = [
   {name:"☁️ 로고",price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등", tag:"design", badge:"로고 디자인"},
 ];
 
-/* ✅ 문의 핸들러: 정규식, 링크, 텍스트만 깔끔히 */
+/* 문의 핸들러 */
 const handleInquiry = (productName) => {
-  const priceMatch = productName.match(/₩\d+[,]?/g);
-  const priceText = priceMatch ? priceMatch[0] : "가격문의";
+  console.log("handleInquiry 호출:", productName); // 디버그용 로그
 
   const message = `🎯 ${productName}
-💰 ${priceText}
+💰 가격문의
 
 👤 Discord: soyugwon
 🔗 https://discord.gg/yEym2KZ9BU
@@ -338,9 +337,10 @@ const handleInquiry = (productName) => {
   });
 };
 
-/* ✅ onclick 안 쓰고, JS에서 직접 이벤트 연결 */
+/* 상품 렌더 + 이벤트 연결 */
 function renderProducts(filter = "all") {
   productList.innerHTML = "";
+
   products
     .filter(p => filter === "all" || p.tag === filter)
     .forEach(product => {
@@ -358,10 +358,13 @@ function renderProducts(filter = "all") {
       productList.appendChild(div);
     });
 
-  // 여기서 한 번에 클릭 이벤트 연결
-  document.querySelectorAll(".inquiry-btn").forEach(btn => {
+  const btns = document.querySelectorAll(".inquiry-btn");
+  console.log("문의 버튼 개수:", btns.length);
+
+  btns.forEach(btn => {
     btn.addEventListener("click", () => {
       const name = btn.getAttribute("data-name");
+      console.log("문의하기 클릭됨:", name);
       handleInquiry(name);
     });
   });
