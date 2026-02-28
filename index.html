@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라니 MALL 로그인</title>
+<title>라니MALLㅣ디스코드/상담/의뢰/외주/봇/로그인</title>
 
 <link rel="icon" type="image/png"
       href="https://cdn.phototourl.com/uploads/2026-02-28-90909391-9783-4299-a370-a3766a19e150.png">
@@ -30,10 +30,385 @@ body {
   filter:blur(18px);
   opacity:0.9;
 }
+
 .bg-orbit {
   position:absolute;
   width:950px;
   height:950px;
+  border-radius:50%;
+  background:conic-gradient(
+    from 0deg,
+    #4f46e5,
+    #22c55e,
+    #f97316,
+    #ec4899,
+    #4f46e5
+  );
+  opacity:0.5;
+  animation:spinOrbit 18s linear infinite;
+}
+
+@keyframes spinOrbit {
+  to { transform:rotate(360deg); }
+}
+
+/* ==== 2열 카드 ==== */
+.card {
+  position:relative; z-index:2;
+  width:100%; max-width:880px;
+  height:70vh; max-height:520px;
+  background:rgba(15,23,42,0.95);
+  backdrop-filter:blur(24px);
+  border-radius:24px;
+  border:1px solid rgba(148,163,184,0.6);
+  box-shadow:0 24px 70px rgba(15,23,42,0.95);
+  display:flex; overflow:hidden;
+}
+
+/* 왼쪽 소개 영역 */
+.card-left {
+  flex:1.1;
+  position:relative;
+  padding:34px 34px 34px 32px;
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,0.35), transparent 60%),
+    radial-gradient(circle at bottom right, rgba(244,114,182,0.35), transparent 55%),
+    linear-gradient(135deg, #020617, #020617);
+  overflow:hidden;
+}
+.card-left::before {
+  content:'';
+  position:absolute;
+  inset:-30%;
+  background:radial-gradient(circle at 0% 0%, rgba(248,250,252,0.12), transparent 65%);
+  opacity:0.7;
+}
+.left-inner {
+  position:relative;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.left-brand {
+  font-size:20px;
+  font-weight:700;
+  letter-spacing:1px;
+}
+.left-title {
+  font-size:30px;
+  font-weight:800;
+  line-height:1.25;
+  margin:12px 0 10px;
+}
+.left-desc {
+  font-size:13px;
+  color:rgba(226,232,240,0.9);
+  max-width:260px;
+}
+.left-tag {
+  align-self:flex-start;
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid rgba(226,232,240,0.8);
+  font-size:11px;
+  color:rgba(226,232,240,0.95);
+}
+
+/* 오른쪽 로그인 영역 */
+.card-right {
+  flex:1;
+  background:rgba(15,23,42,0.98);
+  padding:40px 40px 36px;
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+.card-right::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at top right, rgba(129,140,248,0.4), transparent 55%);
+  opacity:0.9;
+}
+.right-inner {
+  position:relative; z-index:2;
+  width:100%;
+}
+
+/* 텍스트 */
+.logo {
+  font-size:24px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+.subtitle {
+  font-size:14px;
+  color:rgba(226,232,240,0.95);
+  margin-bottom:4px;
+}
+.hint {
+  font-size:12px;
+  color:rgba(148,163,184,0.9);
+  margin-bottom:18px;
+}
+
+/* 입력 폼 */
+.form-group { margin-bottom:14px; }
+label {
+  display:block;
+  font-size:12px;
+  color:rgba(209,213,219,0.95);
+  margin-bottom:4px;
+}
+input {
+  width:100%;
+  padding:10px 11px;
+  border-radius:10px;
+  border:1px solid rgba(55,65,81,0.9);
+  background:rgba(15,23,42,0.95);
+  color:#e5e7eb;
+  font-size:13px;
+  outline:none;
+  transition:border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+input::placeholder { color:rgba(148,163,184,0.8); }
+input:focus {
+  border-color:#6366f1;
+  box-shadow:0 0 0 1px rgba(99,102,241,0.5);
+  background:rgba(15,23,42,1);
+}
+
+.form-extra {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+}
+.form-extra a {
+  font-size:11px;
+  color:rgba(129,140,248,0.95);
+  text-decoration:none;
+}
+.form-extra a:hover { text-decoration:underline; }
+
+/* 기본 로그인 버튼 */
+.primary-btn {
+  width:100%;
+  padding:11px 20px;
+  border:none;
+  border-radius:12px;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  background:linear-gradient(135deg,#4f46e5,#6366f1);
+  color:#f9fafb;
+  box-shadow:0 10px 24px rgba(79,70,229,0.8);
+  transition:all 0.22s;
+}
+.primary-btn:hover {
+  transform:translateY(-2px);
+  box-shadow:0 14px 34px rgba(79,70,229,0.9);
+}
+.primary-btn:active { transform:translateY(0); }
+
+/* 구분선 + Google 버튼 */
+.divider {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:18px 0 14px;
+}
+.divider-line {
+  flex:1;
+  height:1px;
+  background:rgba(55,65,81,0.9);
+}
+.divider-text {
+  font-size:11px;
+  color:rgba(148,163,184,0.9);
+}
+
+.google-btn {
+  width:100%;
+  padding:12px 20px;
+  border:none;
+  border-radius:12px;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  transition:all 0.25s;
+  background:linear-gradient(135deg,#4285F4,#34A853);
+  color:#fff;
+  box-shadow:0 10px 26px rgba(37,99,235,0.8);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.google-btn::before {
+  content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.33),transparent);
+  transition:left 0.55s;
+}
+.google-btn:hover {
+  transform:translateY(-2px);
+  box-shadow:0 14px 34px rgba(37,99,235,0.95);
+}
+.google-btn:hover::before { left:100%; }
+.google-btn:active { transform:translateY(0); }
+
+.google-icon {
+  width:18px;height:18px;margin-right:8px;display:inline-block;
+  background:linear-gradient(135deg,#fff,#f8f9fa);border-radius:4px;
+  mask:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" opacity=".6"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>') no-repeat center;
+  -webkit-mask:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" opacity=".6"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07	H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>') no-repeat center;
+  mask-size:16px;
+}
+
+.loading {
+  display:inline-block;
+  width:16px;height:16px;
+  border:2px solid rgba(255,255,255,0.3);
+  border-radius:50%;
+  border-top-color:#fff;
+  margin-right:8px;
+  animation:spin 1s ease-in-out infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.error {
+  margin-top:10px;
+  font-size:12px;
+  color:#fee2e2;
+  min-height:16px;
+}
+
+/* 모바일: 1열로 전환 */
+@media (max-width:768px) {
+  .card {
+    max-width:420px;
+    height:auto;
+    max-height:none;
+    flex-direction:column;
+  }
+  .card-left {
+    display:none;
+  }
+  .card-right {
+    padding:32px 26px 28px;
+  }
+}
+</style>
+</head>
+<body>
+  <!-- 애니메이션 배경 -->
+  <div class="bg-gradient"></div>
+  <div class="bg-orbit"></div>
+
+  <!-- 2열 카드 -->
+  <div class="card">
+    <!-- 왼쪽 -->
+    <div class="card-left">
+      <div class="left-inner">
+        <div>
+          <div class="left-brand">RANI MALL</div>
+          <div class="left-title">오늘의<br>라니픽을 만나보세요.</div>
+          <p class="left-desc">
+            좋아하는 브랜드와 상품을 한 곳에서.
+            계정 하나로 빠르고 간편하게 시작해 보세요.
+          </p>
+        </div>
+        <div class="left-tag">24/7 간편 쇼핑 · 라니 MALL</div>
+      </div>
+    </div>
+
+    <!-- 오른쪽 -->
+    <div class="card-right">
+      <div class="right-inner">
+        <div class="logo">라니 MALL</div>
+        <div class="subtitle">로그인</div>
+        <div class="hint">라니 MALL 계정 또는 Google로 로그인하세요.</div>
+
+        <form id="email-login-form">
+          <div class="form-group">
+            <label for="email">이메일</label>
+            <input id="email" type="email" placeholder="example@domain.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input id="password" type="password" placeholder="비밀번호" autocomplete="current-password">
+          </div>
+
+          <div class="form-extra">
+            <span></span>
+            <a href="#">비밀번호를 잊으셨나요?</a>
+          </div>
+
+          <button type="submit" class="primary-btn">이메일로 로그인</button>
+        </form>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-text">또는</div>
+          <div class="divider-line"></div>
+        </div>
+
+        <button id="google-login-btn" class="google-btn">
+          <span class="google-icon" aria-hidden="true"></span>
+          <span id="btn-text">Google로 계속</span>
+        </button>
+
+        <div id="error-box" class="error"></div>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+import { auth } from "./firebase.js";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+// 이미 로그인되어 있으면 홈으로
+onAuthStateChanged(auth, user => {
+  if (user) window.location.href = "home.html";
+});
+
+// 이메일/비밀번호 로그인은 아직 미구현이라 알림만
+const emailForm = document.getElementById("email-login-form");
+const errorBox = document.getElementById("error-box");
+emailForm.addEventListener("submit", e => {
+  e.preventDefault();
+  errorBox.textContent = "현재는 Google 로그인만 지원합니다.";
+});
+
+// Google 로그인
+const provider = new GoogleAuthProvider();
+const loginBtn = document.getElementById("google-login-btn");
+const btnText = document.getElementById("btn-text");
+
+loginBtn.addEventListener("click", async () => {
+  loginBtn.disabled = true;
+  errorBox.textContent = "";
+  btnText.innerHTML = '<span class="loading"></span>로그인 중...';
+
+  try {
+    const result = await signInWithPopup(auth, provider);
+    if (result.user) window.location.href = "home.html";
+  } catch (err) {
+    console.error("로그인 오류:", err);
+    errorBox.textContent = "로그인 실패: " + (err.message || "다시 시도해 주세요.");
+    loginBtn.disabled = false;
+    btnText.textContent = "Google로 계속";
+  }
+});
+</script>
+</body>
+</html>
   border-radius:50%;
   background:conic-gradient(
     from 0deg,
