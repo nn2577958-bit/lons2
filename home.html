@@ -51,18 +51,9 @@ body {
   border-radius:999px;
   border:1px solid rgba(34,197,94,.3);
 }
-.header-info {
-  text-align:right;
-}
-.mall-name {
-  font-size:18px;
-  font-weight:800;
-  letter-spacing:.03em;
-}
-.mall-sub {
-  font-size:12px;
-  color:rgba(209,213,219,.9);
-}
+.header-info {text-align:right}
+.mall-name {font-size:18px;font-weight:800;letter-spacing:.03em}
+.mall-sub {font-size:12px;color:rgba(209,213,219,.9)}
 
 /* 환영 문구 */
 #welcome {
@@ -107,7 +98,7 @@ body {
   margin-top:4px;
 }
 
-/* 상품 카드 업그레이드 */
+/* 상품 카드 */
 .product {
   width:100%;
   max-width:260px;
@@ -132,23 +123,19 @@ body {
   opacity:0;
   transition:opacity .3s;
 }
-.product:hover::before {
-  opacity:1;
-}
+.product:hover::before {opacity:1}
 .product:hover {
   transform:translateY(-6px);
   box-shadow:0 18px 28px rgba(15,23,42,.75);
   border-color:rgba(56,189,248,.6);
 }
-
-/* 상품 텍스트 */
-.product h3 { 
+.product h3 {
   margin:0 0 6px;
   font-size:15px;
   font-weight:700;
   color:#f9fafb;
 }
-.product p { 
+.product p {
   margin:0 0 6px;
   font-size:14px;
   font-weight:600;
@@ -156,14 +143,12 @@ body {
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
-.product small { 
+.product small {
   color:rgba(209,213,219,.88);
   font-size:12px;
   display:block;
   margin-bottom:10px;
 }
-
-/* 배지 + 버튼 영역 */
 .product-footer {
   width:100%;
   display:flex;
@@ -180,27 +165,6 @@ body {
   color:rgba(209,213,219,.9);
 }
 
-/* 문의 버튼 */
-.product button {
-  flex-shrink:0;
-  padding:8px 14px;
-  border:none;
-  border-radius:999px;
-  cursor:pointer;
-  background:linear-gradient(135deg,#1976d2,#1565c0);
-  color:#fff;
-  font-weight:600;
-  font-size:12px;
-  transition:all .2s;
-  box-shadow:0 2px 8px rgba(25,118,210,.35);
-  white-space:nowrap;
-}
-.product button:hover {
-  background:linear-gradient(135deg,#1565c0,#0d47a1);
-  transform:translateY(-1px);
-  box-shadow:0 4px 12px rgba(25,118,210,.45);
-}
-
 /* 하단 버튼 줄 */
 .btn-row {
   display:flex;
@@ -210,7 +174,7 @@ body {
   flex-wrap:wrap;
   margin-top:6px;
 }
-.logout-btn, .discord-btn {
+.logout-btn, .discord-btn, .inquiry-main-btn {
   padding:9px 18px;
   border:none;
   border-radius:999px;
@@ -225,6 +189,8 @@ body {
 .logout-btn:hover {background:linear-gradient(135deg,#b71c1c,#7f0000);transform:translateY(-1px)}
 .discord-btn {background:linear-gradient(135deg,#5865F2,#404EED)}
 .discord-btn:hover {background:linear-gradient(135deg,#404EED,#2833C4);transform:translateY(-1px)}
+.inquiry-main-btn {background:linear-gradient(135deg,#22c55e,#16a34a)}
+.inquiry-main-btn:hover {background:linear-gradient(135deg,#16a34a,#15803d);transform:translateY(-1px)}
 
 /* 반응형 */
 @media (min-width:1024px) {
@@ -267,6 +233,7 @@ body {
   <div class="btn-row">
     <button class="discord-btn" id="discord-btn">🙈 디스코드</button>
     <button class="logout-btn" id="logout-btn">로그아웃</button>
+    <button class="inquiry-main-btn" id="inquiry-btn">문의하기</button>
   </div>
 </div>
 
@@ -278,6 +245,7 @@ const welcomeEl = document.getElementById("welcome");
 const productList = document.getElementById("product-list");
 const logoutBtn = document.getElementById("logout-btn");
 const discordBtn = document.getElementById("discord-btn");
+const inquiryBtn = document.getElementById("inquiry-btn");
 const tabs = document.querySelectorAll(".tab");
 
 const products = [
@@ -289,55 +257,7 @@ const products = [
   {name:"☁️ 로고",price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등", tag:"design", badge:"로고 디자인"},
 ];
 
-/* 문의 핸들러 */
-const handleInquiry = (productName) => {
-  console.log("handleInquiry 호출:", productName);
-
-  const message = `🎯 ${productName}
-💰 가격문의
-
-👤 Discord: soyugwon
-🔗 https://discord.gg/yEym2KZ9BU
-
-👇 아래를 눌러 아이콘 디스코드 버튼`;
-
-  navigator.clipboard.writeText(message).then(() => {
-    const modal = document.createElement("div");
-    modal.style.cssText = `
-      position:fixed;top:0;left:0;width:100%;height:100vh;
-      background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;
-      z-index:9999;padding:20px
-    `;
-    modal.innerHTML = `
-      <div style="background:rgba(30,30,40,0.95);backdrop-filter:blur(10px);padding:30px;border-radius:16px;
-                   text-align:center;max-width:320px;width:90%;border:1px solid rgba(255,255,255,0.1)">
-        <h3 style="margin:0 0 15px 0;font-size:18px;">📋 문의 정보 복사완료!</h3>
-        <p style="font-size:14px;margin-bottom:20px;color:#ccc;line-height:1.4;">
-          클립보드에 복사되었습니다.<br>
-          <strong>👇 아래를 눌러 아이콘 디스코드 버튼</strong>
-        </p>
-        <a href="https://discord.gg/yEym2KZ9BU" target="_blank" style="
-          display:inline-block;padding:12px 24px;background:linear-gradient(135deg,#5865F2,#404EED);
-          color:#fff;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;
-          box-shadow:0 4px 15px rgba(88,101,242,0.4);transition:all .2s
-        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-          💬 디스코드로 이동
-        </a>
-        <br><br>
-        <button style="
-          padding:8px 18px;border:none;border-radius:8px;background:#444;color:#fff;
-          cursor:pointer;font-size:13px
-        ">닫기</button>
-      </div>
-    `;
-    modal.querySelector("button").addEventListener("click", () => modal.remove());
-    document.body.appendChild(modal);
-  }).catch(() => {
-    prompt("디스코드로 보내세요:", message);
-  });
-};
-
-/* 상품 렌더 (이 안에서는 이벤트 안 건다) */
+// 상품 렌더 (카드 안에는 버튼 없음)
 function renderProducts(filter = "all") {
   productList.innerHTML = "";
 
@@ -352,7 +272,6 @@ function renderProducts(filter = "all") {
         <small>${product.desc}</small>
         <div class="product-footer">
           <span class="badge">${product.badge}</span>
-          <button class="inquiry-btn" data-name="${product.name}">문의하기</button>
         </div>
       `;
       productList.appendChild(div);
@@ -361,15 +280,22 @@ function renderProducts(filter = "all") {
   console.log("상품 렌더 완료");
 }
 
-/* ✅ 상품 리스트에서 클릭 이벤트 위임 */
-productList.addEventListener("click", (e) => {
-  const btn = e.target.closest(".inquiry-btn");
-  if (!btn) return;                 // 문의하기 버튼 아니면 무시
+// 아래 큰 문의하기 버튼
+inquiryBtn.onclick = () => {
+  const message = `🎯 라니 MALL 문의
+💰 가격 및 상품 문의
 
-  const name = btn.getAttribute("data-name");
-  console.log("문의하기 클릭됨 (위임):", name);
-  handleInquiry(name);
-});
+👤 Discord: soyugwon
+🔗 https://discord.gg/yEym2KZ9BU
+
+👇 아래 디스코드 버튼을 눌러 문의를 보내주세요.`;
+
+  navigator.clipboard.writeText(message).then(() => {
+    alert("문의 텍스트가 복사되었습니다. 디스코드에서 붙여넣기 해 주세요.");
+  }).catch(() => {
+    prompt("디스코드로 보내세요:", message);
+  });
+};
 
 let statusInterval;
 function updateStatus() {
@@ -395,7 +321,7 @@ tabs.forEach(tab => {
 onAuthStateChanged(auth, (user) => {
   if (user) {
     welcomeEl.textContent = `환영합니다, ${user.email.split('@')[0]}님! 👋`;
-    renderProducts();          // 기본 전체 보여주기
+    renderProducts();
     statusInterval = setInterval(updateStatus, 1000);
     updateStatus();
   } else {
