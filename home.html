@@ -289,8 +289,8 @@ const products = [
   {name:"☁️ 로고",price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등", tag:"design", badge:"로고 디자인"},
 ];
 
-// 문의 핸들러
-window.handleInquiry = function(productName) {
+// 문의 핸들러 (모듈에서도 전역으로 노출)
+const handleInquiry = (productName) => {
   const message = `🎯 ${productName}
 💰 ${productName.match(/₩\d+[,]?/g)?.[0] || "가격문의"}
 
@@ -332,7 +332,10 @@ window.handleInquiry = function(productName) {
   }).catch(() => {
     prompt("디스코드로 보내세요:", message);
   });
-}
+};
+
+// 모듈에서 전역(window)에 붙여줘야 onclick에서 인식됨
+window.handleInquiry = handleInquiry;
 
 function renderProducts(filter = "all") {
   productList.innerHTML = "";
@@ -404,4 +407,3 @@ document.addEventListener("keydown", (e) => {
 </script>
 </body>
 </html>
-
