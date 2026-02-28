@@ -7,87 +7,269 @@
 <style>
 * {box-sizing:border-box;margin:0;padding:0}
 body {
-  min-height:100vh;font-family:'Segoe UI',sans-serif;
-  background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.7)),url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover;
-  display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;color:#fff;gap:20px
+  min-height:100vh;
+  font-family:'Segoe UI',sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(15,23,42,.7), rgba(15,23,42,.95)),
+    url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  color:#fff;
+  gap:20px;
 }
+
+/* 메인 카드 컨테이너 */
 .container {
-  width:90vw;max-width:850px;padding:24px;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);
-  border-radius:18px;border:1px solid rgba(255,255,255,.15);display:flex;flex-direction:column;gap:22px;
-  box-shadow:0 15px 30px rgba(0,0,0,.6)
+  width:92vw;
+  max-width:960px;
+  padding:24px 24px 22px;
+  background:rgba(15,23,42,.82);
+  backdrop-filter:blur(12px);
+  border-radius:22px;
+  border:1px solid rgba(148,163,184,.35);
+  box-shadow:0 22px 50px rgba(15,23,42,.9);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+/* 상단 상태 + 헤더 라인 */
+.top-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
 }
 #status {
-  font-size:13px;font-weight:600;padding:6px 12px;background:rgba(76,175,80,.25);border-radius:16px;
-  border:1px solid rgba(76,175,80,.3);align-self:center
+  font-size:12px;
+  font-weight:600;
+  padding:6px 12px;
+  background:rgba(34,197,94,.15);
+  border-radius:999px;
+  border:1px solid rgba(34,197,94,.3);
 }
+.header-info {
+  text-align:right;
+}
+.mall-name {
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:.03em;
+}
+.mall-sub {
+  font-size:12px;
+  color:rgba(209,213,219,.9);
+}
+
+/* 환영 문구 */
 #welcome {
-  font-size:20px;font-weight:700;background:linear-gradient(135deg,#fff,#eee);-webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;text-align:center
+  font-size:20px;
+  font-weight:700;
+  background:linear-gradient(135deg,#e5e7eb,#f9fafb);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-align:left;
 }
+
+/* 카테고리 탭 */
+.tabs {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:-4px;
+}
+.tab {
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,.5);
+  font-size:11px;
+  color:rgba(209,213,219,.9);
+  cursor:pointer;
+  background:rgba(15,23,42,.85);
+  transition:all .2s;
+}
+.tab.active {
+  background:linear-gradient(135deg,#3b82f6,#22c55e);
+  border-color:transparent;
+  color:#f9fafb;
+  box-shadow:0 6px 14px rgba(37,99,235,.55);
+}
+
+/* 상품 그리드 */
 #product-list {
   display:grid;
-  /* 👇 3열 그리드! */
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:16px;width:100%
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
+  width:100%;
+  margin-top:4px;
 }
+
+/* 상품 카드 업그레이드 */
 .product {
-  background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);
-  padding:18px;border-radius:14px;transition:all .3s;position:relative;overflow:hidden;
-  display:flex;flex-direction:column;align-items:center;
+  width:100%;
+  max-width:260px;
+  background:radial-gradient(circle at top left, rgba(148,163,184,.25), transparent 55%),
+             rgba(15,23,42,.9);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(148,163,184,.45);
+  padding:18px 16px 14px;
+  border-radius:16px;
+  transition:all .3s;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
+.product::before {
+  content:'';
+  position:absolute;
+  inset:-40%;
+  background:radial-gradient(circle at 0% 0%, rgba(56,189,248,.28), transparent 60%);
+  opacity:0;
+  transition:opacity .3s;
+}
+.product:hover::before {
+  opacity:1;
 }
 .product:hover {
-  transform:translateY(-5px);box-shadow:0 14px 25px rgba(0,0,0,.4);border-color:rgba(76,175,80,.3)
+  transform:translateY(-6px);
+  box-shadow:0 18px 28px rgba(15,23,42,.75);
+  border-color:rgba(56,189,248,.6);
 }
+
+/* 상품 텍스트 */
 .product h3 { 
-  margin:0 0 8px;font-size:16px;font-weight:700;color:#fff;text-align:center;
+  margin:0 0 6px;
+  font-size:15px;
+  font-weight:700;
+  color:#f9fafb;
 }
 .product p { 
-  margin:0 0 12px;font-size:15px;font-weight:600;color:#4caf50;text-align:center;
+  margin:0 0 6px;
+  font-size:14px;
+  font-weight:600;
+  background:linear-gradient(135deg,#4ade80,#22c55e);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 .product small { 
-  color:rgba(255,255,255,.75);font-size:12px;display:block;text-align:center;margin-bottom:12px;
+  color:rgba(209,213,219,.88);
+  font-size:12px;
+  display:block;
+  margin-bottom:10px;
 }
+
+/* 배지 + 버튼 영역 */
+.product-footer {
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-top:auto;
+}
+.badge {
+  padding:4px 8px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,.6);
+  font-size:10px;
+  color:rgba(209,213,219,.9);
+}
+
+/* 문의 버튼 */
 .product button {
-  width:100%;padding:10px;border:none;border-radius:8px;cursor:pointer;background:linear-gradient(135deg,#1976d2,#1565c0);
-  color:#fff;font-weight:600;font-size:13px;transition:all .2s;box-shadow:0 2px 8px rgba(25,118,210,.3)
+  flex-shrink:0;
+  padding:8px 14px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  background:linear-gradient(135deg,#1976d2,#1565c0);
+  color:#fff;
+  font-weight:600;
+  font-size:12px;
+  transition:all .2s;
+  box-shadow:0 2px 8px rgba(25,118,210,.35);
+  white-space:nowrap;
 }
 .product button:hover {
-  background:linear-gradient(135deg,#1565c0,#0d47a1);transform:translateY(-1px);box-shadow:0 4px 12px rgba(25,118,210,.4)
+  background:linear-gradient(135deg,#1565c0,#0d47a1);
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(25,118,210,.45);
 }
+
+/* 하단 버튼 줄 */
 .btn-row {
-  display:flex;justify-content:center;gap:16px;flex-wrap:wrap
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-top:6px;
 }
 .logout-btn, .discord-btn {
-  padding:10px 22px;border:none;border-radius:12px;cursor:pointer;font-weight:600;font-size:14px;
-  color:#fff;transition:all .2s;box-shadow:0 4px 15px rgba(0,0,0,.3)
+  padding:9px 18px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:13px;
+  color:#fff;
+  transition:all .2s;
+  box-shadow:0 4px 15px rgba(15,23,42,.7);
 }
 .logout-btn {background:linear-gradient(135deg,#d32f2f,#b71c1c)}
 .logout-btn:hover {background:linear-gradient(135deg,#b71c1c,#7f0000);transform:translateY(-1px)}
 .discord-btn {background:linear-gradient(135deg,#5865F2,#404EED)}
 .discord-btn:hover {background:linear-gradient(135deg,#404EED,#2833C4);transform:translateY(-1px)}
+
+/* 반응형 */
 @media (min-width:1024px) {
-  #product-list{grid-template-columns:repeat(3,1fr)}  /* 👈 데스크톱 3열 고정 */
+  #product-list{grid-template-columns:repeat(3,1fr)}
 }
 @media (max-width:768px) {
-  #product-list{grid-template-columns:repeat(2,1fr);gap:12px}  /* 👈 태블릿 2열 */
+  .container{padding:20px 18px}
+  #product-list{grid-template-columns:repeat(2,1fr);gap:14px}
+  .btn-row{flex-direction:column;align-items:stretch}
 }
 @media (max-width:480px) {
-  .container{padding:18px;max-width:95vw}#welcome{font-size:18px}
-  #product-list{grid-template-columns:1fr;gap:12px}  /* 👈 모바일 1열 */
-  .product{padding:16px}
+  .container{padding:18px;max-width:95vw}
+  #welcome{font-size:18px}
+  #product-list{grid-template-columns:1fr;gap:12px}
 }
 </style>
 </head>
 <body>
 <div class="container">
-  <div id="status">🟢 온라인</div>
+  <div class="top-row">
+    <div id="status">🟢 온라인</div>
+    <div class="header-info">
+      <div class="mall-name">라니 MALL</div>
+      <div class="mall-sub">디스코드 봇 · 서버 세팅 · 로고 디자인</div>
+    </div>
+  </div>
+
   <h1 id="welcome">로그인 확인 중...</h1>
+
+  <!-- 카테고리 탭 -->
+  <div class="tabs">
+    <button class="tab active" data-filter="all">전체</button>
+    <button class="tab" data-filter="bot">디스코드 봇</button>
+    <button class="tab" data-filter="design">디자인</button>
+    <button class="tab" data-filter="hosting">호스팅</button>
+  </div>
+
   <div id="product-list"></div>
+
   <div class="btn-row">
     <button class="discord-btn" id="discord-btn">🙈 디스코드</button>
     <button class="logout-btn" id="logout-btn">로그아웃</button>
   </div>
 </div>
+
 <script type="module">
 import { auth } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -96,20 +278,21 @@ const welcomeEl = document.getElementById("welcome");
 const productList = document.getElementById("product-list");
 const logoutBtn = document.getElementById("logout-btn");
 const discordBtn = document.getElementById("discord-btn");
+const tabs = document.querySelectorAll(".tab");
 
 const products = [
-  {name:"🚀 디스코드 봇 일반",price:"₩15,000",desc:"기능 맞춤 제작 1개"},
-  {name:"🚀 디스코드 봇 고급",price:"₩30,000",desc:"게임 봇 시스템 적용 등"},
-  {name:"☁️ 디스코드 템플릿",price:"₩5,000",desc:"역할 & 기본 세팅"},
-  {name:"☁️ 프리미엄 해외 호스팅",price:"월₩10,000 ~시작",desc:"99.9% 디도스 보호 완벽 차단 빽업 기능"},
-  {name:"☁️ 프로필",price:"₩3,000 ~ 시작",desc:"이쁜 선생님이 해주셔요"},
-  {name:"☁️ 로고",price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등"},
+  {name:"🚀 디스코드 봇 일반",price:"₩15,000",desc:"기능 맞춤 제작 1개", tag:"bot", badge:"기본 봇 제작"},
+  {name:"🚀 디스코드 봇 고급",price:"₩30,000",desc:"게임 봇 시스템 적용 등", tag:"bot", badge:"고급 기능"},
+  {name:"☁️ 디스코드 템플릿",price:"₩5,000",desc:"역할 & 기본 세팅", tag:"bot", badge:"템플릿"},
+  {name:"☁️ 프리미엄 해외 호스팅",price:"월₩10,000 ~시작",desc:"99.9% 디도스 보호 완벽 차단 빽업 기능", tag:"hosting", badge:"호스팅"},
+  {name:"☁️ 프로필",price:"₩3,000 ~ 시작",desc:"이쁜 선생님이 해주셔요", tag:"design", badge:"프로필 디자인"},
+  {name:"☁️ 로고",price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등", tag:"design", badge:"로고 디자인"},
 ];
 
-// ✅ 문의 핸들러
+// 문의 핸들러
 window.handleInquiry = function(productName) {
   const message = `🎯 ${productName}
-💰 ${productName.match(/₩\d+[,]?/g)?.[0] || "가격문의"}
+💰 ${productName.match(/₩\\d+[,]?/g)?.[0] || "가격문의"}
 
 👤 Discord: soyugwon
 🔗 https://discord.gg/yEym2KZ9BU
@@ -151,19 +334,24 @@ window.handleInquiry = function(productName) {
   });
 }
 
-function renderProducts() {
+function renderProducts(filter = "all") {
   productList.innerHTML = "";
-  products.forEach(product => {
-    const div = document.createElement("div");
-    div.className = "product";
-    div.innerHTML = `
-      <h3>${product.name}</h3>
-      <p>${product.price}</p>
-      <small>${product.desc}</small>
-      <button onclick="handleInquiry('${product.name.replace(/'/g, "\\'")}')">문의하기</button>
-    `;
-    productList.appendChild(div);
-  });
+  products
+    .filter(p => filter === "all" || p.tag === filter)
+    .forEach(product => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <h3>${product.name}</h3>
+        <p>${product.price}</p>
+        <small>${product.desc}</small>
+        <div class="product-footer">
+          <span class="badge">${product.badge}</span>
+          <button onclick="handleInquiry('${product.name.replace(/'/g, "\\\\'")}')">문의하기</button>
+        </div>
+      `;
+      productList.appendChild(div);
+    });
 }
 
 let statusInterval;
@@ -176,10 +364,21 @@ function updateStatus() {
   document.getElementById("status").textContent = `🟢 온라인 | ${now}`;
 }
 
+// 탭 필터 이벤트
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    tabs.forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    const filter = tab.getAttribute("data-filter");
+    renderProducts(filter);
+  });
+});
+
+// 로그인 상태 체크
 onAuthStateChanged(auth, (user) => {
   if (user) {
     welcomeEl.textContent = `환영합니다, ${user.email.split('@')[0]}님! 👋`;
-    renderProducts();
+    renderProducts();          // 기본 전체 보여주기
     statusInterval = setInterval(updateStatus, 1000);
     updateStatus();
   } else {
@@ -187,6 +386,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+// 로그아웃
 logoutBtn.onclick = async () => {
   logoutBtn.disabled = true;
   logoutBtn.textContent = "로그아웃 중...";
@@ -194,8 +394,10 @@ logoutBtn.onclick = async () => {
   catch (error) { console.error("로그아웃 오류:", error); }
 };
 
+// 디스코드 버튼
 discordBtn.onclick = () => window.open("https://discord.gg/yEym2KZ9BU", "_blank");
 
+// ESC 로 로그아웃
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") logoutBtn.click();
 });
