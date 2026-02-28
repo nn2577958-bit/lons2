@@ -11,12 +11,15 @@
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
 
-/* ==== 차분한 블루·민트 네온 배경 ==== */
+/* ==== 전체에 살아 있는 네온 그라데이션 배경 ==== */
 body {
   height:100vh;
   font-family:'Segoe UI',sans-serif;
   background:
-    radial-gradient(circle at 10% 0%, #0f172a 0%, #020617 45%, #020617 100%);
+    radial-gradient(circle at 0% 0%, rgba(15,23,42,0.95), #020617 60%),
+    linear-gradient(-45deg, #0f172a, #1e293b, #0f172a, #020617);
+  background-size:200% 200%;
+  animation:bgWave 30s ease-in-out infinite;
   color:#fff;
   display:flex;
   justify-content:center;
@@ -37,10 +40,6 @@ body::before {
   filter:blur(12px);
   animation:calmNebula 26s ease-in-out infinite;
   z-index:-2;
-}
-@keyframes calmNebula {
-  0%,100% { transform:scale(1) translate(0,0); }
-  50%     { transform:scale(1.06) translate(-20px, 18px); }
 }
 
 /* 아주 느리게 도는 희미한 링 */
@@ -69,6 +68,21 @@ body::before {
   border-radius:50%;
   background:radial-gradient(circle, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
 }
+
+/* 배경 전체가 물결처럼 천천히 움직이는 효과 */
+@keyframes bgWave {
+  0%   { background-position:0% 50%; }
+  50%  { background-position:100% 50%; }
+  100% { background-position:0% 50%; }
+}
+
+/* 안개 살짝 이동 */
+@keyframes calmNebula {
+  0%,100% { transform:scale(1) translate(0,0); }
+  50%     { transform:scale(1.06) translate(-20px, 18px); }
+}
+
+/* 링 회전 */
 @keyframes slowOrbit {
   to { transform:rotate(360deg); }
 }
@@ -82,8 +96,11 @@ body::before {
   backdrop-filter:blur(24px);
   border-radius:24px;
   border:1px solid rgba(148,163,184,0.55);
-  box-shadow:0 24px 70px rgba(15,23,42,0.95);
-  display:flex; overflow:hidden;
+  box-shadow:
+    0 24px 70px rgba(15,23,42,0.95),
+    0 0 22px rgba(56,189,248,0.32);
+  display:flex;
+  overflow:hidden;
 }
 
 /* 왼쪽 소개 영역 */
@@ -157,7 +174,7 @@ body::before {
   width:100%;
 }
 
-/* 텍스트 */
+/* 상단 로고 + 제목 */
 .logo {
   font-size:24px;
   font-weight:800;
@@ -165,13 +182,28 @@ body::before {
 }
 .subtitle {
   font-size:14px;
-  color:rgba(226,232,240,0.95);
-  margin-bottom:4px;
+  margin-bottom:6px;
+  background:linear-gradient(135deg,#e5e7eb,#ffffff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
+
+/* 네온 그라데이션 안내 문구 */
 .hint {
-  font-size:12px;
-  color:rgba(148,163,184,0.9);
-  margin-bottom:18px;
+  font-size:13px;
+  font-weight:600;
+  margin-bottom:20px;
+  background:linear-gradient(130deg,#38bdf8,#22c55e,#a855f7,#f97316,#38bdf8);
+  background-size:250% 250%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:hintGlow 6s ease-in-out infinite;
+  text-shadow:0 0 14px rgba(56,189,248,0.55);
+}
+@keyframes hintGlow {
+  0%   { background-position:0% 50%;   text-shadow:0 0 10px rgba(56,189,248,0.45); }
+  50%  { background-position:100% 50%; text-shadow:0 0 20px rgba(45,212,191,0.65); }
+  100% { background-position:0% 50%;   text-shadow:0 0 10px rgba(56,189,248,0.45); }
 }
 
 /* 입력 폼 */
@@ -283,8 +315,8 @@ input:focus {
 .google-icon {
   width:18px;height:18px;margin-right:8px;display:inline-block;
   background:linear-gradient(135deg,#fff,#f8f9fa);border-radius:4px;
-  mask:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" opacity=".6"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>') no-repeat center;
-  -webkit-mask:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25	H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" opacity=".6"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07	H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>') no-repeat center;
+  mask:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25	H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" opacity=".6"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53	H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07	H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>') no-repeat center;
+  -webkit-mask:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25	H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" opacity=".6"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53	H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07	H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>') no-repeat center;
   mask-size:16px;
 }
 
@@ -324,32 +356,32 @@ input:focus {
 </style>
 </head>
 <body>
-  <!-- 차분한 네온 배경 요소 -->
+  <!-- 네온 링 배경 요소 -->
   <div class="bg-orbit"></div>
 
   <!-- 2열 로그인 카드 -->
   <div class="card">
-    <!-- 왼쪽 -->
+    <!-- 왼쪽 소개 -->
     <div class="card-left">
       <div class="left-inner">
         <div>
           <div class="left-brand">RANI MALL</div>
           <div class="left-title">오늘의<br>라니픽을 만나보세요.</div>
           <p class="left-desc">
-            좋아하는 브랜드와 상품을 한 곳에서.
-            계정 하나로 빠르고 간편하게 시작해 보세요.
+            디스코드 봇, 서버 세팅, 로고 디자인까지<br>
+            한 번에 의뢰하고 관리해 보세요.
           </p>
         </div>
-        <div class="left-tag">24/7 간편 쇼핑 · 라니 MALL</div>
+        <div class="left-tag">24/7 디스코드 · 외주 · 봇 서비스</div>
       </div>
     </div>
 
-    <!-- 오른쪽 -->
+    <!-- 오른쪽 로그인 -->
     <div class="card-right">
       <div class="right-inner">
         <div class="logo">라니 MALL</div>
         <div class="subtitle">로그인</div>
-        <div class="hint">라니 MALL 계정 또는 Google로 로그인하세요.</div>
+        <div class="hint">디스코드 봇 · 서버 세팅 · 로고 디자인을 한 번에 만나보세요.</div>
 
         <form id="email-login-form">
           <div class="form-group">
@@ -393,7 +425,6 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// 이미 로그인되어 있으면 홈으로
 onAuthStateChanged(auth, user => {
   if (user) window.location.href = "home.html";
 });
@@ -406,7 +437,6 @@ emailForm.addEventListener("submit", e => {
   errorBox.textContent = "현재는 Google 로그인만 지원합니다.";
 });
 
-// Google 로그인
 const provider = new GoogleAuthProvider();
 const loginBtn = document.getElementById("google-login-btn");
 const btnText = document.getElementById("btn-text");
@@ -421,7 +451,7 @@ loginBtn.addEventListener("click", async () => {
     if (result.user) window.location.href = "home.html";
   } catch (err) {
     console.error("로그인 오류:", err);
-    errorBox.textContent = "로그인 실패: " + (err.message || "다시 시도해 주세요.");
+    errorBox.textContent = "로그인 실패: " + (err.message || "다시 시도해 주세요.";
     loginBtn.disabled = false;
     btnText.textContent = "Google로 계속";
   }
