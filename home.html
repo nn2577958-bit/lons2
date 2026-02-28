@@ -289,7 +289,7 @@ const products = [
   {name:"☁️ 로고",price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등", tag:"design", badge:"로고 디자인"},
 ];
 
-// 문의 핸들러 (모듈에서도 전역으로 노출)
+// 문의 핸들러 정의
 const handleInquiry = (productName) => {
   const message = `🎯 ${productName}
 💰 ${productName.match(/₩\d+[,]?/g)?.[0] || "가격문의"}
@@ -334,7 +334,7 @@ const handleInquiry = (productName) => {
   });
 };
 
-// 모듈에서 전역(window)에 붙여줘야 onclick에서 인식됨
+// 모듈 전역으로 노출 (onclick에서 사용)
 window.handleInquiry = handleInquiry;
 
 function renderProducts(filter = "all") {
