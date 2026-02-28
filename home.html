@@ -292,7 +292,7 @@ const products = [
 // 문의 핸들러
 window.handleInquiry = function(productName) {
   const message = `🎯 ${productName}
-💰 ${productName.match(/₩\\d+[,]?/g)?.[0] || "가격문의"}
+💰 ${productName.match(/₩\d+[,]?/g)?.[0] || "가격문의"}
 
 👤 Discord: soyugwon
 🔗 https://discord.gg/yEym2KZ9BU
@@ -347,7 +347,7 @@ function renderProducts(filter = "all") {
         <small>${product.desc}</small>
         <div class="product-footer">
           <span class="badge">${product.badge}</span>
-          <button onclick="handleInquiry('${product.name.replace(/'/g, "\\\\'")}')">문의하기</button>
+          <button onclick="handleInquiry('${product.name.replace(/'/g, "\\'")}')">문의하기</button>
         </div>
       `;
       productList.appendChild(div);
@@ -404,3 +404,4 @@ document.addEventListener("keydown", (e) => {
 </script>
 </body>
 </html>
+
