@@ -11,23 +11,41 @@
 
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
+
 body {
   height:100vh;
   font-family:'Segoe UI',sans-serif;
-  background:
-    linear-gradient(135deg, rgba(0,0,0,0.6), rgba(0,0,0,0.3)),
-    url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover;
-  display:flex; justify-content:center; align-items:center;
-  overflow:hidden; position:relative; color:#fff;
+  background:#050816;
+  display:flex;justify-content:center;align-items:center;
+  overflow:hidden;position:relative;color:#fff;
 }
-body::before {
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-  opacity:0.15; animation:gradientShift 8s ease infinite;
+
+/* 회전하는 원형 배경 */
+.bg-orbit {
+  position:absolute;
+  width:900px;
+  height:900px;
+  border-radius:50%;
+  background:conic-gradient(
+    from 0deg,
+    #6366f1,
+    #ec4899,
+    #22c55e,
+    #6366f1
+  );
+  filter:blur(40px);
+  opacity:0.55;
+  animation:spinOrbit 18s linear infinite;
 }
-@keyframes gradientShift {
-  0%,100%{opacity:0.15}
-  50%{opacity:0.25}
+.bg-orbit::before {
+  content:'';
+  position:absolute;
+  inset:120px;
+  border-radius:50%;
+  background:#050816;
+}
+@keyframes spinOrbit {
+  to { transform:rotate(360deg); }
 }
 
 /* 메인 카드: 2열 레이아웃 */
@@ -35,11 +53,11 @@ body::before {
   position:relative; z-index:1;
   width:100%; max-width:860px;
   height:70vh; max-height:520px;
-  background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(22px);
+  background:rgba(15,15,30,0.92);
+  backdrop-filter:blur(20px);
   border-radius:26px;
-  border:1px solid rgba(255,255,255,0.25);
-  box-shadow:0 24px 60px rgba(0,0,0,0.45);
+  border:1px solid rgba(148,163,184,0.3);
+  box-shadow:0 24px 60px rgba(0,0,0,0.7);
   display:flex; overflow:hidden;
 }
 
@@ -49,7 +67,7 @@ body::before {
   position:relative;
   overflow:hidden;
   background:
-    linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.7)),
+    linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.85)),
     url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover;
 }
 .card-left::before {
@@ -91,7 +109,7 @@ body::before {
 /* 우측 로그인 영역 */
 .card-right {
   flex:1;
-  background:rgba(10,10,25,0.85);
+  background:rgba(7,10,25,0.96);
   padding:40px 40px 36px;
   display:flex; flex-direction:column;
   justify-content:center;
@@ -99,7 +117,7 @@ body::before {
 }
 .card-right::before {
   content:''; position:absolute; inset:0;
-  background:radial-gradient(circle at top right, rgba(102,126,234,0.45), transparent 55%);
+  background:radial-gradient(circle at top right, rgba(102,126,234,0.4), transparent 55%);
   opacity:0.9;
 }
 .right-inner {
@@ -147,12 +165,12 @@ body::before {
   transition:left 0.5s;
 }
 .google-btn:hover {
-  transform:translateY(-3px);
+  transform:translateY(-3px) rotate(-2deg);
   box-shadow:0 14px 34px rgba(66,133,244,0.7);
   background:linear-gradient(135deg,#34A853,#4285F4);
 }
 .google-btn:hover::before { left:100%; }
-.google-btn:active { transform:translateY(-1px); }
+.google-btn:active { transform:translateY(-1px) rotate(-1deg); }
 .google-btn:focus-visible {
   outline:2px solid #fff;
   outline-offset:3px;
@@ -199,12 +217,15 @@ body::before {
     padding:32px 26px 28px;
   }
 }
-
 </style>
 </head>
 <body>
+  <!-- 회전 배경 -->
+  <div class="bg-orbit"></div>
+
+  <!-- 로그인 카드 -->
   <div class="card">
-    <!-- 왼쪽 비주얼 영역 -->
+    <!-- 왼쪽 비주얼 -->
     <div class="card-left">
       <div class="left-inner">
         <div>
@@ -221,7 +242,7 @@ body::before {
       </div>
     </div>
 
-    <!-- 오른쪽 로그인 영역 -->
+    <!-- 오른쪽 로그인 -->
     <div class="card-right">
       <div class="right-inner">
         <div class="logo">라니 MALL</div>
