@@ -291,7 +291,7 @@ const products = [
 
 /* 문의 핸들러 */
 const handleInquiry = (productName) => {
-  console.log("handleInquiry 호출:", productName); // 디버그용 로그
+  console.log("handleInquiry 호출:", productName);
 
   const message = `🎯 ${productName}
 💰 가격문의
@@ -337,7 +337,7 @@ const handleInquiry = (productName) => {
   });
 };
 
-/* 상품 렌더 + 이벤트 연결 */
+/* 상품 렌더 (이 안에서는 이벤트 안 건다) */
 function renderProducts(filter = "all") {
   productList.innerHTML = "";
 
@@ -358,17 +358,18 @@ function renderProducts(filter = "all") {
       productList.appendChild(div);
     });
 
-  const btns = document.querySelectorAll(".inquiry-btn");
-  console.log("문의 버튼 개수:", btns.length);
-
-  btns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const name = btn.getAttribute("data-name");
-      console.log("문의하기 클릭됨:", name);
-      handleInquiry(name);
-    });
-  });
+  console.log("상품 렌더 완료");
 }
+
+/* ✅ 상품 리스트에서 클릭 이벤트 위임 */
+productList.addEventListener("click", (e) => {
+  const btn = e.target.closest(".inquiry-btn");
+  if (!btn) return;                 // 문의하기 버튼 아니면 무시
+
+  const name = btn.getAttribute("data-name");
+  console.log("문의하기 클릭됨 (위임):", name);
+  handleInquiry(name);
+});
 
 let statusInterval;
 function updateStatus() {
