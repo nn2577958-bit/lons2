@@ -11,7 +11,7 @@
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
 
-/* ==== 전체 네온 그라데이션 배경 (톤 조금 바꿈) ==== */
+/* ==== 전체 네온 그라데이션 배경 ==== */
 body {
   height:100vh;
   font-family:'Segoe UI',sans-serif;
@@ -28,7 +28,7 @@ body {
   position:relative;
 }
 
-/* 부드럽게 움직이는 네온 안개 */
+/* 부드럽게 움직이는 네온 안개 (기존값 유지) */
 body::before {
   content:'';
   position:fixed;
@@ -42,7 +42,7 @@ body::before {
   z-index:-2;
 }
 
-/* 아주 느리게 도는 희미한 링 */
+/* 좀 더 선명하게 보이는 도는 링 */
 .bg-orbit {
   position:fixed;
   width:900px;
@@ -50,13 +50,13 @@ body::before {
   border-radius:50%;
   background:conic-gradient(
     from 0deg,
-    rgba(59,130,246,0.0),
-    rgba(59,130,246,0.22),
-    rgba(45,212,191,0.18),
-    rgba(37,99,235,0.22),
-    rgba(59,130,246,0.0)
+    rgba(59,130,246,0.00),
+    rgba(59,130,246,0.32),
+    rgba(45,212,191,0.28),
+    rgba(37,99,235,0.32),
+    rgba(59,130,246,0.00)
   );
-  opacity:0.45;
+  opacity:0.65; /* 기존 0.45 → 더 선명하게 */
   mix-blend-mode:screen;
   animation:slowOrbit 48s linear infinite;
   z-index:-1;
@@ -397,9 +397,8 @@ input:focus {
     <!-- 오른쪽 로그인 -->
     <div class="card-right">
       <div class="right-inner">
-        <div class="logo">라니 MALL</div>
         <div class="subtitle">로그인</div>
-        <div class="hint">디스코드 봇 · 서버 세팅 · 로고 디자인을 한 번에 만나보세요.</div>
+        <div class="hint">디스코드 봇 · 서버 세팅 · 로고 디자인을 한 번에 만나보세요.환불보증 48시간 이내</div>
 
         <form id="email-login-form">
           <div class="form-group">
@@ -469,7 +468,6 @@ loginBtn.addEventListener("click", async () => {
     if (result.user) window.location.href = "home.html";
   } catch (err) {
     console.error("로그인 오류:", err);
-    // ← 여기 오타 수정: 괄호 닫힘 + 세미콜론
     errorBox.textContent = "로그인 실패: " + (err.message || "다시 시도해 주세요.");
     loginBtn.disabled = false;
     btnText.textContent = "Google로 계속";
