@@ -123,7 +123,7 @@ body {
   background:radial-gradient(circle at 0% 0%, rgba(56,189,248,.28), transparent 60%);
   opacity:0;
   transition:opacity .3s;
-  pointer-events:none;  /* ← 추가된 줄 */
+  pointer-events:none;
 }
 
 .product:hover::before {opacity:1}
@@ -198,7 +198,7 @@ body {
   flex-wrap:wrap;
   margin-top:6px;
 }
-.logout-btn, .discord-btn, .inquiry-main-btn {
+.logout-btn, .discord-btn, .inquiry-main-btn, .reset-btn {
   padding:9px 18px;
   border:none;
   border-radius:999px;
@@ -215,6 +215,8 @@ body {
 .discord-btn:hover {background:linear-gradient(135deg,#404EED,#2833C4);transform:translateY(-1px)}
 .inquiry-main-btn {background:linear-gradient(135deg,#22c55e,#16a34a)}
 .inquiry-main-btn:hover {background:linear-gradient(135deg,#16a34a,#15803d);transform:translateY(-1px)}
+.reset-btn {background:linear-gradient(135deg,#0ea5e9,#2563eb)}
+.reset-btn:hover {background:linear-gradient(135deg,#2563eb,#1d4ed8);transform:translateY(-1px)}
 
 /* 반응형 */
 @media (min-width:1024px) {
@@ -258,6 +260,7 @@ body {
     <button class="discord-btn" id="discord-btn">🙈 디스코드</button>
     <button class="logout-btn" id="logout-btn">로그아웃</button>
     <button class="inquiry-main-btn" id="inquiry-btn">문의하기</button>
+    <button class="reset-btn" id="reset-points-btn">포인트 초기화</button>
   </div>
 </div>
 
@@ -280,6 +283,7 @@ const productList = document.getElementById("product-list");
 const logoutBtn = document.getElementById("logout-btn");
 const discordBtn = document.getElementById("discord-btn");
 const inquiryBtn = document.getElementById("inquiry-btn");
+const resetBtn = document.getElementById("reset-points-btn");
 const tabs = document.querySelectorAll(".tab");
   
 const products = [
@@ -367,6 +371,30 @@ async function attachBuyEvents() {
     };
   });
 }
+
+// 포인트 초기화 버튼
+resetBtn.onclick = async () => {
+  const user = auth.currentUser;
+  if (!user) {
+    alert("로그인 후 이용해 주세요.");
+    return;
+  }
+
+  const ok = confirm("정말 포인트를 0점으로 초기화할까요?");
+  if (!ok) return;
+
+  const uid = user.uid;
+  const userRef = doc(db, "users", uid);
+
+  await updateDoc(userRef, { points: 0 });  // 이 유저 포인트 0으로 초기화[web:176][web:180]
+
+  const snap = await getDoc(userRef);
+  const nickname = user.email.split("@")[0];
+  const points = snap.data().points ?? 0;
+
+  welcomeEl.textContent = `환영합니다, ${nickname}님! (포인트: ${points}점) 👋`;
+  alert("포인트가 0점으로 초기화되었습니다.");
+};
 
 // 아래 큰 문의하기 버튼
 inquiryBtn.onclick = () => {
