@@ -215,7 +215,10 @@ body {
 .discord-btn:hover {background:linear-gradient(135deg,#404EED,#2833C4);transform:translateY(-1px)}
 .inquiry-main-btn {background:linear-gradient(135deg,#22c55e,#16a34a)}
 .inquiry-main-btn:hover {background:linear-gradient(135deg,#16a34a,#15803d);transform:translateY(-1px)}
-.reset-btn {background:linear-gradient(135deg,#0ea5e9,#2563eb)}
+.reset-btn {
+  background:linear-gradient(135deg,#0ea5e9,#2563eb);
+  display:none; /* 기본은 숨김, 관리자만 노출 */
+}
 .reset-btn:hover {background:linear-gradient(135deg,#2563eb,#1d4ed8);transform:translateY(-1px)}
 
 /* 반응형 */
@@ -274,8 +277,7 @@ import {
   doc,
   getDoc,
   setDoc,
-  updateDoc,
-  increment
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const welcomeEl = document.getElementById("welcome");
@@ -287,12 +289,14 @@ const resetBtn = document.getElementById("reset-points-btn");
 const tabs = document.querySelectorAll(".tab");
   
 const products = [
-  {name:"🚀 디스코드 봇 일반",price:"₩15,000",desc:"기능 맞춤 제작 1개", tag:"bot", badge:"기본 봇 제작"},
-  {name:"🚀 디스코드 봇 고급",price:"₩30,000",desc:"게임 봇 시스템 적용 등", tag:"bot", badge:"고급 기능"},
-  {name:"☁️ 디스코드 템플릿",price:"₩5,000",desc:"역할 & 기본 세팅", tag:"bot", badge:"템플릿"},
-  {name:"☁️ 프리미엄 해외 호스팅",price:"월₩10,000 ~시작",desc:"99.9% 디도스 보호 완벽 차단 빽업 기능", tag:"hosting", badge:"호스팅"},
-  {name:"☁️ 프로필",price:"₩3,000 ~ 시작",desc:"이쁜 선생님이 해주셔요", tag:"design", badge:"프로필 디자인"},
-  {name:"☁️ 로고",price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등", tag:"design", badge:"로고 디자인"},
+  {name:"🚀 디스코드 봇 일반",price:"₩15,000",desc:"기능 맞춤 제작 1개", tag:"bot",     badge:"기본 봇 제작"},
+  {name:"🚀 디스코드 봇 고급",price:"₩30,000",desc:"게임 봇 시스템 적용 등", tag:"bot",  badge:"고급 기능"},
+  {name:"☁️ 디스코드 템플릿",price:"₩5,000",desc:"역할 & 기본 세팅",          tag:"bot",     badge:"템플릿"},
+  {name:"☁️ 일반 디스코드 봇 호스팅",price:"월₩6,000 ~시작",desc:"99.9% 디도스 보호 완벽 차단 빽업 기능", tag:"hosting", badge:"호스팅"},
+  {name:"🤖 고급 디스코드 봇 호스팅",price:"₩10,000",desc:"99.9% 디도스 보호 완벽 차단",       tag:"hosting", badge:"봇 호스팅"},
+  {name:"🌟 어드밴스드 봇 호스팅",price:"₩30,000",desc:"99.9% 디도스 보호 완벽 차단",       tag:"hosting", badge:"봇 호스팅"},
+  {name:"☁️ 프로필",price:"₩3,000 ~ 시작",desc:"이쁜 선생님이 해주셔요",     tag:"design",  badge:"프로필 디자인"},
+  {name:"☁️ 로고",price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등",   tag:"design",  badge:"로고 디자인"},
 ];
 
 // 상품 렌더
@@ -319,8 +323,8 @@ function renderProducts(filter = "all") {
   attachBuyEvents();
 }
 
-// 구매하기 버튼 클릭 시 포인트 적립 + 디스코드용 메시지 복사
-async function attachBuyEvents() {
+// 구매하기 버튼 클릭 시: 포인트 적립 없이, 디스코드 문의용 텍스트만 복사
+function attachBuyEvents() {
   const buttons = document.querySelectorAll(".buy-btn");
 
   buttons.forEach(btn => {
@@ -331,38 +335,22 @@ async function attachBuyEvents() {
         return;
       }
 
-      const uid = user.uid;
       const nickname = user.email.split("@")[0];
       const idx = btn.getAttribute("data-index");
       const product = products[idx];
 
-      const userRef = doc(db, "users", uid);
-
-      // 포인트 +10
-      await updateDoc(userRef, {
-        points: increment(10)
-      });
-
-      // 최신 포인트 조회
-      const snap = await getDoc(userRef);
-      const points = snap.data().points ?? 0;
-
-      welcomeEl.textContent = `환영합니다, ${nickname}님! (포인트: ${points}점) 👋`;
-
-      const msg = `🧾 라니 MALL 구매 요청
+      const msg = `🧾 라니 MALL 구매 / 충전 문의
 
 👤 구매자: ${nickname}
 📧 이메일: ${user.email}
-포인트: ${points}점
+포인트 충전 / 결제 문의는 디스코드로 연락해 주세요.
 
 🛒 상품명: ${product.name}
 💰 가격: ${product.price}
-📄 설명: ${product.desc}
-
-위 상품 구매를 희망합니다.`;
+📄 설명: ${product.desc}`;
 
       navigator.clipboard.writeText(msg).then(() => {
-        alert("구매 요청 텍스트가 복사되었습니다. 디스코드에서 붙여넣기 해 주세요. (포인트 +10 적립 완료)");
+        alert("구매 / 충전 문의 텍스트가 복사되었습니다. 디스코드에서 붙여넣기 해 주세요.");
         window.open("https://discord.gg/yEym2KZ9BU", "_blank");
       }).catch(() => {
         prompt("아래 내용을 디스코드로 보내주세요:", msg);
@@ -372,7 +360,7 @@ async function attachBuyEvents() {
   });
 }
 
-// 포인트 초기화 버튼
+// 포인트 초기화 버튼 (관리자만) — 포인트 필드는 유지
 resetBtn.onclick = async () => {
   const user = auth.currentUser;
   if (!user) {
@@ -380,17 +368,24 @@ resetBtn.onclick = async () => {
     return;
   }
 
+  const uid = user.uid;
+  const userRef = doc(db, "users", uid);
+  const snap = await getDoc(userRef);
+  const data = snap.data();
+
+  if (!data?.isAdmin) {
+    alert("관리자만 사용할 수 있는 기능입니다.");
+    return;
+  }
+
   const ok = confirm("정말 포인트를 0점으로 초기화할까요?");
   if (!ok) return;
 
-  const uid = user.uid;
-  const userRef = doc(db, "users", uid);
+  await updateDoc(userRef, { points: 0 });
 
-  await updateDoc(userRef, { points: 0 });  // 이 유저 포인트 0으로 초기화[web:176][web:180]
-
-  const snap = await getDoc(userRef);
+  const refreshed = await getDoc(userRef);
   const nickname = user.email.split("@")[0];
-  const points = snap.data().points ?? 0;
+  const points = refreshed.data().points ?? 0;
 
   welcomeEl.textContent = `환영합니다, ${nickname}님! (포인트: ${points}점) 👋`;
   alert("포인트가 0점으로 초기화되었습니다.");
@@ -442,20 +437,30 @@ onAuthStateChanged(auth, async (user) => {
     const userRef = doc(db, "users", uid);
     const snap = await getDoc(userRef);
 
-    // 처음 로그인한 유저면 기본 정보 + 포인트 0
+    // 처음 로그인한 유저면 기본 정보 + 포인트 0 + isAdmin false
     if (!snap.exists()) {
       await setDoc(userRef, {
         email: user.email,
         nickname: nickname,
-        points: 0
+        points: 0,
+        isAdmin: false
       });
     }
 
     // 최신 포인트 다시 읽기
     const refreshed = await getDoc(userRef);
-    const points = refreshed.data().points ?? 0;
+    const data = refreshed.data();
+    const points = data.points ?? 0;
+    const isAdmin = data.isAdmin === true;
 
     welcomeEl.textContent = `환영합니다, ${nickname}님! (포인트: ${points}점) 👋`;
+
+    // 관리자만 포인트 초기화 버튼 보이게
+    if (isAdmin) {
+      resetBtn.style.display = "inline-flex";
+    } else {
+      resetBtn.style.display = "none";
+    }
 
     renderProducts();
     statusInterval = setInterval(updateStatus, 1000);
