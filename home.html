@@ -115,7 +115,6 @@ body {
   flex-direction:column;
   align-items:flex-start;
 }
-
 .product::before {
   content:'';
   position:absolute;
@@ -125,22 +124,18 @@ body {
   transition:opacity .3s;
   pointer-events:none;
 }
-
 .product:hover::before {opacity:1}
-
 .product:hover {
   transform:translateY(-6px);
   box-shadow:0 18px 28px rgba(15,23,42,.75);
   border-color:rgba(56,189,248,.6);
 }
-
 .product h3 {
   margin:0 0 6px;
   font-size:15px;
   font-weight:700;
   color:#f9fafb;
 }
-  
 .product p {
   margin:0 0 6px;
   font-size:14px;
@@ -173,31 +168,33 @@ body {
 
 /* 구매하기 버튼 */
 .buy-btn {
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-  color: #0f172a;
-  background: linear-gradient(135deg,#4ade80,#22c55e);
-  box-shadow: 0 6px 14px rgba(34,197,94,.45);
-  transition: transform .15s, box-shadow .15s, background .15s;
+  padding:6px 12px;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+  color:#0f172a;
+  background:linear-gradient(135deg,#4ade80,#22c55e);
+  box-shadow:0 6px 14px rgba(34,197,94,.45);
+  transition:transform .15s, box-shadow .15s, background .15s;
 }
 .buy-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 18px rgba(34,197,94,.55);
+  transform:translateY(-1px);
+  box-shadow:0 10px 18px rgba(34,197,94,.55);
 }
 
 /* 하단 버튼 줄 */
 .btn-row {
   display:flex;
-  justify-content:space-between;
+  justify-content:space-between; /* PC에서 한 줄 4개 */
   align-items:center;
-  gap:16px;
-  flex-wrap:wrap;
+  gap:12px;
+  flex-wrap:nowrap;              /* 줄바꿈 금지 (PC) */
   margin-top:6px;
 }
+
+/* 하단 버튼 스타일 */
 .logout-btn, .discord-btn, .inquiry-main-btn, .reset-btn {
   padding:9px 18px;
   border:none;
@@ -219,21 +216,43 @@ body {
   background:linear-gradient(135deg,#0ea5e9,#2563eb);
   display:none; /* 기본은 숨김, 관리자만 노출 */
 }
-.reset-btn:hover {background:linear-gradient(135deg,#2563eb,#1d4ed8);transform:translateY(-1px)}
+.reset-btn:hover {
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  transform:translateY(-1px);
+}
 
 /* 반응형 */
 @media (min-width:1024px) {
-  #product-list{grid-template-columns:repeat(3,1fr)}
+  #product-list{
+    grid-template-columns:repeat(3,1fr);
+  }
 }
 @media (max-width:768px) {
-  .container{padding:20px 18px}
-  #product-list{grid-template-columns:repeat(2,1fr);gap:14px}
-  .btn-row{flex-direction:column;align-items:stretch}
+  .container{
+    padding:20px 18px;
+  }
+  #product-list{
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+  }
+  .btn-row{
+    flex-wrap:wrap;         /* 작은 화면에서 줄바꿈 허용 */
+    justify-content:center; /* 버튼 묶음 가운데 정렬 */
+    align-items:center;
+  }
 }
 @media (max-width:480px) {
-  .container{padding:18px;max-width:95vw}
-  #welcome{font-size:18px}
-  #product-list{grid-template-columns:1fr;gap:12px}
+  .container{
+    padding:18px;
+    max-width:95vw;
+  }
+  #welcome{
+    font-size:18px;
+  }
+  #product-list{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
 }
 </style>
 </head>
@@ -269,40 +288,31 @@ body {
 
 <script type="module">
 import { auth, db } from "./firebase.js";
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import {
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-const welcomeEl = document.getElementById("welcome");
+const welcomeEl   = document.getElementById("welcome");
 const productList = document.getElementById("product-list");
-const logoutBtn = document.getElementById("logout-btn");
-const discordBtn = document.getElementById("discord-btn");
-const inquiryBtn = document.getElementById("inquiry-btn");
-const resetBtn = document.getElementById("reset-points-btn");
-const tabs = document.querySelectorAll(".tab");
-  
+const logoutBtn   = document.getElementById("logout-btn");
+const discordBtn  = document.getElementById("discord-btn");
+const inquiryBtn  = document.getElementById("inquiry-btn");
+const resetBtn    = document.getElementById("reset-points-btn");
+const tabs        = document.querySelectorAll(".tab");
+
 const products = [
-  {name:"🚀 디스코드 봇 일반",price:"₩15,000",desc:"기능 맞춤 제작 1개", tag:"bot",     badge:"기본 봇 제작"},
-  {name:"🚀 디스코드 봇 고급",price:"₩30,000",desc:"게임 봇 시스템 적용 등", tag:"bot",  badge:"고급 기능"},
-  {name:"☁️ 디스코드 템플릿",price:"₩5,000",desc:"역할 & 기본 세팅",          tag:"bot",     badge:"템플릿"},
-  {name:"☁️ 일반 디스코드 봇 호스팅",price:"월₩5,000 ~시작",desc:"99.9% 디도스 보호 완벽 차단 빽업 기능", tag:"hosting", badge:"호스팅"},
-  {name:"🤖 고급 디스코드 봇 호스팅",price:"₩10,000",desc:"99.9% 디도스 보호 완벽 차단",       tag:"hosting", badge:"봇 호스팅"},
-  {name:"🌟 어드밴스드 봇 호스팅",price:"₩20,000",desc:"99.9% 디도스 보호 완벽 차단",       tag:"hosting", badge:"봇 호스팅"},
-  {name:"☁️ 프로필",price:"₩3,000 ~ 시작",desc:"이쁜 선생님이 해주셔요",     tag:"design",  badge:"프로필 디자인"},
-  {name:"☁️ 로고",price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등",   tag:"design",  badge:"로고 디자인"},
+  {name:"🚀 디스코드 봇 일반",          price:"₩15,000",      desc:"기능 맞춤 제작 1개",                 tag:"bot",     badge:"기본 봇 제작"},
+  {name:"🚀 디스코드 봇 고급",          price:"₩30,000",      desc:"게임 봇 시스템 적용 등",             tag:"bot",     badge:"고급 기능"},
+  {name:"☁️ 디스코드 템플릿",           price:"₩5,000",       desc:"역할 & 기본 세팅",                   tag:"bot",     badge:"템플릿"},
+  {name:"☁️ 일반 디스코드 봇 호스팅",  price:"월₩5,000 ~시작",desc:"99.9% 디도스 보호 완벽 차단 빽업 기능", tag:"hosting", badge:"호스팅"},
+  {name:"🤖 고급 디스코드 봇 호스팅",  price:"₩10,000",      desc:"99.9% 디도스 보호 완벽 차단",         tag:"hosting", badge:"봇 호스팅"},
+  {name:"🌟 어드밴스드 봇 호스팅",     price:"₩20,000",      desc:"99.9% 디도스 보호 완벽 차단",         tag:"hosting", badge:"봇 호스팅"},
+  {name:"☁️ 프로필",                  price:"₩3,000 ~ 시작", desc:"이쁜 선생님이 해주셔요",              tag:"design",  badge:"프로필 디자인"},
+  {name:"☁️ 로고",                     price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등",           tag:"design",  badge:"로고 디자인"},
 ];
 
 // 상품 렌더
 function renderProducts(filter = "all") {
   productList.innerHTML = "";
-
   products
     .filter(p => filter === "all" || p.tag === filter)
     .forEach((product, index) => {
@@ -319,14 +329,12 @@ function renderProducts(filter = "all") {
       `;
       productList.appendChild(div);
     });
-
   attachBuyEvents();
 }
 
-// 구매하기 버튼 클릭 시: 포인트 적립 없이, 디스코드 문의용 텍스트만 복사
+// 구매하기 버튼: 포인트 변경 없이 문의 텍스트 복사
 function attachBuyEvents() {
   const buttons = document.querySelectorAll(".buy-btn");
-
   buttons.forEach(btn => {
     btn.onclick = async () => {
       const user = auth.currentUser;
@@ -334,7 +342,6 @@ function attachBuyEvents() {
         alert("로그인 후 이용해 주세요.");
         return;
       }
-
       const nickname = user.email.split("@")[0];
       const idx = btn.getAttribute("data-index");
       const product = products[idx];
@@ -360,18 +367,17 @@ function attachBuyEvents() {
   });
 }
 
-// 포인트 초기화 버튼 (관리자만) — 포인트 필드는 유지
+// 포인트 초기화 (관리자만)
 resetBtn.onclick = async () => {
   const user = auth.currentUser;
   if (!user) {
     alert("로그인 후 이용해 주세요.");
     return;
   }
-
-  const uid = user.uid;
+  const uid     = user.uid;
   const userRef = doc(db, "users", uid);
-  const snap = await getDoc(userRef);
-  const data = snap.data();
+  const snap    = await getDoc(userRef);
+  const data    = snap.data();
 
   if (!data?.isAdmin) {
     alert("관리자만 사용할 수 있는 기능입니다.");
@@ -384,8 +390,8 @@ resetBtn.onclick = async () => {
   await updateDoc(userRef, { points: 0 });
 
   const refreshed = await getDoc(userRef);
-  const nickname = user.email.split("@")[0];
-  const points = refreshed.data().points ?? 0;
+  const nickname  = user.email.split("@")[0];
+  const points    = refreshed.data().points ?? 0;
 
   welcomeEl.textContent = `환영합니다, ${nickname}님! (포인트: ${points}점) 👋`;
   alert("포인트가 0점으로 초기화되었습니다.");
@@ -411,14 +417,14 @@ inquiryBtn.onclick = () => {
 let statusInterval;
 function updateStatus() {
   const now = new Date().toLocaleString("ko-KR", {
-    hour12: false, timeZone: "Asia/Seoul",
-    year: "numeric", month: "2-digit", day: "2-digit",
-    hour: "2-digit", minute: "2-digit", second: "2-digit"
+    hour12:false, timeZone:"Asia/Seoul",
+    year:"numeric", month:"2-digit", day:"2-digit",
+    hour:"2-digit", minute:"2-digit", second:"2-digit"
   });
   document.getElementById("status").textContent = `🟢 온라인 | ${now}`;
 }
 
-// 탭 필터 이벤트
+// 탭 필터
 tabs.forEach(tab => {
   tab.addEventListener("click", () => {
     tabs.forEach(t => t.classList.remove("active"));
@@ -428,16 +434,14 @@ tabs.forEach(tab => {
   });
 });
 
-// 로그인 상태 체크 + Firestore 유저/포인트 세팅
+// 로그인 상태 체크 + 유저 세팅
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    const uid = user.uid;
+    const uid      = user.uid;
     const nickname = user.email.split('@')[0];
+    const userRef  = doc(db, "users", uid);
+    const snap     = await getDoc(userRef);
 
-    const userRef = doc(db, "users", uid);
-    const snap = await getDoc(userRef);
-
-    // 처음 로그인한 유저면 기본 정보 + 포인트 0 + isAdmin false
     if (!snap.exists()) {
       await setDoc(userRef, {
         email: user.email,
@@ -447,15 +451,13 @@ onAuthStateChanged(auth, async (user) => {
       });
     }
 
-    // 최신 포인트 다시 읽기
     const refreshed = await getDoc(userRef);
-    const data = refreshed.data();
-    const points = data.points ?? 0;
-    const isAdmin = data.isAdmin === true;
+    const data      = refreshed.data();
+    const points    = data.points ?? 0;
+    const isAdmin   = data.isAdmin === true;
 
     welcomeEl.textContent = `환영합니다, ${nickname}님! (포인트: ${points}점) 👋`;
 
-    // 관리자만 포인트 초기화 버튼 보이게
     if (isAdmin) {
       resetBtn.style.display = "inline-flex";
     } else {
