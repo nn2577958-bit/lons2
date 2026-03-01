@@ -248,143 +248,149 @@ body {
   </div>
 </div>
 
-<script>
-// FAQ 데이터
-const faqs = [
-  {
-    q: "디스코드 봇은 어떤 언어로 개발되나요?",
-    a: "주로 Node.js(자바스크립트) 기반으로 개발하며, 디스코드 공식 API를 사용합니다. 필요 시 Python 등 다른 언어도 협의 가능합니다.",
-    tag: "bot"
-  },
-  {
-    q: "봇 제작 후 수정이나 유지보수도 해주나요?",
-    a: "간단한 버그 수정은 기본으로 지원하고, 기능 추가나 큰 구조 변경은 별도 비용으로 진행합니다. 처음 상담 시 유지보수 범위를 같이 정해요.",
-    tag: "bot"
-  },
-  {
-    q: "디자인 의뢰할 때 레퍼런스가 꼭 필요할까요?",
-    a: "있으면 훨씬 좋지만, 없어도 가능합니다. 선호하는 색감/분위기/키워드 정도만 알려주시면 거기서 컨셉을 잡아 드려요.",
-    tag: "design"
-  },
-  {
-    q: "상표권이나 저작권 문제는 어떻게 처리되나요?",
-    a: "의뢰자가 제공한 캐릭터나 로고 등은 의뢰자가 권리를 가지고 있다고 보고 작업합니다. 상표 등록용 로고가 필요하면 미리 말씀해 주세요.",
-    tag: "design"
-  },
-  {
-    q: "결제는 어떻게 하나요?",
-    a: "기본적으로 계좌이체 또는 카카오페이 송금 등으로 받고 있습니다. 필요하다면 다른 수단도 상의 가능해요.",
-    tag: "pay"
-  },
-  {
-    q: "포인트 제도는 어떻게 동작하나요?",
-    a: "일부 작업/이벤트로 적립된 포인트를 라니 MALL에서 상품처럼 사용할 수 있습니다. 실제 현금은 아니고, 라니 디지털 내부에서만 사용 가능한 값이에요.",
-    tag: "pay"
-  },
-  {
-    q: "작업 진행 과정은 어떻게 되나요?",
-    a: "문의 → 견적 확정 → 선입금(또는 일부 선입금) → 작업 진행 → 중간 검수 → 최종 전달 순서로 진행됩니다. 프로젝트 성격에 따라 조금씩 달라질 수 있어요.",
-    tag: "etc"
-  },
-  {
-    q: "응답은 언제쯤 받을 수 있나요?",
-    a: "가능한 빠르게 답변드리며, 보통 1시간 이내, 늦어도 당일 안에는 답변을 드리려고 합니다. 새벽 시간에는 답변이 조금 늦어질 수 있어요.",
-    tag: "etc"
-  }
-];
+<script type="module">
+  import { auth } from "./firebase.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// DOM 요소
-const faqListEl = document.getElementById("faq-list");
-const tabsEl    = document.getElementById("tabs");
-const homeBtn   = document.getElementById("home-btn");
-const inquiryBtn= document.getElementById("inquiry-btn");
+  // 로그인 안 되어 있으면 FAQ 접속 불가 → 로그인 페이지로 보내기
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "index.html"; // 로그인 페이지 파일 이름
+    }
+  });
 
-// FAQ 렌더링
-function renderFaqs(filter = "all") {
-  faqListEl.innerHTML = "";
-  faqs
-    .filter(item => filter === "all" || item.tag === filter)
-    .forEach((item, index) => {
-      const wrapper = document.createElement("div");
-      wrapper.className = "faq-item";
-      wrapper.innerHTML = `
-        <div class="faq-header" data-index="${index}">
-          <div>
-            <div class="faq-question">${item.q}</div>
-            <div class="faq-category">${labelForTag(item.tag)}</div>
+  // FAQ 데이터
+  const faqs = [
+    {
+      q: "디스코드 봇은 어떤 언어로 개발되나요?",
+      a: "주로 Node.js(자바스크립트) 기반으로 개발하며, 디스코드 공식 API를 사용합니다. 필요 시 Python 등 다른 언어도 협의 가능합니다.",
+      tag: "bot"
+    },
+    {
+      q: "봇 제작 후 수정이나 유지보수도 해주나요?",
+      a: "간단한 버그 수정은 기본으로 지원하고, 기능 추가나 큰 구조 변경은 별도 비용으로 진행합니다. 처음 상담 시 유지보수 범위를 같이 정해요.",
+      tag: "bot"
+    },
+    {
+      q: "디자인 의뢰할 때 레퍼런스가 꼭 필요할까요?",
+      a: "있으면 훨씬 좋지만, 없어도 가능합니다. 선호하는 색감/분위기/키워드 정도만 알려주시면 거기서 컨셉을 잡아 드려요.",
+      tag: "design"
+    },
+    {
+      q: "상표권이나 저작권 문제는 어떻게 처리되나요?",
+      a: "의뢰자가 제공한 캐릭터나 로고 등은 의뢰자가 권리를 가지고 있다고 보고 작업합니다. 상표 등록용 로고가 필요하면 미리 말씀해 주세요.",
+      tag: "design"
+    },
+    {
+      q: "결제는 어떻게 하나요?",
+      a: "기본적으로 계좌이체 또는 카카오페이 송금 등으로 받고 있습니다. 필요하다면 다른 수단도 상의 가능해요.",
+      tag: "pay"
+    },
+    {
+      q: "포인트 제도는 어떻게 동작하나요?",
+      a: "일부 작업/이벤트로 적립된 포인트를 라니 MALL에서 상품처럼 사용할 수 있습니다. 실제 현금은 아니고, 라니 디지털 내부에서만 사용 가능한 값이에요.",
+      tag: "pay"
+    },
+    {
+      q: "작업 진행 과정은 어떻게 되나요?",
+      a: "문의 → 견적 확정 → 선입금(또는 일부 선입금) → 작업 진행 → 중간 검수 → 최종 전달 순서로 진행됩니다. 프로젝트 성격에 따라 조금씩 달라질 수 있어요.",
+      tag: "etc"
+    },
+    {
+      q: "응답은 언제쯤 받을 수 있나요?",
+      a: "가능한 빠르게 답변드리며, 보통 1시간 이내, 늦어도 당일 안에는 답변을 드리려고 합니다. 새벽 시간에는 답변이 조금 늦어질 수 있어요.",
+      tag: "etc"
+    }
+  ];
+
+  // DOM 요소
+  const faqListEl = document.getElementById("faq-list");
+  const tabsEl    = document.getElementById("tabs");
+  const homeBtn   = document.getElementById("home-btn");
+  const inquiryBtn= document.getElementById("inquiry-btn");
+
+  // FAQ 렌더링
+  function renderFaqs(filter = "all") {
+    faqListEl.innerHTML = "";
+    faqs
+      .filter(item => filter === "all" || item.tag === filter)
+      .forEach((item, index) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "faq-item";
+        wrapper.innerHTML = `
+          <div class="faq-header" data-index="${index}">
+            <div>
+              <div class="faq-question">${item.q}</div>
+              <div class="faq-category">${labelForTag(item.tag)}</div>
+            </div>
+            <div class="faq-icon">▶</div>
           </div>
-          <div class="faq-icon">▶</div>
-        </div>
-        <div class="faq-body">
-          ${item.a}
-        </div>
-      `;
-      faqListEl.appendChild(wrapper);
-    });
-
-  attachFaqEvents();
-}
-
-function labelForTag(tag) {
-  switch (tag) {
-    case "bot": return "디스코드 봇";
-    case "design": return "디자인";
-    case "pay": return "결제 · 포인트";
-    case "etc": return "기타";
-    default: return "";
-  }
-}
-
-// FAQ 클릭 이벤트(아코디언)
-function attachFaqEvents() {
-  const headers = document.querySelectorAll(".faq-header");
-  headers.forEach(header => {
-    header.onclick = () => {
-      const item = header.parentElement;
-      const body = item.querySelector(".faq-body");
-      const isOpen = item.classList.contains("open");
-
-      // 열려있으면 닫기
-      if (isOpen) {
-        item.classList.remove("open");
-        body.style.maxHeight = null;
-        return;
-      }
-
-      // 다른 것들 닫기 (피코 느낌처럼 한 번에 한 개만 열고 싶으면 이 부분 유지)
-      document.querySelectorAll(".faq-item.open").forEach(openItem => {
-        openItem.classList.remove("open");
-        const openBody = openItem.querySelector(".faq-body");
-        openBody.style.maxHeight = null;
+          <div class="faq-body">
+            ${item.a}
+          </div>
+        `;
+        faqListEl.appendChild(wrapper);
       });
 
-      // 현재 것 열기
-      item.classList.add("open");
-      body.style.maxHeight = body.scrollHeight + "px";
-    };
+    attachFaqEvents();
+  }
+
+  function labelForTag(tag) {
+    switch (tag) {
+      case "bot": return "디스코드 봇";
+      case "design": return "디자인";
+      case "pay": return "결제 · 포인트";
+      case "etc": return "기타";
+      default: return "";
+    }
+  }
+
+  // FAQ 클릭 이벤트(아코디언)
+  function attachFaqEvents() {
+    const headers = document.querySelectorAll(".faq-header");
+    headers.forEach(header => {
+      header.onclick = () => {
+        const item = header.parentElement;
+        const body = item.querySelector(".faq-body");
+        const isOpen = item.classList.contains("open");
+
+        if (isOpen) {
+          item.classList.remove("open");
+          body.style.maxHeight = null;
+          return;
+        }
+
+        document.querySelectorAll(".faq-item.open").forEach(openItem => {
+          openItem.classList.remove("open");
+          const openBody = openItem.querySelector(".faq-body");
+          openBody.style.maxHeight = null;
+        });
+
+        item.classList.add("open");
+        body.style.maxHeight = body.scrollHeight + "px";
+      };
+    });
+  }
+
+  // 탭 클릭 이벤트
+  tabsEl.addEventListener("click", (e) => {
+    const btn = e.target.closest(".tab");
+    if (!btn) return;
+    const filter = btn.dataset.filter || "all";
+
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    btn.classList.add("active");
+
+    renderFaqs(filter);
   });
-}
 
-// 탭 클릭 이벤트
-tabsEl.addEventListener("click", (e) => {
-  const btn = e.target.closest(".tab");
-  if (!btn) return;
-  const filter = btn.dataset.filter || "all";
+  // 하단 버튼
+  homeBtn.onclick = () => {
+    window.location.href = "index.html"; // 상점/로그인 페이지 이름에 맞게 유지
+  };
 
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  btn.classList.add("active");
-
-  renderFaqs(filter);
-});
-
-// 하단 버튼
-homeBtn.onclick = () => {
-  // 실제 상점 URL로 교체
-  window.location.href = "index.html";
-};
-
-inquiryBtn.onclick = () => {
-  const msg = `🙋 라니 디지털 문의
+  inquiryBtn.onclick = () => {
+    const msg = `🙋 라니 디지털 문의
 
 - 어떤 작업이 필요하신가요?
 - 디스코드 닉네임:
@@ -392,17 +398,17 @@ inquiryBtn.onclick = () => {
 - 예산 범위:
 
 가능하시면 위 내용을 복사해서 채워 주시면 상담이 더 빨라져요.`;
-  navigator.clipboard.writeText(msg).then(() => {
-    alert("문의 텍스트가 복사되었습니다. 디스코드에서 붙여넣기 해 주세요.");
-    window.open("https://discord.gg/yEym2KZ9BU", "_blank");
-  }).catch(() => {
-    prompt("디스코드로 보내 주세요:", msg);
-    window.open("https://discord.gg/yEym2KZ9BU", "_blank");
-  });
-};
+    navigator.clipboard.writeText(msg).then(() => {
+      alert("문의 텍스트가 복사되었습니다. 디스코드에서 붙여넣기 해 주세요.");
+      window.open("https://discord.gg/yEym2KZ9BU", "_blank");
+    }).catch(() => {
+      prompt("디스코드로 보내 주세요:", msg);
+      window.open("https://discord.gg/yEym2KZ9BU", "_blank");
+    });
+  };
 
-// 초기 렌더
-renderFaqs();
+  // 초기 렌더
+  renderFaqs();
 </script>
 </body>
 </html>
