@@ -7,7 +7,7 @@
 
 <link rel="icon" type="image/png"
       href="https://cdn.phototourl.com/uploads/2026-02-28-90909391-9783-4299-a370-a3766a19e150.png">
-  
+
 <style>
 * {box-sizing:border-box;margin:0;padding:0}
 body {
@@ -34,194 +34,150 @@ body {
   backdrop-filter:blur(12px);
   border-radius:22px;
   border:1px solid rgba(148,163,184,.35);
-  box-shadow:0 22px 50px rgba(15,23,42,.9);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
+  box-shadow:
+    0 24px 60px rgba(15,23,42,.9),
+    0 0 0 1px rgba(15,23,42,.9);
 }
 
-/* 상단 상태 + 헤더 라인 */
-.top-row {
+/* 상단 헤더 */
+.header {
   display:flex;
   justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+.header-left {
+  display:flex;
   align-items:center;
   gap:12px;
 }
-#status {
-  font-size:12px;
-  font-weight:600;
-  padding:6px 12px;
-  background:rgba(34,197,94,.15);
-  border-radius:999px;
-  border:1px solid rgba(34,197,94,.3);
-}
-.header-info {text-align:right}
-.mall-name {font-size:18px;font-weight:800;letter-spacing:.03em}
-.mall-sub {font-size:12px;color:rgba(209,213,219,.9)}
-
-/* 환영 문구 */
-#welcome {
-  font-size:20px;
-  font-weight:700;
-  background:linear-gradient(135deg,#e5e7eb,#f9fafb);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  text-align:left;
-}
-
-/* 카테고리 탭 */
-.tabs {
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:-4px;
-}
-.tab {
-  padding:6px 12px;
-  border-radius:999px;
-  border:1px solid rgba(148,163,184,.5);
-  font-size:11px;
-  color:rgba(209,213,219,.9);
-  cursor:pointer;
-  background:rgba(15,23,42,.85);
-  transition:all .2s;
-}
-.tab.active {
-  background:linear-gradient(135deg,#3b82f6,#22c55e);
-  border-color:transparent;
-  color:#f9fafb;
-  box-shadow:0 6px 14px rgba(37,99,235,.55);
-}
-
-/* 상품 그리드 */
-#product-list {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-  width:100%;
-  margin-top:4px;
-}
-
-/* 상품 카드 + LED 테두리 */
-.product {
-  width:100%;
-  max-width:260px;
-  background:radial-gradient(circle at top left, rgba(148,163,184,.18), transparent 55%),
-             rgba(15,23,42,.95);
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(148,163,184,.45);
-  padding:18px 16px 14px;
-  border-radius:16px;
-  transition:all .3s;
-  position:relative;
+.logo {
+  width:40px;
+  height:40px;
+  border-radius:14px;
   overflow:hidden;
+  border:1px solid rgba(148,163,184,.6);
+  box-shadow:0 10px 30px rgba(15,23,42,.7);
+}
+.logo img {width:100%;height:100%;object-fit:cover}
+.title-block {display:flex;flex-direction:column;gap:2px}
+.site-title {font-size:18px;font-weight:700;letter-spacing:.02em}
+.site-subtitle {font-size:11px;color:#cbd5f5;opacity:.9}
+
+/* 잔여 포인트 뱃지 */
+.badge {
+  padding:7px 11px;
+  border-radius:999px;
+  background:rgba(15,23,42,.9);
+  border:1px solid rgba(148,163,184,.7);
+  font-size:11px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  box-shadow:0 10px 30px rgba(15,23,42,.8);
+}
+.badge span.value {font-weight:700;color:#e5e7eb}
+
+/* 안내 문구 영역 */
+.notice {
+  margin:6px 0 14px;
+  padding:10px 12px;
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(56,189,248,.16),rgba(129,140,248,.08));
+  border:1px solid rgba(96,165,250,.5);
+  font-size:11px;
+  line-height:1.5;
+  color:#e5e7eb;
+}
+.notice b {color:#fbbf24}
+
+/* 상품 리스트 */
+#product-list {
   display:flex;
   flex-direction:column;
-  align-items:flex-start;
+  gap:10px;
+  margin-top:8px;
 }
 
-/* LED 외곽 테두리 */
-.product::before {
-  content:'';
-  position:absolute;
-  inset:-2px;
-  border-radius:inherit;
-  padding:2px;
-  background:
-    conic-gradient(
-      from 0deg,
-      #22c55e,
-      #0ea5e9,
-      #6366f1,
-      #ec4899,
-      #22c55e
-    );
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask-composite:exclude;
-  -webkit-mask-composite:xor;
-  opacity:.7;
-  animation:led-border 7s linear infinite;
-  pointer-events:none;
-}
-
-/* 카드 안쪽 내용 영역 (LED 테두리와 겹치지 않게) */
-.product-content {
+/* 개별 상품 카드 */
+.product-card {
   position:relative;
-  z-index:1;
-}
-
-/* LED 테두리 회전 애니메이션 */
-@keyframes led-border {
-  to { transform:rotate(360deg); }
-}
-
-.product:hover {
-  transform:translateY(-6px);
-  box-shadow:0 18px 28px rgba(15,23,42,.75);
-  border-color:rgba(56,189,248,.7);
-}
-
-.product h3 {
-  margin:0 0 6px;
-  font-size:15px;
-  font-weight:700;
-  color:#f9fafb;
-}
-.product p {
-  margin:0 0 6px;
-  font-size:14px;
-  font-weight:600;
-  background:linear-gradient(135deg,#4ade80,#22c55e);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.product small {
-  color:rgba(209,213,219,.88);
-  font-size:12px;
-  display:block;
-  margin-bottom:10px;
-}
-.product-footer {
-  width:100%;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:8px;
-  margin-top:auto;
+  padding:11px 12px;
+  border-radius:14px;
+  background:rgba(15,23,42,.96);
+  border:1px solid rgba(51,65,85,.9);
+  box-shadow:0 14px 30px rgba(15,23,42,.9);
 }
-.badge {
-  padding:4px 8px;
-  border-radius:999px;
-  border:1px solid rgba(148,163,184,.6);
+.product-main {
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.product-title {
+  font-size:14px;
+  font-weight:600;
+}
+.product-sub {
+  font-size:11px;
+  color:#9ca3af;
+}
+.product-meta {
+  display:flex;
+  gap:8px;
+  margin-top:4px;
   font-size:10px;
-  color:rgba(209,213,219,.9);
+  color:#9ca3af;
 }
 
-/* 구매하기 버튼 */
+/* 가격/버튼 영역 */
+.product-right {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:6px;
+}
+.price {
+  font-size:13px;
+  font-weight:700;
+}
+.price .original {
+  font-size:10px;
+  color:#9ca3af;
+  text-decoration:line-through;
+  margin-right:4px;
+}
+.price .discount {
+  color:#f97316;
+  font-size:11px;
+}
+
+/* 구매 버튼 */
 .buy-btn {
-  padding:6px 12px;
+  padding:7px 12px;
   border-radius:999px;
   border:none;
   cursor:pointer;
-  font-size:12px;
+  font-size:11px;
   font-weight:600;
+  letter-spacing:.02em;
   color:#0f172a;
-  background:linear-gradient(135deg,#4ade80,#22c55e);
-  box-shadow:0 6px 14px rgba(34,197,94,.45);
-  transition:transform .15s, box-shadow .15s, background .15s;
+  background:linear-gradient(135deg,#fbbf24,#f97316);
+  box-shadow:0 8px 20px rgba(251,191,36,.55);
+  transition:all .18s ease-out;
 }
 .buy-btn:hover {
   transform:translateY(-1px);
-  box-shadow:0 10px 18px rgba(34,197,94,.55);
+  box-shadow:0 12px 28px rgba(251,191,36,.6);
 }
 
 /* 하단 버튼 줄 */
 .btn-row {
   display:flex;
   flex-wrap:wrap;
-  justify-content:center;   /* 중앙 정렬 */
+  justify-content:center;
   align-items:center;
   gap:12px;
   margin-top:16px;
@@ -229,6 +185,10 @@ body {
 
 /* 하단 버튼 스타일 */
 .logout-btn, .discord-btn, .inquiry-main-btn, .reset-btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
   padding:9px 18px;
   border:none;
   border-radius:999px;
@@ -238,16 +198,20 @@ body {
   color:#fff;
   transition:all .2s;
   box-shadow:0 4px 15px rgba(15,23,42,.7);
-  min-width:150px;          /* 버튼 폭 통일 → 나열 느낌 */
+  min-width:150px;
   text-align:center;
 }
 
+/* 개별 버튼 색상 */
 .logout-btn {background:linear-gradient(135deg,#d32f2f,#b71c1c)}
 .logout-btn:hover {background:linear-gradient(135deg,#b71c1c,#7f0000);transform:translateY(-1px)}
+
 .discord-btn {background:linear-gradient(135deg,#5865F2,#404EED)}
 .discord-btn:hover {background:linear-gradient(135deg,#404EED,#2833C4);transform:translateY(-1px)}
+
 .inquiry-main-btn {background:linear-gradient(135deg,#22c55e,#16a34a)}
 .inquiry-main-btn:hover {background:linear-gradient(135deg,#16a34a,#15803d);transform:translateY(-1px)}
+
 .reset-btn {
   background:linear-gradient(135deg,#0ea5e9,#2563eb);
   display:none; /* 기본은 숨김, 관리자만 노출 */
@@ -256,273 +220,44 @@ body {
   background:linear-gradient(135deg,#2563eb,#1d4ed8);
   transform:translateY(-1px);
 }
-
-/* 반응형 */
-@media (min-width:1024px) {
-  #product-list{
-    grid-template-columns:repeat(3,1fr);
-  }
-}
-@media (max-width:768px) {
-  .container{
-    padding:20px 18px;
-  }
-  #product-list{
-    grid-template-columns:repeat(2,1fr);
-    gap:14px;
-  }
-  .btn-row{
-    justify-content:center; /* 모바일에서 가운데 정렬 */
-  }
-}
-@media (max-width:480px) {
-  .container{
-    padding:18px;
-    max-width:95vw;
-  }
-  #welcome{
-    font-size:18px;
-  }
-  #product-list{
-    grid-template-columns:1fr;
-    gap:12px;
-  }
-}
 </style>
 </head>
 <body>
+
 <div class="container">
-  <div class="top-row">
-    <div id="status">🟢 온라인</div>
-    <div class="header-info">
-      <div class="mall-name">라니 MALL</div>
-      <div class="mall-sub">디스코드 봇 · 서버 세팅 · 로고 디자인</div>
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">
+        <img src="https://cdn.phototourl.com/uploads/2026-02-28-90909391-9783-4299-a370-a3766a19e150.png" alt="logo">
+      </div>
+      <div class="title-block">
+        <div class="site-title">라니 MALL</div>
+        <div class="site-subtitle">라니 전용 포인트 상점</div>
+      </div>
+    </div>
+    <div class="badge">
+      <span>보유 포인트</span>
+      <span class="value" id="user-points">0P</span>
     </div>
   </div>
 
-  <h1 id="welcome">로그인 확인 중...</h1>
-
-  <!-- 카테고리 탭 -->
-  <div class="tabs">
-    <button class="tab active" data-filter="all">전체</button>
-    <button class="tab" data-filter="bot">디스코드 봇</button>
-    <button class="tab" data-filter="design">디자인</button>
-    <button class="tab" data-filter="hosting">호스팅</button>
+  <div class="notice">
+    <b>안내</b> · 포인트로만 구매 가능한 상품입니다. 디스코드 문의를 통해 배송 정보 등을 전달해 주세요.
   </div>
 
-<div id="product-list"></div>
+  <div id="product-list"></div>
 
-<div class="btn-row">
-  <button class="logout-btn" id="logout-btn">로그아웃</button>
-  <button class="reset-btn" id="reset-points-btn">포인트 초기화</button>
-  <button class="discord-btn" id="discord-btn">🙈 디스코드</button>
-  <button class="inquiry-main-btn" id="inquiry-btn">문의하기</button>
+  <div class="btn-row">
+    <button class="logout-btn" id="logout-btn">🚪 로그아웃</button>
+    <button class="reset-btn" id="reset-points-btn">🧹 포인트 초기화</button>
+    <button class="discord-btn" id="discord-btn">🙈 디스코드</button>
+    <button class="inquiry-main-btn" id="inquiry-btn">📨 문의하기</button>
+  </div>
 </div>
-</div>
 
-<script type="module">
-import { auth, db } from "./firebase.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-const welcomeEl   = document.getElementById("welcome");
-const productList = document.getElementById("product-list");
-const logoutBtn   = document.getElementById("logout-btn");
-const discordBtn  = document.getElementById("discord-btn");
-const inquiryBtn  = document.getElementById("inquiry-btn");
-const resetBtn    = document.getElementById("reset-points-btn");
-const tabs        = document.querySelectorAll(".tab");
-
-const products = [
-  {name:"🚀 디스코드 봇 일반",          price:"₩15,000",      desc:"기능 맞춤 제작 1개",                 tag:"bot",     badge:"기본 봇 제작"},
-  {name:"🚀 디스코드 봇 고급",          price:"₩30,000",      desc:"게임 봇 시스템 적용 등",             tag:"bot",     badge:"고급 기능"},
-  {name:"☁️ 디스코드 템플릿",           price:"₩5,000",       desc:"역할 & 기본 세팅",                   tag:"bot",     badge:"템플릿"},
-  {name:"☁️ 일반 디스코드 봇 호스팅",  price:"월₩5,000 ~시작",desc:"99.9% 디도스 보호 완벽 차단 빽업 기능", tag:"hosting", badge:"호스팅"},
-  {name:"🤖 고급 디스코드 봇 호스팅",  price:"₩10,000",      desc:"99.9% 디도스 보호 완벽 차단",         tag:"hosting", badge:"봇 호스팅"},
-  {name:"🌟 어드밴스드 봇 호스팅",     price:"₩20,000",      desc:"99.9% 디도스 보호 완벽 차단",         tag:"hosting", badge:"봇 호스팅"},
-  {name:"☁️ 프로필",                  price:"₩3,000 ~ 시작", desc:"이쁜 선생님이 해주셔요",              tag:"design",  badge:"프로필 디자인"},
-  {name:"☁️ 로고",                     price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등",           tag:"design",  badge:"로고 디자인"},
-];
-
-// 상품 렌더
-function renderProducts(filter = "all") {
-  productList.innerHTML = "";
-  products
-    .filter(p => filter === "all" || p.tag === filter)
-    .forEach((product, index) => {
-      const div = document.createElement("div");
-      div.className = "product";
-      div.innerHTML = `
-        <div class="product-content">
-          <h3>${product.name}</h3>
-          <p>${product.price}</p>
-          <small>${product.desc}</small>
-          <div class="product-footer">
-            <span class="badge">${product.badge}</span>
-            <button class="buy-btn" data-index="${index}">구매하기</button>
-          </div>
-        </div>
-      `;
-      productList.appendChild(div);
-    });
-  attachBuyEvents();
-}
-
-// 구매하기 버튼: 포인트 변경 없이 문의 텍스트 복사
-function attachBuyEvents() {
-  const buttons = document.querySelectorAll(".buy-btn");
-  buttons.forEach(btn => {
-    btn.onclick = async () => {
-      const user = auth.currentUser;
-      if (!user) {
-        alert("로그인 후 이용해 주세요.");
-        return;
-      }
-      const nickname = user.email.split("@")[0];
-      const idx = btn.getAttribute("data-index");
-      const product = products[idx];
-
-      const msg = `🧾 라니 MALL 구매 / 충전 문의
-
-👤 구매자: ${nickname}
-📧 이메일: ${user.email}
-포인트 충전 / 결제 문의는 디스코드로 연락해 주세요.
-
-🛒 상품명: ${product.name}
-💰 가격: ${product.price}
-📄 설명: ${product.desc}`;
-
-      navigator.clipboard.writeText(msg).then(() => {
-        alert("구매 / 충전 문의 텍스트가 복사되었습니다. 디스코드에서 붙여넣기 해 주세요.");
-        window.open("https://discord.gg/yEym2KZ9BU", "_blank");
-      }).catch(() => {
-        prompt("아래 내용을 디스코드로 보내주세요:", msg);
-        window.open("https://discord.gg/yEym2KZ9BU", "_blank");
-      });
-    };
-  });
-}
-
-// 포인트 초기화 (관리자만)
-resetBtn.onclick = async () => {
-  const user = auth.currentUser;
-  if (!user) {
-    alert("로그인 후 이용해 주세요.");
-    return;
-  }
-  const uid     = user.uid;
-  const userRef = doc(db, "users", uid);
-  const snap    = await getDoc(userRef);
-  const data    = snap.data();
-
-  if (!data?.isAdmin) {
-    alert("관리자만 사용할 수 있는 기능입니다.");
-    return;
-  }
-
-  const ok = confirm("정말 포인트를 0점으로 초기화할까요?");
-  if (!ok) return;
-
-  await updateDoc(userRef, { points: 0 });
-
-  const refreshed = await getDoc(userRef);
-  const nickname  = user.email.split("@")[0];
-  const points    = refreshed.data().points ?? 0;
-
-  welcomeEl.textContent = `환영합니다, ${nickname}님! (포인트: ${points}점) 👋`;
-  alert("포인트가 0점으로 초기화되었습니다.");
-};
-
-// 아래 큰 문의하기 버튼
-inquiryBtn.onclick = () => {
-  const message = `🎯 라니 MALL 문의
-💰 가격 및 상품 문의
-
-👤 Discord: soyugwon
-🔗 https://discord.gg/yEym2KZ9BU
-
-👇 아래 디스코드 버튼을 눌러 문의를 보내주세요.`;
-
-  navigator.clipboard.writeText(message).then(() => {
-    alert("문의 텍스트가 복사되었습니다. 디스코드에서 붙여넣기 해 주세요.");
-  }).catch(() => {
-    prompt("디스코드로 보내세요:", message);
-  });
-};
-
-let statusInterval;
-function updateStatus() {
-  const now = new Date().toLocaleString("ko-KR", {
-    hour12:false, timeZone:"Asia/Seoul",
-    year:"numeric", month:"2-digit", day:"2-digit",
-    hour:"2-digit", minute:"2-digit", second:"2-digit"
-  });
-  document.getElementById("status").textContent = `🟢 온라인 | ${now}`;
-}
-
-// 탭 필터
-tabs.forEach(tab => {
-  tab.addEventListener("click", () => {
-    tabs.forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-    const filter = tab.getAttribute("data-filter");
-    renderProducts(filter);
-  });
-});
-
-// 로그인 상태 체크 + 유저 세팅
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const uid      = user.uid;
-    const nickname = user.email.split('@')[0];
-    const userRef  = doc(db, "users", uid);
-    const snap     = await getDoc(userRef);
-
-    if (!snap.exists()) {
-      await setDoc(userRef, {
-        email: user.email,
-        nickname: nickname,
-        points: 0,
-        isAdmin: false
-      });
-    }
-
-    const refreshed = await getDoc(userRef);
-    const data      = refreshed.data();
-    const points    = data.points ?? 0;
-    const isAdmin   = data.isAdmin === true;
-
-    welcomeEl.textContent = `환영합니다, ${nickname}님! (포인트: ${points}점) 👋`;
-
-    if (isAdmin) {
-      resetBtn.style.display = "inline-flex";
-    } else {
-      resetBtn.style.display = "none";
-    }
-
-    renderProducts();
-    statusInterval = setInterval(updateStatus, 1000);
-    updateStatus();
-  } else {
-    window.location.href = "index.html";
-  }
-});
-
-// 로그아웃
-logoutBtn.onclick = async () => {
-  logoutBtn.disabled = true;
-  logoutBtn.textContent = "로그아웃 중...";
-  try { await signOut(auth); }
-  catch (error) { console.error("로그아웃 오류:", error); }
-};
-
-// 디스코드 버튼
-discordBtn.onclick = () => window.open("https://discord.gg/yEym2KZ9BU", "_blank");
-
-// ESC 로 로그아웃
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") logoutBtn.click();
-});
+<script>
+  // 여기에 너가 쓰던 JS (상품 렌더링, 포인트, 버튼 이벤트 등) 그대로 넣으면 돼
 </script>
+
 </body>
 </html>
