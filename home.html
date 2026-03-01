@@ -539,6 +539,12 @@ logoutBtn.onclick = async () => {
 // 디스코드 버튼
 discordBtn.onclick = () => window.open("https://discord.gg/yEym2KZ9BU", "_blank");
 
+// FAQ 버튼
+const faqBtn = document.getElementById("faq-btn");
+faqBtn?.addEventListener("click", () => {
+  window.location.href = "faq.html"; // 네가 만든 FAQ 파일 이름
+});
+
 // ESC 로 로그아웃
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") logoutBtn.click();
@@ -546,3 +552,4 @@ document.addEventListener("keydown", (e) => {
 </script>
 </body>
 </html>
+
