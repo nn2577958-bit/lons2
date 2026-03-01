@@ -165,6 +165,24 @@ body {
   color:rgba(209,213,219,.9);
 }
 
+/* 구매하기 버튼 */
+.buy-btn {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0f172a;
+  background: linear-gradient(135deg,#4ade80,#22c55e);
+  box-shadow: 0 6px 14px rgba(34,197,94,.45);
+  transition: transform .15s, box-shadow .15s, background .15s;
+}
+.buy-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(34,197,94,.55);
+}
+
 /* 하단 버튼 줄 */
 .btn-row {
   display:flex;
@@ -238,8 +256,18 @@ body {
 </div>
 
 <script type="module">
-import { auth } from "./firebase.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { auth, db } from "./firebase.js";
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  increment
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const welcomeEl = document.getElementById("welcome");
 const productList = document.getElementById("product-list");
@@ -247,7 +275,7 @@ const logoutBtn = document.getElementById("logout-btn");
 const discordBtn = document.getElementById("discord-btn");
 const inquiryBtn = document.getElementById("inquiry-btn");
 const tabs = document.querySelectorAll(".tab");
-
+  
 const products = [
   {name:"🚀 디스코드 봇 일반",price:"₩15,000",desc:"기능 맞춤 제작 1개", tag:"bot", badge:"기본 봇 제작"},
   {name:"🚀 디스코드 봇 고급",price:"₩30,000",desc:"게임 봇 시스템 적용 등", tag:"bot", badge:"고급 기능"},
@@ -257,13 +285,13 @@ const products = [
   {name:"☁️ 로고",price:"₩10,000 ~ 시작",desc:"홈페이지/디스코드/로고/등", tag:"design", badge:"로고 디자인"},
 ];
 
-// 상품 렌더 (카드 안에는 버튼 없음)
+// 상품 렌더
 function renderProducts(filter = "all") {
   productList.innerHTML = "";
 
   products
     .filter(p => filter === "all" || p.tag === filter)
-    .forEach(product => {
+    .forEach((product, index) => {
       const div = document.createElement("div");
       div.className = "product";
       div.innerHTML = `
@@ -272,12 +300,66 @@ function renderProducts(filter = "all") {
         <small>${product.desc}</small>
         <div class="product-footer">
           <span class="badge">${product.badge}</span>
+          <button class="buy-btn" data-index="${index}">구매하기</button>
         </div>
       `;
       productList.appendChild(div);
     });
 
-  console.log("상품 렌더 완료");
+  attachBuyEvents();
+}
+
+// 구매하기 버튼 클릭 시 포인트 적립 + 디스코드용 메시지 복사
+async function attachBuyEvents() {
+  const buttons = document.querySelectorAll(".buy-btn");
+
+  buttons.forEach(btn => {
+    btn.onclick = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("로그인 후 이용해 주세요.");
+        return;
+      }
+
+      const uid = user.uid;
+      const nickname = user.email.split("@")[0];
+      const idx = btn.getAttribute("data-index");
+      const product = products[idx];
+
+      const userRef = doc(db, "users", uid);
+
+      // 포인트 +10
+      await updateDoc(userRef, {
+        points: increment(10)
+      });
+
+      // 최신 포인트 조회
+      const snap = await getDoc(userRef);
+      const points = snap.data().points ?? 0;
+
+      welcomeEl.textContent = `환영합니다, ${nickname}님! (포인트: ${points}점) 👋`;
+
+      const msg = `🧾 라니 MALL 구매 요청
+
+👤 구매자: ${nickname}
+📧 이메일: ${user.email}
+포인트: ${points}점
+
+🛒 상품명: ${product.name}
+💰 가격: ${product.price}
+📄 설명: ${product.desc}
+
+위 상품 구매를 희망합니다.`;
+
+      navigator.clipboard.writeText(msg).then(() => {
+        alert("구매 요청 텍스트가 복사되었습니다. 디스코드에서 붙여넣기 해 주세요. (포인트 +10 적립 완료)");
+        window.open("https://discord.gg/yEym2KZ9BU", "_blank");
+      }).catch(() => {
+        prompt("아래 내용을 디스코드로 보내주세요:", msg);
+        window.open("https://discord.gg/yEym2KZ9BU", "_blank");
+      });
+    };
+  });
 }
 
 // 아래 큰 문의하기 버튼
@@ -317,10 +399,30 @@ tabs.forEach(tab => {
   });
 });
 
-// 로그인 상태 체크
-onAuthStateChanged(auth, (user) => {
+// 로그인 상태 체크 + Firestore 유저/포인트 세팅
+onAuthStateChanged(auth, async (user) => {
   if (user) {
-    welcomeEl.textContent = `환영합니다, ${user.email.split('@')[0]}님! 👋`;
+    const uid = user.uid;
+    const nickname = user.email.split('@')[0];
+
+    const userRef = doc(db, "users", uid);
+    const snap = await getDoc(userRef);
+
+    // 처음 로그인한 유저면 기본 정보 + 포인트 0
+    if (!snap.exists()) {
+      await setDoc(userRef, {
+        email: user.email,
+        nickname: nickname,
+        points: 0
+      });
+    }
+
+    // 최신 포인트 다시 읽기
+    const refreshed = await getDoc(userRef);
+    const points = refreshed.data().points ?? 0;
+
+    welcomeEl.textContent = `환영합니다, ${nickname}님! (포인트: ${points}점) 👋`;
+
     renderProducts();
     statusInterval = setInterval(updateStatus, 1000);
     updateStatus();
