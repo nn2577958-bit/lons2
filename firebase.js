@@ -1,23 +1,9 @@
-// firebase.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-// 🔹 Firebase 프로젝트 설정
 const firebaseConfig = {
-  apiKey: "AIzaSyBeoiT7Bh0r83YY4Ga52auTmA5X92DMzKQ",
-  authDomain: "lons2-74bfa.firebaseapp.com",
-  projectId: "lons2-74bfa",
-  storageBucket: "lons2-74bfa.appspot.com",
-  messagingSenderId: "734178165313",
-  appId: "1:734178165313:web:395ed759777ec61f4b3cc0"
+  apiKey: "AIzaSyACDNgJpxqJM5P47c5D3HfIQIlpLfEjiKY",
+  authDomain: "rani-mall-firebase.firebaseapp.com",
+  projectId: "rani-mall-firebase",
+  storageBucket: "rani-mall-firebase.firebasestorage.app",
+  messagingSenderId: "231199139441",
+  appId: "1:231199139441:web:fe2e971c00a8282cb95dd0",
+  measurementId: "G-KYFWJED24P"
 };
-
-// Firebase 초기화
-const app = initializeApp(firebaseConfig);
-
-// ✅ 반드시 둘 다 export
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-
-console.log("✅ Firebase Initialized (Auth + Firestore)");
