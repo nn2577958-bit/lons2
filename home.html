@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>라니 MALL - 홈</title>
+
+<link rel="icon" type="image/png"
+      href="https://cdn.phototourl.com/uploads/2026-02-28-90909391-9783-4299-a370-a3766a19e150.png">
+  
 <style>
 * {box-sizing:border-box;margin:0;padding:0}
 body {
@@ -98,12 +102,12 @@ body {
   margin-top:4px;
 }
 
-/* 상품 카드 */
+/* 상품 카드 + LED 테두리 */
 .product {
   width:100%;
   max-width:260px;
-  background:radial-gradient(circle at top left, rgba(148,163,184,.25), transparent 55%),
-             rgba(15,23,42,.9);
+  background:radial-gradient(circle at top left, rgba(148,163,184,.18), transparent 55%),
+             rgba(15,23,42,.95);
   backdrop-filter:blur(10px);
   border:1px solid rgba(148,163,184,.45);
   padding:18px 16px 14px;
@@ -115,21 +119,50 @@ body {
   flex-direction:column;
   align-items:flex-start;
 }
+
+/* LED 외곽 테두리 */
 .product::before {
   content:'';
   position:absolute;
-  inset:-40%;
-  background:radial-gradient(circle at 0% 0%, rgba(56,189,248,.28), transparent 60%);
-  opacity:0;
-  transition:opacity .3s;
+  inset:-2px;
+  border-radius:inherit;
+  padding:2px;
+  background:
+    conic-gradient(
+      from 0deg,
+      #22c55e,
+      #0ea5e9,
+      #6366f1,
+      #ec4899,
+      #22c55e
+    );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  -webkit-mask-composite:xor;
+  opacity:.7;
+  animation:led-border 4s linear infinite;
   pointer-events:none;
 }
-.product:hover::before {opacity:1}
+
+/* 카드 안쪽 내용 영역 (LED 테두리와 겹치지 않게) */
+.product-content {
+  position:relative;
+  z-index:1;
+}
+
+/* LED 테두리 회전 애니메이션 */
+@keyframes led-border {
+  to { transform:rotate(360deg); }
+}
+
 .product:hover {
   transform:translateY(-6px);
   box-shadow:0 18px 28px rgba(15,23,42,.75);
-  border-color:rgba(56,189,248,.6);
+  border-color:rgba(56,189,248,.7);
 }
+
 .product h3 {
   margin:0 0 6px;
   font-size:15px;
@@ -187,11 +220,11 @@ body {
 /* 하단 버튼 줄 */
 .btn-row {
   display:flex;
-  justify-content:space-between; /* PC에서 한 줄 4개 */
+  flex-wrap:wrap;          /* PC에서도 자연스럽게 나열 */
+  justify-content:space-between;
   align-items:center;
   gap:12px;
-  flex-wrap:nowrap;              /* 줄바꿈 금지 (PC) */
-  margin-top:6px;
+  margin-top:16px;
 }
 
 /* 하단 버튼 스타일 */
@@ -236,9 +269,7 @@ body {
     gap:14px;
   }
   .btn-row{
-    flex-wrap:wrap;         /* 작은 화면에서 줄바꿈 허용 */
-    justify-content:center; /* 버튼 묶음 가운데 정렬 */
-    align-items:center;
+    justify-content:center; /* 모바일에서 가운데 정렬 */
   }
 }
 @media (max-width:480px) {
@@ -319,12 +350,14 @@ function renderProducts(filter = "all") {
       const div = document.createElement("div");
       div.className = "product";
       div.innerHTML = `
-        <h3>${product.name}</h3>
-        <p>${product.price}</p>
-        <small>${product.desc}</small>
-        <div class="product-footer">
-          <span class="badge">${product.badge}</span>
-          <button class="buy-btn" data-index="${index}">구매하기</button>
+        <div class="product-content">
+          <h3>${product.name}</h3>
+          <p>${product.price}</p>
+          <small>${product.desc}</small>
+          <div class="product-footer">
+            <span class="badge">${product.badge}</span>
+            <button class="buy-btn" data-index="${index}">구매하기</button>
+          </div>
         </div>
       `;
       productList.appendChild(div);
