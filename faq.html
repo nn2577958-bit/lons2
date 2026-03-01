@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>라니 FAQ</title>
+<style>
+* { box-sizing:border-box; margin:0; padding:0 }
+body {
+  min-height:100vh;
+  font-family:'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(15,23,42,.7), rgba(15,23,42,.95)),
+    url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  color:#e5e7eb;
+}
+
+/* 메인 카드 */
+.container {
+  width:92vw;
+  max-width:960px;
+  padding:24px 24px 22px;
+  background:rgba(15,23,42,.86);
+  backdrop-filter:blur(12px);
+  border-radius:22px;
+  border:1px solid rgba(148,163,184,.35);
+  box-shadow:0 22px 50px rgba(15,23,42,.9);
+}
+
+/* 상단 헤더 */
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+.header-left {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.logo {
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid rgba(148,163,184,.6);
+  box-shadow:0 10px 30px rgba(15,23,42,.7);
+}
+.logo img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.title-block { display:flex; flex-direction:column; gap:2px; }
+.site-title { font-size:18px; font-weight:700; letter-spacing:.03em; }
+.site-subtitle { font-size:11px; color:#cbd5f5; opacity:.9; }
+
+.badge {
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,.7);
+  font-size:11px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(15,23,42, .9);
+}
+.badge-dot { font-size:10px; }
+.badge-label { color:#e5e7eb; }
+
+/* 페이지 타이틀/설명 */
+.page-title {
+  margin-top:8px;
+  font-size:20px;
+  font-weight:700;
+}
+.page-sub {
+  margin-top:4px;
+  font-size:12px;
+  color:#9ca3af;
+}
+
+/* 카테고리 탭 */
+.tabs {
+  margin-top:14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.tab {
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,.5);
+  font-size:11px;
+  color:rgba(209,213,219,.9);
+  cursor:pointer;
+  background:rgba(15,23,42,.85);
+  transition:all .2s;
+}
+.tab.active {
+  background:linear-gradient(135deg,#3b82f6,#22c55e);
+  border-color:transparent;
+  color:#f9fafb;
+  box-shadow:0 6px 14px rgba(37,99,235,.55);
+}
+
+/* FAQ 리스트 */
+.faq-list {
+  margin-top:14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+/* FAQ 아이템(아코디언) */
+.faq-item {
+  border-radius:14px;
+  border:1px solid rgba(51,65,85,.9);
+  background:rgba(15,23,42,.96);
+  overflow:hidden;
+}
+.faq-header {
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  cursor:pointer;
+}
+.faq-question {
+  font-size:13px;
+  font-weight:600;
+}
+.faq-category {
+  font-size:10px;
+  color:#9ca3af;
+}
+.faq-icon {
+  font-size:12px;
+  color:#9ca3af;
+  transition:transform .2s;
+}
+
+/* 열렸을 때 아이콘 회전 */
+.faq-item.open .faq-icon {
+  transform:rotate(90deg);
+}
+
+/* 답변 영역 */
+.faq-body {
+  max-height:0;
+  overflow:hidden;
+  padding:0 12px;
+  font-size:12px;
+  color:#d1d5db;
+  line-height:1.6;
+  transition:max-height .22s ease, padding .22s ease;
+}
+.faq-item.open .faq-body {
+  padding:0 12px 10px;
+}
+
+/* 하단 버튼 줄 (홈 이동/문의 등) */
+.btn-row {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:16px;
+  font-size:12px;
+}
+.btn {
+  padding:7px 14px;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  box-shadow:0 4px 14px rgba(15,23,42,.8);
+  transition:transform .15s, box-shadow .15s;
+}
+.btn:hover {
+  transform:translateY(-1px);
+}
+.btn-home {
+  background:linear-gradient(135deg,#0ea5e9,#2563eb);
+}
+.btn-inquiry {
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+}
+
+/* 반응형 */
+@media (max-width:640px) {
+  .container { padding:20px 18px; }
+  .header { flex-direction:column; align-items:flex-start; gap:10px; }
+  .btn-row { justify-content:flex-start; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 헤더 -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">
+        <img src="https://cdn.phototourl.com/uploads/2026-02-28-90909391-9783-4299-a370-a3766a19e150.png" alt="라니 로고" />
+      </div>
+      <div class="title-block">
+        <div class="site-title">라니 FAQ</div>
+        <div class="site-subtitle">디스코드 · 봇 · 디자인 관련 자주 묻는 질문</div>
+      </div>
+    </div>
+    <div class="badge">
+      <span class="badge-dot">🟢</span>
+      <span class="badge-label">평균 응답 시간 · 1시간 이내</span>
+    </div>
+  </div>
+
+  <!-- 타이틀 -->
+  <div class="page-title">무엇이 궁금하신가요?</div>
+  <div class="page-sub">자주 묻는 질문을 먼저 확인해 보시고, 없으면 아래 문의 버튼으로 편하게 물어보세요.</div>
+
+  <!-- 카테고리 탭 -->
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-filter="all">전체</button>
+    <button class="tab" data-filter="bot">디스코드 봇</button>
+    <button class="tab" data-filter="design">디자인</button>
+    <button class="tab" data-filter="pay">결제 · 포인트</button>
+    <button class="tab" data-filter="etc">기타</button>
+  </div>
+
+  <!-- FAQ 리스트 -->
+  <div class="faq-list" id="faq-list"></div>
+
+  <!-- 하단 버튼 -->
+  <div class="btn-row">
+    <button class="btn btn-home" id="home-btn">🏠 상점으로 돌아가기</button>
+    <button class="btn btn-inquiry" id="inquiry-btn">🙋 직접 문의하기</button>
+  </div>
+</div>
+
+<script>
+// FAQ 데이터
+const faqs = [
+  {
+    q: "디스코드 봇은 어떤 언어로 개발되나요?",
+    a: "주로 Node.js(자바스크립트) 기반으로 개발하며, 디스코드 공식 API를 사용합니다. 필요 시 Python 등 다른 언어도 협의 가능합니다.",
+    tag: "bot"
+  },
+  {
+    q: "봇 제작 후 수정이나 유지보수도 해주나요?",
+    a: "간단한 버그 수정은 기본으로 지원하고, 기능 추가나 큰 구조 변경은 별도 비용으로 진행합니다. 처음 상담 시 유지보수 범위를 같이 정해요.",
+    tag: "bot"
+  },
+  {
+    q: "디자인 의뢰할 때 레퍼런스가 꼭 필요할까요?",
+    a: "있으면 훨씬 좋지만, 없어도 가능합니다. 선호하는 색감/분위기/키워드 정도만 알려주시면 거기서 컨셉을 잡아 드려요.",
+    tag: "design"
+  },
+  {
+    q: "상표권이나 저작권 문제는 어떻게 처리되나요?",
+    a: "의뢰자가 제공한 캐릭터나 로고 등은 의뢰자가 권리를 가지고 있다고 보고 작업합니다. 상표 등록용 로고가 필요하면 미리 말씀해 주세요.",
+    tag: "design"
+  },
+  {
+    q: "결제는 어떻게 하나요?",
+    a: "기본적으로 계좌이체 또는 카카오페이 송금 등으로 받고 있습니다. 필요하다면 다른 수단도 상의 가능해요.",
+    tag: "pay"
+  },
+  {
+    q: "포인트 제도는 어떻게 동작하나요?",
+    a: "일부 작업/이벤트로 적립된 포인트를 라니 MALL에서 상품처럼 사용할 수 있습니다. 실제 현금은 아니고, 라니 디지털 내부에서만 사용 가능한 값이에요.",
+    tag: "pay"
+  },
+  {
+    q: "작업 진행 과정은 어떻게 되나요?",
+    a: "문의 → 견적 확정 → 선입금(또는 일부 선입금) → 작업 진행 → 중간 검수 → 최종 전달 순서로 진행됩니다. 프로젝트 성격에 따라 조금씩 달라질 수 있어요.",
+    tag: "etc"
+  },
+  {
+    q: "응답은 언제쯤 받을 수 있나요?",
+    a: "가능한 빠르게 답변드리며, 보통 1시간 이내, 늦어도 당일 안에는 답변을 드리려고 합니다. 새벽 시간에는 답변이 조금 늦어질 수 있어요.",
+    tag: "etc"
+  }
+];
+
+// DOM 요소
+const faqListEl = document.getElementById("faq-list");
+const tabsEl    = document.getElementById("tabs");
+const homeBtn   = document.getElementById("home-btn");
+const inquiryBtn= document.getElementById("inquiry-btn");
+
+// FAQ 렌더링
+function renderFaqs(filter = "all") {
+  faqListEl.innerHTML = "";
+  faqs
+    .filter(item => filter === "all" || item.tag === filter)
+    .forEach((item, index) => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "faq-item";
+      wrapper.innerHTML = `
+        <div class="faq-header" data-index="${index}">
+          <div>
+            <div class="faq-question">${item.q}</div>
+            <div class="faq-category">${labelForTag(item.tag)}</div>
+          </div>
+          <div class="faq-icon">▶</div>
+        </div>
+        <div class="faq-body">
+          ${item.a}
+        </div>
+      `;
+      faqListEl.appendChild(wrapper);
+    });
+
+  attachFaqEvents();
+}
+
+function labelForTag(tag) {
+  switch (tag) {
+    case "bot": return "디스코드 봇";
+    case "design": return "디자인";
+    case "pay": return "결제 · 포인트";
+    case "etc": return "기타";
+    default: return "";
+  }
+}
+
+// FAQ 클릭 이벤트(아코디언)
+function attachFaqEvents() {
+  const headers = document.querySelectorAll(".faq-header");
+  headers.forEach(header => {
+    header.onclick = () => {
+      const item = header.parentElement;
+      const body = item.querySelector(".faq-body");
+      const isOpen = item.classList.contains("open");
+
+      // 열려있으면 닫기
+      if (isOpen) {
+        item.classList.remove("open");
+        body.style.maxHeight = null;
+        return;
+      }
+
+      // 다른 것들 닫기 (피코 느낌처럼 한 번에 한 개만 열고 싶으면 이 부분 유지)
+      document.querySelectorAll(".faq-item.open").forEach(openItem => {
+        openItem.classList.remove("open");
+        const openBody = openItem.querySelector(".faq-body");
+        openBody.style.maxHeight = null;
+      });
+
+      // 현재 것 열기
+      item.classList.add("open");
+      body.style.maxHeight = body.scrollHeight + "px";
+    };
+  });
+}
+
+// 탭 클릭 이벤트
+tabsEl.addEventListener("click", (e) => {
+  const btn = e.target.closest(".tab");
+  if (!btn) return;
+  const filter = btn.dataset.filter || "all";
+
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+
+  renderFaqs(filter);
+});
+
+// 하단 버튼
+homeBtn.onclick = () => {
+  // 실제 상점 URL로 교체
+  window.location.href = "mall.html";
+};
+
+inquiryBtn.onclick = () => {
+  const msg = `🙋 라니 디지털 문의
+
+- 어떤 작업이 필요하신가요?
+- 디스코드 닉네임:
+- 희망 일정:
+- 예산 범위:
+
+가능하시면 위 내용을 복사해서 채워 주시면 상담이 더 빨라져요.`;
+  navigator.clipboard.writeText(msg).then(() => {
+    alert("문의 텍스트가 복사되었습니다. 디스코드에서 붙여넣기 해 주세요.");
+    window.open("https://discord.gg/yEym2KZ9BU", "_blank");
+  }).catch(() => {
+    prompt("디스코드로 보내 주세요:", msg);
+    window.open("https://discord.gg/yEym2KZ9BU", "_blank");
+  });
+};
+
+// 초기 렌더
+renderFaqs();
+</script>
+</body>
+</html>
