@@ -4,7 +4,7 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth
 import { getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyACDNgJpxqJM5P47c5D3HfIQIlpLfEjiKY",
+  apiKey: "AIzaSyAPn2ZTZjAxqX4WIzd8O43jq8cXD_8J1SE",   // 새 키
   authDomain: "rani-mall-firebase.firebaseapp.com",
   projectId: "rani-mall-firebase",
   storageBucket: "rani-mall-firebase.firebasestorage.app",
@@ -14,7 +14,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
 export const auth = getAuth(app);
 export const db   = getFirestore(app);
 export default app;
