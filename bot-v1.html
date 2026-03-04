@@ -67,7 +67,7 @@
       text-decoration: underline;
     }
 
-    /* 상단 디스코드 서버 배너 */
+    /* 디스코드 서버 배너 */
     .discord-banner {
       margin: 8px 0 18px;
       padding: 16px 18px;
@@ -157,10 +157,6 @@
         grid-template-columns: 1fr;
       }
     }
-    .card-link {
-      text-decoration: none;
-      color: inherit;
-    }
     .card {
       position: relative;
       padding: 18px 18px 20px;
@@ -178,6 +174,7 @@
         box-shadow 180ms ease-out,
         border-color 180ms ease-out,
         background 220ms ease-out;
+      min-height: 120px;
     }
     .card:hover {
       transform: translateY(-6px) translateZ(0);
@@ -208,7 +205,7 @@
       color: #9ca3af;
     }
 
-    /* 간단 소개/성향 섹션 */
+    /* 간단 설명 */
     h2 {
       font-size: 20px;
       margin-top: 28px;
@@ -237,9 +234,9 @@
       <div class="path">배포봇 v1</div>
       <h1>배포봇 v1 · RLNL + 공지 + 출석</h1>
       <div class="meta">
-        <span class="tag">RLNL 카지노 스타일 포인트 게임</span>
-        <span class="tag">공지 모달 · 출석 · 위로금 · 리필</span>
-        <span class="tag">서버 관리자 친화 설정</span>
+        <span class="tag">RLNL 포인트 게임</span>
+        <span class="tag">공지 모달</span>
+        <span class="tag">출석 · 위로금 · 레벨</span>
       </div>
     </header>
 
@@ -275,57 +272,51 @@
       </div>
     </section>
 
-    <!-- 기능 카드 3D -->
+    <!-- 기능 카드 (설명용, 링크 없음) -->
     <section>
       <div class="cards">
-        <a href="/bot-v1-setup.html" class="card-link">
-          <div class="card">
-            <div class="card-icon">⚙</div>
-            <div class="card-title>/setup · 기본 설정</div>
-            <div class="card-sub">
-              공지 채널 지정, RLNL 게임 ON/OFF, 결과 채널까지 한 번에 세팅하는 관리자용 명령어.
-            </div>
+        <div class="card">
+          <div class="card-icon">⚙</div>
+          <div class="card-title">/setup · 기본 설정</div>
+          <div class="card-sub">
+            공지 채널, RLNL 게임 ON/OFF, 결과 채널까지 한 번에 세팅하는 관리자 명령어.
           </div>
-        </a>
+        </div>
 
-        <a href="/bot-v1-gamepanel.html" class="card-link">
-          <div class="card">
-            <div class="card-icon">🎮</div>
-            <div class="card-title>/gamepanel · RLNL 패널</div>
-            <div class="card-sub">
-              바카라, 출석, 일일 위로금, 30분 리필 버튼이 한 번에 뜨는 유저용 게임 패널.
-            </div>
+        <div class="card">
+          <div class="card-icon">🎮</div>
+          <div class="card-title">/gamepanel · RLNL 패널</div>
+          <div class="card-sub">
+            바카라, 출석, 일일 위로금, 30분 리필 버튼이 한 번에 뜨는 RLNL 게임 패널.
           </div>
-        </a>
+        </div>
 
-        <a href="/bot-v1-checkin.html" class="card-link">
-          <div class="card">
-            <div class="card-icon">📅</div>
-            <div class="card-title>출석 · 위로금 · 리필</div>
-            <div class="card-sub">
-              출석/보상 포인트 규칙과 쿨타임 등 RLNL 포인트 시스템 정리용 문서.
-            </div>
+        <div class="card">
+          <div class="card-icon">📅</div>
+          <div class="card-title">출석 · 위로금 · 레벨</div>
+          <div class="card-sub">
+            출석, 보상 포인트, 30분 리필과 레벨/경험치 시스템을 정리해 둔 문서.
           </div>
-        </a>
+        </div>
       </div>
     </section>
 
-    <!-- 서버 성향 / 어울리는 서버 -->
+    <!-- 간단 요약 -->
     <section>
       <h2>이 봇이 잘 맞는 서버</h2>
       <ul>
-        <li>카지노·RLNL 같은 포인트 게임으로 소규모 커뮤니티 분위기를 살리고 싶은 서버.</li>
-        <li>공지 채널과 게임 채널을 깔끔하게 분리해서 운영하고 싶은 서버.</li>
-        <li>운영진이 “오늘 이벤트/배포 일정” 같은 공지를 자주 올리는 서버.</li>
-        <li>유저들이 출석, 일일 위로금, 30분 리필로 천천히 포인트를 모으는 구조를 선호하는 서버.</li>
+        <li>카지노·RLNL 스타일 포인트 게임으로 소규모 커뮤니티를 굴리는 서버.</li>
+        <li>공지 채널과 게임 채널을 분리해서 깔끔하게 운영하고 싶은 서버.</li>
+        <li>운영진이 이벤트/배포/공지 등을 자주 올리는 서버.</li>
+        <li>출석과 소액 포인트 보상으로 천천히 포인트를 쌓게 만들고 싶은 서버.</li>
       </ul>
     </section>
 
     <section>
       <h2>빠른 시작</h2>
       <p>
-        처음 사용하는 경우, <strong>/setup</strong> 페이지에서 공지 채널과 RLNL 게임 여부만 먼저 설정한 뒤,
-        <strong>/gamepanel</strong>을 원하는 채널에 한 번만 띄워두면 대부분의 기능을 바로 쓸 수 있습니다.
+        처음 사용하는 경우, <strong>/setup</strong>으로 공지 채널과 RLNL 게임 여부를 설정한 뒤,
+        원하는 채널에 <strong>/gamepanel</strong>을 한 번 띄워 두면 대부분의 기능을 바로 쓸 수 있습니다.
       </p>
     </section>
   </div>
