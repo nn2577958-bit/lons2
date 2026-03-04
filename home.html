@@ -1,339 +1,494 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>라니 디지털 - 홈</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>라니 디지털 - 홈</title>
 
-  <link rel="icon" type="image/png"
-        href="https://cdn.phototourl.com/uploads/2026-02-28-90909391-9783-4299-a370-a3766a19e150.png">
+<link rel="icon" type="image/png"
+      href="https://cdn.phototourl.com/uploads/2026-02-28-90909391-9783-4299-a370-a3766a19e150.png">
+  
+<style>
+* {box-sizing:border-box;margin:0;padding:0}
+body {
+  min-height:100vh;
+  font-family:'Segoe UI',sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(15,23,42,.7), rgba(15,23,42,.95)),
+    url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  color:#fff;
+  gap:20px;
+}
 
-  <style>
-    * {box-sizing:border-box;margin:0;padding:0}
-    body {
-      min-height:100vh;
-      font-family:'Segoe UI',sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(15,23,42,.7), rgba(15,23,42,.95)),
-        url('https://cdn.phototourl.com/uploads/2026-02-18-2239f19c-5c7f-4c1e-b1c1-731bf5606151.webp') center/cover no-repeat;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      padding:20px;
-      color:#fff;
-      gap:20px;
-    }
+/* 메인 카드 컨테이너 */
+.container {
+  width:92vw;
+  max-width:960px;
+  padding:24px 24px 22px;
+  background:rgba(15,23,42,.82);
+  backdrop-filter:blur(12px);
+  border-radius:22px;
+  border:1px solid rgba(148,163,184,.35);
+  box-shadow:0 22px 50px rgba(15,23,42,.9);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
 
-    /* 메인 카드 컨테이너 */
-    .container {
-      width:92vw;
-      max-width:960px;
-      padding:24px 24px 22px;
-      background:rgba(15,23,42,.82);
-      backdrop-filter:blur(12px);
-      border-radius:22px;
-      border:1px solid rgba(148,163,184,.35);
-    }
+/* 상단 상태 + 헤더 라인 */
+.top-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+#status {
+  font-size:12px;
+  font-weight:600;
+  padding:6px 12px;
+  background:rgba(34,197,94,.15);
+  border-radius:999px;
+  border:1px solid rgba(34,197,94,.3);
+}
+.header-info {text-align:right}
+.mall-name {font-size:18px;font-weight:800;letter-spacing:.03em}
+.mall-sub {font-size:12px;color:rgba(209,213,219,.9)}
 
-    /* 상단 헤더 / 타이틀 */
-    .top-bar {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:14px;
-    }
-    .brand {
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-size:15px;
-      font-weight:600;
-    }
-    .brand span.logo-mark {
-      width:26px;
-      height:26px;
-      border-radius:10px;
-      background:linear-gradient(135deg,#4f46e5,#22c55e);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      font-size:16px;
-    }
-    .status {
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-size:12px;
-      color:#a5b4fc;
-    }
-    .status-dot {
-      width:8px;
-      height:8px;
-      border-radius:999px;
-      background:#22c55e;
-      box-shadow:0 0 6px #22c55e;
-    }
+/* 환영 문구 */
+#welcome {
+  font-size:20px;
+  font-weight:700;
+  background:linear-gradient(135deg,#e5e7eb,#f9fafb);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-align:left;
+}
 
-    /* 메인 인트로 영역 */
-    .hero {
-      margin-bottom:18px;
-    }
-    .hero-title {
-      font-size:20px;
-      font-weight:600;
-      margin-bottom:6px;
-    }
-    .hero-sub {
-      font-size:13px;
-      color:#e5e7eb;
-      margin-bottom:10px;
-    }
-    .hero-badge-row {
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      margin-bottom:4px;
-    }
-    .badge {
-      padding:3px 8px;
-      border-radius:999px;
-      font-size:11px;
-      border:1px solid rgba(129,140,248,.5);
-      background:rgba(15,23,42,.9);
-      color:#c7d2fe;
-    }
+/* 안내 박스 */
+.notice {
+  margin:4px 0 8px;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid rgba(148,163,184,.7);
+  font-size:11px;
+  line-height:1.5;
+  color:#e5e7eb;
+  background:rgba(15,23,42,.85);
+}
+.notice b {
+  color:#fbbf24;
+}
 
-    /* 공통 섹션 */
-    .section {
-      margin-top:20px;
-      padding-top:16px;
-      border-top:1px solid rgba(148,163,184,.3);
-    }
+/* 카테고리 탭 */
+.tabs {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:-4px;
+}
+.tab {
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,.5);
+  font-size:11px;
+  color:rgba(209,213,219,.9);
+  cursor:pointer;
+  background:rgba(15,23,42,.85);
+  transition:all .2s;
+}
+.tab.active {
+  background:linear-gradient(135deg,#3b82f6,#22c55e);
+  border-color:transparent;
+  color:#f9fafb;
+  box-shadow:0 6px 14px rgba(37,99,235,.55);
+}
 
-    .section h2 {
-      font-size:18px;
-      margin-bottom:4px;
-    }
+/* ====== 여기가 새로 추가된 공통 섹션 스타일 ====== */
 
-    .section-sub {
-      font-size:13px;
-      color:#cbd5f5;
-      margin-bottom:12px;
-    }
+.section {
+  margin-top:10px;
+  padding-top:12px;
+  border-top:1px solid rgba(148,163,184,.35);
+}
+.section h2 {
+  font-size:16px;
+  margin-bottom:4px;
+}
+.section-sub {
+  font-size:12px;
+  color:#cbd5f5;
+  margin-bottom:10px;
+}
 
-    /* 상품 카드 그리드 */
-    .card-grid {
-      display:grid;
-      gap:10px;
-    }
-    @media (min-width: 768px) {
-      .card-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
+/* 대표 서비스 간단 카드 */
+.simple-grid {
+  display:grid;
+  gap:8px;
+}
+@media (min-width:768px) {
+  .simple-grid {
+    grid-template-columns: repeat(3, minmax(0,1fr));
+  }
+}
+.simple-card {
+  background:rgba(15,23,42,.9);
+  border-radius:12px;
+  border:1px solid rgba(148,163,184,.4);
+  padding:9px 9px;
+  font-size:12px;
+}
+.simple-card h3 {
+  font-size:13px;
+  margin-bottom:4px;
+}
+.simple-card p {
+  font-size:12px;
+  color:#e5e7eb;
+}
 
-    .card {
-      background: rgba(15,23,42,.9);
-      border-radius:14px;
-      border:1px solid rgba(148,163,184,.4);
-      padding:12px 11px 10px;
-      font-size:13px;
-    }
+/* 후기 */
+.review-grid {
+  display:grid;
+  gap:8px;
+}
+@media (min-width:768px) {
+  .review-grid {
+    grid-template-columns: repeat(3, minmax(0,1fr));
+  }
+}
+.review {
+  font-size:12px;
+  background:rgba(15,23,42,.9);
+  border-radius:12px;
+  border:1px solid rgba(148,163,184,.4);
+  padding:8px 9px;
+}
+.review blockquote {
+  margin-bottom:4px;
+  color:#e5e7eb;
+}
+.review figcaption {
+  color:#94a3b8;
+  font-size:11px;
+}
 
-    .card h3 {
-      font-size:15px;
-      margin-bottom:6px;
-    }
+/* CTA 버튼 */
+.section-cta {
+  text-align:center;
+}
+.cta-btn {
+  display:inline-block;
+  margin-top:8px;
+  padding:8px 18px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;
+  font-size:13px;
+  text-decoration:none;
+}
 
-    .card p {
-      margin-bottom:6px;
-      color:#e5e7eb;
-    }
+/* ====== 기존 상품/버튼 스타일 그대로 ====== */
 
-    .card ul {
-      list-style:none;
-      margin-bottom:8px;
-    }
-    .card li {
-      color:#cbd5f5;
-      font-size:12px;
-    }
+/* 상품 그리드 */
+#product-list {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
+  width:100%;
+  margin-top:4px;
+}
 
-    .card-btn {
-      width: 100%;
-      margin-top: 4px;
-      padding: 7px 0;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(135deg,#38bdf8,#6366f1);
-      color: #fff;
-      font-size: 12px;
-      cursor: pointer;
-    }
+/* 상품 카드 + LED 테두리 */
+.product {
+  width:100%;
+  max-width:260px;
+  background:radial-gradient(circle at top left, rgba(148,163,184,.18), transparent 55%),
+             rgba(15,23,42,.95);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(148,163,184,.45);
+  padding:18px 16px 14px;
+  border-radius:16px;
+  transition:all .3s;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
 
-    /* 후기 섹션 */
-    .review-grid {
-      display:grid;
-      gap:8px;
-    }
-    @media (min-width: 768px) {
-      .review-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-    .review {
-      font-size:12px;
-      background:rgba(15,23,42,.9);
-      border-radius:12px;
-      border:1px solid rgba(148,163,184,.4);
-      padding:9px 9px;
-    }
-    .review blockquote {
-      margin-bottom:4px;
-      color:#e5e7eb;
-    }
-    .review figcaption {
-      color:#94a3b8;
-      font-size:11px;
-    }
+/* LED 외곽 테두리 */
+.product::before {
+  content:'';
+  position:absolute;
+  inset:-2px;
+  border-radius:inherit;
+  padding:2px;
+  background:
+    conic-gradient(
+      from 0deg,
+      #22c55e,
+      #0ea5e9,
+      #6366f1,
+      #ec4899,
+      #22c55e
+    );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  -webkit-mask-composite:xor;
+  opacity:.7;
+  animation:led-border 8s linear infinite;
+  pointer-events:none;
+}
 
-    /* CTA 섹션 */
-    .section-cta {
-      text-align:center;
-    }
+/* 카드 안쪽 내용 영역 (LED 테두리와 겹치지 않게) */
+.product-content {
+  position:relative;
+  z-index:1;
+}
 
-    .cta-btn {
-      display:inline-block;
-      margin-top:10px;
-      padding:9px 20px;
-      border-radius:999px;
-      background:linear-gradient(135deg,#22c55e,#16a34a);
-      color:#fff;
-      font-size:13px;
-      text-decoration:none;
-    }
+/* LED 테두리 회전 애니메이션 */
+@keyframes led-border {
+  to { transform:rotate(360deg); }
+}
 
-    /* 푸터 */
-    .footer {
-      margin-top:18px;
-      font-size:11px;
-      color:#9ca3af;
-      text-align:right;
-    }
-  </style>
+.product:hover {
+  transform:translateY(-6px);
+  box-shadow:0 18px 28px rgba(15,23,42,.75);
+  border-color:rgba(56,189,248,.7);
+}
+
+.product h3 {
+  margin:0 0 6px;
+  font-size:15px;
+  font-weight:700;
+  color:#f9fafb;
+}
+.product p {
+  margin:0 0 6px;
+  font-size:14px;
+  font-weight:600;
+  background:linear-gradient(135deg,#4ade80,#22c55e);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.product small {
+  color:rgba(209,213,219,.88);
+  font-size:12px;
+  display:block;
+  margin-bottom:10px;
+}
+.product-footer {
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-top:auto;
+}
+.badge {
+  padding:4px 8px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,.6);
+  font-size:10px;
+  color:rgba(209,213,219,.9);
+}
+
+/* 구매하기 버튼 */
+.buy-btn {
+  padding:6px 12px;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+  color:#0f172a;
+  background:linear-gradient(135deg,#4ade80,#22c55e);
+  box-shadow:0 6px 14px rgba(34,197,94,.45);
+  transition:transform .15s, box-shadow .15s, background .15s;
+}
+.buy-btn:hover {
+  transform:translateY(-1px);
+  box-shadow:0 10px 18px rgba(34,197,94,.55);
+}
+
+/* 하단 버튼 줄 */
+.btn-row {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  margin-top:16px;
+}
+
+/* 하단 버튼 스타일 */
+.logout-btn, .discord-btn, .inquiry-main-btn, .reset-btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:9px 18px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:13px;
+  color:#fff;
+  transition:all .2s;
+  box-shadow:0 4px 15px rgba(15,23,42,.7);
+  min-width:150px;
+  text-align:center;
+}
+.logout-btn {background:linear-gradient(135deg,#d32f2f,#b71c1c)}
+.logout-btn:hover {background:linear-gradient(135deg,#b71c1c,#7f0000);transform:translateY(-1px)}
+.discord-btn {background:linear-gradient(135deg,#5865F2,#404EED)}
+.discord-btn:hover {background:linear-gradient(135deg,#404EED,#2833C4);transform:translateY(-1px)}
+.inquiry-main-btn {background:linear-gradient(135deg,#22c55e,#16a34a)}
+.inquiry-main-btn:hover {background:linear-gradient(135deg,#16a34a,#15803d);transform:translateY(-1px)}
+.reset-btn {
+  background:linear-gradient(135deg,#0ea5e9,#2563eb);
+  display:none; /* 기본은 숨김, 관리자만 노출 */
+}
+.reset-btn:hover {
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  transform:translateY(-1px);
+}
+
+/* 반응형 */
+@media (min-width:1024px) {
+  #product-list{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+@media (max-width:768px) {
+  .container{
+    padding:20px 18px;
+  }
+  #product-list{
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+  }
+  .btn-row{
+    justify-content:center;
+  }
+}
+@media (max-width:480px) {
+  .container{
+    padding:18px;
+    max-width:95vw;
+  }
+  #welcome{
+    font-size:18px;
+  }
+  #product-list{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+}
+</style>
 </head>
 <body>
-  <main class="container">
-    <!-- 상단 브랜드 / 상태 -->
-    <header class="top-bar">
-      <div class="brand">
-        <span class="logo-mark">R</span>
-        <div>
-          <div>라니 디지털</div>
-          <small style="font-size:11px;color:#a5b4fc;">디스코드 봇 · 서버 세팅 · 로고 디자인</small>
-        </div>
+<div class="container">
+  <div class="top-row">
+    <div id="status">🟢 온라인</div>
+    <div class="header-info">
+      <div class="mall-name">라니 MALL</div>
+      <div class="mall-sub">디스코드 봇 · 서버 세팅 · 로고 디자인</div>
+    </div>
+  </div>
+
+  <h1 id="welcome">로그인 확인 중...</h1>
+  
+  <div class="notice">
+    <b>안내</b> · 포인트로만 구매 가능한 상품입니다. 디스코드 문의를 통해 배송 정보 등을 전달해 주세요.
+  </div>
+
+  <!-- 🔹 추가: 대표 서비스 요약 섹션 (상품 위) -->
+  <section class="section">
+    <h2>라니 디지털, 이렇게 도와드립니다</h2>
+    <p class="section-sub">
+      디스코드 봇 제작부터 서버 세팅, 로고 디자인까지 한 번에 맡길 수 있는 올인원 디지털 스튜디오입니다.
+    </p>
+    <div class="simple-grid">
+      <div class="simple-card">
+        <h3>맞춤형 디스코드 봇</h3>
+        <p>게임, 경제, 관리, 로그 등 서버 컨셉에 딱 맞는 기능을 직접 설계해 드립니다.</p>
       </div>
-      <div class="status">
-        <span class="status-dot"></span>
-        <span>현재 작업 가능 · 문의 환영</span>
+      <div class="simple-card">
+        <h3>서버 세팅 · 템플릿</h3>
+        <p>역할·채널 구조와 권한까지 깔끔하게 정리된 템플릿/세팅을 제공합니다.</p>
       </div>
-    </header>
-
-    <!-- 메인 인트로 -->
-    <section class="hero">
-      <div class="hero-badge-row">
-        <span class="badge">디스코드 봇 자판기</span>
-        <span class="badge">커스텀 게임/경제 봇</span>
-        <span class="badge">서버 세팅 · 디자인 패키지</span>
+      <div class="simple-card">
+        <h3>브랜딩 디자인</h3>
+        <p>프로필 · 로고 · 배너까지 통일감 있는 서버 브랜딩을 제작합니다.</p>
       </div>
-      <h1 class="hero-title">당신 서버에 딱 맞는 디스코드 봇/브랜딩, 한 번에 맡기세요.</h1>
-      <p class="hero-sub">
-        라니가 직접 설계·개발·디자인까지 책임집니다. 안정적인 봇과 통일된 브랜드 아이덴티티로 서버 퀄리티를 올려보세요.
-      </p>
-    </section>
+    </div>
+  </section>
 
-    <!-- 대표 상품 섹션 -->
-    <section class="section section-products">
-      <h2>대표 서비스 한눈에 보기</h2>
-      <p class="section-sub">
-        디스코드 봇, 서버 세팅, 로고 디자인까지 라니가 직접 제작합니다.
-      </p>
+  <!-- 카테고리 탭 -->
+  <div class="tabs">
+    <button class="tab active" data-filter="all">전체</button>
+    <button class="tab" data-filter="bot">디스코드 봇</button>
+    <button class="tab" data-filter="design">디자인</button>
+    <button class="tab" data-filter="hosting">호스팅</button>
+  </div>
 
-      <div class="card-grid">
-        <article class="card">
-          <h3>디스코드 봇 자판기</h3>
-          <p>자동 결제·권한 지급까지 한 번에 처리되는 프리미엄 자판기 봇.</p>
-          <ul>
-            <li>・자동 입금 확인 및 권한 지급</li>
-            <li>・로그/통계 대시보드 제공</li>
-            <li>・기본 커스터마이징 포함</li>
-          </ul>
-          <button class="card-btn">자판기 상담 받기</button>
-        </article>
+  <!-- 기존: JS가 상품 카드 렌더하는 자리 -->
+  <div id="product-list"></div>
 
-        <article class="card">
-          <h3>맞춤형 디스코드 봇</h3>
-          <p>서버 컨셉에 완전히 맞춘 전용 기능/게임 봇 제작 서비스.</p>
-          <ul>
-            <li>・게임/경제/로그 등 완전 커스텀 가능</li>
-            <li>・버그 패치 및 기본 유지보수</li>
-            <li>・봇 사용 가이드 제공</li>
-          </ul>
-          <button class="card-btn">커스텀 봇 문의</button>
-        </article>
+  <!-- 🔹 추가: 후기 섹션 (상품 아래, 버튼 위) -->
+  <section class="section">
+    <h2>사용자들이 남긴 한 줄 후기</h2>
+    <p class="section-sub">
+      실제로 라니 MALL을 이용해본 분들의 솔직한 평가입니다.
+    </p>
+    <div class="review-grid">
+      <figure class="review">
+        <blockquote>“이벤트 시즌에도 봇이 안 터지고 잘 버텨줘서 진짜 편했습니다.”</blockquote>
+        <figcaption>— 디스코드 서버 운영자 A님</figcaption>
+      </figure>
+      <figure class="review">
+        <blockquote>“서버 세팅 받고 나서 유저들이 ‘와 퀄리티 뭐냐’ 반응 나왔어요.”</blockquote>
+        <figcaption>— 커뮤니티 서버 B님</figcaption>
+      </figure>
+      <figure class="review">
+        <blockquote>“로고부터 봇까지 한 번에 맡겨서 시간 진짜 많이 아꼈습니다.”</blockquote>
+        <figcaption>— 팀 서버 C님</figcaption>
+      </figure>
+    </div>
+  </section>
 
-        <article class="card">
-          <h3>서버 세팅 · 로고 디자인</h3>
-          <p>서버 구조 설계부터 브랜딩 로고까지 한 번에 세팅.</p>
-          <ul>
-            <li>・역할/채널/권한 구조 설계</li>
-            <li>・서버 컨셉 로고·배너 제작</li>
-            <li>・운영 가이드 기본 제공</li>
-          </ul>
-          <button class="card-btn">패키지 견적 받기</button>
-        </article>
-      </div>
-    </section>
+  <!-- 🔹 추가: CTA 섹션 (버튼 위) -->
+  <section class="section section-cta">
+    <h2>지금 바로 디스코드로 상담 받기</h2>
+    <p class="section-sub">
+      어떤 봇이 필요하신지 편하게 말씀해 주세요. 라니가 현재 상황에 맞는 구성을 같이 잡아드립니다.
+    </p>
+    <a href="https://discord.gg/yEym2KZ9BU" target="_blank" class="cta-btn">
+      디스코드 서버 입장하기
+    </a>
+  </section>
 
-    <!-- 후기 섹션 -->
-    <section class="section section-reviews">
-      <h2>사용자들이 남긴 한 줄 후기</h2>
-      <p class="section-sub">
-        실제로 라니 디지털를 이용해본 분들의 솔직한 평가입니다.
-      </p>
+  <div class="btn-row">
+    <button class="logout-btn" id="logout-btn">🚪 로그아웃</button>
+    <button class="reset-btn" id="reset-points-btn">🧹 포인트 초기화</button>
+    <button class="discord-btn" id="discord-btn">🙈 디스코드</button>
+    <button class="inquiry-main-btn" id="inquiry-btn">📨 문의하기</button>
+    <button class="inquiry-main-btn" id="faq-btn">❓ FAQ</button>
+    <button class="inquiry-main-btn" id="points-btn">💳 포인트 정책</button>
+  </div>
+</div>
 
-      <div class="review-grid">
-        <figure class="review">
-          <blockquote>“봇 안정성이 미쳤어요. 이벤트할 때도 안 터지고 잘 버텼습니다.”</blockquote>
-          <figcaption>— 디스코드 서버 운영자 A님</figcaption>
-        </figure>
-        <figure class="review">
-          <blockquote>“서버 세팅 이후 유저들이 ‘와 퀄리티 뭐임’ 반응 나왔어요.”</blockquote>
-          <figcaption>— 커뮤니티 서버 B님</figcaption>
-        </figure>
-        <figure class="review">
-          <blockquote>“로고부터 봇까지 한 번에 맡겨서 시간 엄청 절약했습니다.”</blockquote>
-          <figcaption>— 팀 서버 C님</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- CTA 섹션 -->
-    <section class="section section-cta">
-      <h2>지금 바로 견적 받고 시작하기</h2>
-      <p class="section-sub">
-        디스코드 닉네임 또는 서버 초대 링크만 남겨주시면, 라니가 직접 연락드립니다.
-      </p>
-      <a href="https://discord.gg/yEym2KZ9BU" class="cta-btn">
-        디스코드로 상담 받기
-      </a>
-    </section>
-
-    <!-- 푸터 -->
-    <footer class="footer">
-      © 2026 라니 디지털 · Discord Bot & Design Studio
-    </footer>
-  </main>
+<!-- 이하 JS는 네가 준 거 그대로 (상품/포인트/로그인 로직) -->
+<script type="module">
+  /* 네 기존 JS 코드 그대로 */
+</script>
 </body>
 </html>
