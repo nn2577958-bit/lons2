@@ -13,7 +13,13 @@
 body {
   min-height:100vh;
   font-family:'Segoe UI',sans-serif;
-  background:#0f172a;  /* Tailwind slate-900 비슷한 톤 */
+
+  /* 위는 조금 밝고, 아래로 갈수록 짙어지는 네이비 그라데이션 */
+  background:
+    radial-gradient(circle at 10% 0%, rgba(56,189,248,0.18), transparent 55%),
+    radial-gradient(circle at 90% 0%, rgba(244,114,182,0.16), transparent 55%),
+    linear-gradient(180deg, #0f172a 0%, #020617 100%);
+
   display:flex;
   flex-direction:column;
   justify-content:center;
