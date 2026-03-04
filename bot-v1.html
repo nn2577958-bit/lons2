@@ -25,24 +25,25 @@
     .wrap {
       max-width: 960px;
       margin: 0 auto;
-      padding: 32px 16px 64px;
+      padding: 32px 16px 80px;
     }
     header {
-      margin-bottom: 24px;
+      margin-bottom: 28px;
       border-bottom: 1px solid rgba(148,163,184,0.3);
-      padding-bottom: 16px;
+      padding-bottom: 18px;
     }
     header .path {
-      font-size: 13px;
+      font-size: 14px;
       color: #9ca3af;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     header h1 {
-      font-size: 28px;
-      margin: 0 0 6px;
+      font-size: 32px;
+      margin: 0 0 8px;
+      text-shadow: 0 0 16px rgba(59,130,246,0.35);
     }
     header .meta {
-      font-size: 13px;
+      font-size: 14px;
       color: #9ca3af;
       display: flex;
       flex-wrap: wrap;
@@ -50,9 +51,9 @@
       gap: 6px;
     }
     .tag {
-      font-size: 12px;
+      font-size: 13px;
       display: inline-block;
-      padding: 2px 8px;
+      padding: 3px 9px;
       border-radius: 999px;
       background: rgba(15,23,42,0.9);
       border: 1px solid rgba(148,163,184,0.6);
@@ -69,9 +70,9 @@
 
     /* 디스코드 서버 배너 */
     .discord-banner {
-      margin: 8px 0 18px;
-      padding: 16px 18px;
-      border-radius: 14px;
+      margin: 10px 0 22px;
+      padding: 18px 20px;
+      border-radius: 16px;
       background:
         radial-gradient(circle at top left, rgba(59,130,246,0.35), transparent 55%),
         radial-gradient(circle at bottom right, rgba(236,72,153,0.3), transparent 55%),
@@ -82,7 +83,7 @@
       align-items: center;
       gap: 14px;
       box-shadow:
-        0 18px 40px rgba(15,23,42,0.85),
+        0 20px 44px rgba(15,23,42,0.9),
         0 0 0 1px rgba(15,23,42,0.9);
     }
     .discord-banner-main {
@@ -93,15 +94,17 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 16px;
+      padding: 9px 18px;
       border-radius: 999px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 500;
       color: #0b1120;
       text-decoration: none;
       background: linear-gradient(135deg,#60a5fa,#a855f7,#f97316);
       background-size: 200% 200%;
-      box-shadow: 0 10px 25px rgba(15,23,42,0.9);
+      box-shadow:
+        0 0 18px rgba(96,165,250,0.7),
+        0 12px 28px rgba(15,23,42,0.95);
       border: 1px solid rgba(248,250,252,0.2);
       transition:
         transform 160ms ease-out,
@@ -110,22 +113,24 @@
     }
     .discord-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 16px 32px rgba(15,23,42,0.95);
+      box-shadow:
+        0 0 26px rgba(129,140,248,0.9),
+        0 18px 36px rgba(15,23,42,1);
       background-position: 100% 0;
       text-decoration: none;
     }
 
     /* 탭 네비게이션 */
     .tabs-row {
-      margin-top: 20px;
+      margin-top: 22px;
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
     }
     .tab-btn {
-      padding: 7px 13px;
+      padding: 8px 15px;
       border-radius: 999px;
-      font-size: 13px;
+      font-size: 14px;
       border: 1px solid #4b5563;
       background: #020617;
       color: #e5e7eb;
@@ -135,13 +140,15 @@
         border-color 160ms ease-out,
         transform 160ms ease-out,
         box-shadow 160ms ease-out;
-      box-shadow: 0 6px 18px rgba(15,23,42,0.75);
+      box-shadow: 0 8px 20px rgba(15,23,42,0.8);
     }
     .tab-btn:hover {
-      background: radial-gradient(circle at top left, rgba(59,130,246,0.45), #020617 60%);
-      border-color: rgba(59,130,246,0.9);
+      background: radial-gradient(circle at top left, rgba(59,130,246,0.5), #020617 60%);
+      border-color: rgba(59,130,246,0.95);
       transform: translateY(-3px);
-      box-shadow: 0 12px 28px rgba(15,23,42,0.9);
+      box-shadow:
+        0 0 20px rgba(96,165,250,0.7),
+        0 14px 30px rgba(15,23,42,1);
       text-decoration: none;
     }
 
@@ -149,8 +156,8 @@
     .cards {
       display: grid;
       grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 16px;
-      margin-top: 20px;
+      gap: 18px;
+      margin-top: 22px;
     }
     @media (max-width: 900px) {
       .cards {
@@ -159,69 +166,74 @@
     }
     .card {
       position: relative;
-      padding: 18px 18px 20px;
-      border-radius: 16px;
-      background: radial-gradient(circle at top left, rgba(59,130,246,0.25), transparent 55%),
-                  radial-gradient(circle at bottom right, rgba(236,72,153,0.22), transparent 55%),
-                  #020617;
-      border: 1px solid rgba(55,65,81,0.9);
+      padding: 20px 20px 22px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.25), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(236,72,153,0.2), transparent 55%),
+        #020617;
+      border: 1px solid rgba(55,65,81,0.95);
       box-shadow:
-        0 18px 40px rgba(15,23,42,0.75),
-        0 0 0 1px rgba(15,23,42,0.9);
+        0 20px 44px rgba(15,23,42,0.9),
+        0 0 0 1px rgba(15,23,42,0.95);
       overflow: hidden;
       transition:
         transform 180ms ease-out,
         box-shadow 180ms ease-out,
         border-color 180ms ease-out,
         background 220ms ease-out;
-      min-height: 120px;
+      min-height: 130px;
     }
     .card:hover {
       transform: translateY(-6px) translateZ(0);
       box-shadow:
-        0 24px 60px rgba(15,23,42,0.9),
-        0 0 0 1px rgba(37,99,235,0.8);
-      border-color: rgba(59,130,246,0.9);
+        0 0 26px rgba(129,140,248,0.8),
+        0 24px 60px rgba(15,23,42,1);
+      border-color: rgba(59,130,246,0.95);
       background:
-        radial-gradient(circle at top left, rgba(59,130,246,0.45), transparent 55%),
+        radial-gradient(circle at top left, rgba(59,130,246,0.5), transparent 55%),
         radial-gradient(circle at bottom right, rgba(236,72,153,0.4), transparent 55%),
         #020617;
     }
     .card-icon {
-      font-size: 20px;
-      margin-bottom: 8px;
+      font-size: 22px;
+      margin-bottom: 10px;
+      text-shadow: 0 0 12px rgba(129,140,248,0.7);
     }
     .card-title {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: 4px;
-      background: linear-gradient(135deg, #e5e7eb, #93c5fd);
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, #e5e7eb, #a5b4fc, #f9a8d4);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      text-shadow:
+        0 0 18px rgba(129,140,248,0.8),
+        0 0 8px rgba(236,72,153,0.6);
     }
     .card-sub {
-      font-size: 12px;
-      color: #9ca3af;
+      font-size: 14px;
+      color: #d1d5db;
     }
 
     /* 간단 설명 */
     h2 {
-      font-size: 20px;
-      margin-top: 28px;
+      font-size: 22px;
+      margin-top: 30px;
       border-bottom: 1px solid rgba(55,65,81,0.7);
-      padding-bottom: 4px;
+      padding-bottom: 6px;
     }
     p {
-      font-size: 14px;
-      line-height: 1.7;
+      font-size: 16px;
+      line-height: 1.8;
       color: #d1d5db;
     }
     ul {
-      font-size: 14px;
-      line-height: 1.7;
+      font-size: 16px;
+      line-height: 1.8;
       color: #d1d5db;
-      padding-left: 18px;
+      padding-left: 20px;
     }
     li + li {
       margin-top: 4px;
@@ -244,13 +256,13 @@
     <section>
       <div class="discord-banner">
         <div class="discord-banner-main">
-          <div style="font-size:13px; color:#9ca3af; margin-bottom:4px;">
+          <div style="font-size:14px; color:#9ca3af; margin-bottom:4px;">
             공식 디스코드 서버
           </div>
-          <div style="font-size:16px; font-weight:600; margin-bottom:2px;">
+          <div style="font-size:18px; font-weight:600; margin-bottom:3px;">
             RLNL · 배포봇 v1 지원 서버
           </div>
-          <div style="font-size:12px; color:#9ca3af;">
+          <div style="font-size:13px; color:#9ca3af;">
             실제 운영 중인 RLNL 게임, 공지 예시, 오류 제보·기능 요청은 모두 이 서버에서 받고 있습니다.
           </div>
         </div>
