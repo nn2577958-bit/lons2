@@ -35,7 +35,7 @@
       margin-bottom: 4px;
     }
     header h1 {
-      font-size: 26px;
+      font-size: 28px;
       margin: 0 0 4px;
     }
     header .meta {
@@ -74,13 +74,13 @@
       margin-top: 20px;
     }
     p {
-      font-size: 14px;
-      line-height: 1.7;
+      font-size: 16px;
+      line-height: 1.8;
       color: #d1d5db;
     }
     ul {
-      font-size: 14px;
-      line-height: 1.7;
+      font-size: 16px;
+      line-height: 1.8;
       color: #d1d5db;
       padding-left: 18px;
     }
@@ -109,19 +109,9 @@
       border-radius: 8px;
       padding: 12px 14px;
       border: 1px solid rgba(55,65,81,0.9);
-      font-size: 13px;
+      font-size: 14px;
       margin: 10px 0;
       white-space: pre-line;
-    }
-    .two-col {
-      display: grid;
-      grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
-      gap: 24px;
-    }
-    @media (max-width: 800px) {
-      .two-col {
-        grid-template-columns: 1fr;
-      }
     }
     a {
       color: #60a5fa;
@@ -146,158 +136,112 @@
 
     <section>
       <p>
-        <strong>/setup</strong>은 배포봇 v1이 서버에서 어떻게 동작할지 한 번에 설정하는 명령어입니다.
-        공지 채널, RLNL 게임 기능 ON/OFF, 게임 결과를 보낼 채널까지 한 번에 지정할 수 있습니다.
+        <code>/setup</code>은 배포봇 v1이 이 서버에서 어떻게 동작할지 한 번에 정리하는 관리자용 설정 명령어입니다.
+        공지 채널, RLNL 게임 기능 ON/OFF, 게임 결과 채널까지 한 번에 지정합니다.
       </p>
       <div class="note">
         👉 이 명령어는 <strong>서버 관리 권한</strong>이 있는 관리자만 사용할 수 있습니다.
       </div>
 
-      <!-- 다른 페이지로 가는 버튼 묶음 -->
       <div style="margin-top:16px; display:flex; flex-wrap:wrap; gap:8px;">
         <a href="/bot-v1.html"
-           style="padding:8px 14px; border-radius:999px; font-size:13px;
+           style="padding:8px 14px; border-radius:999px; font-size:14px;
                   background:#111827; color:#e5e7eb; text-decoration:none;
                   border:1px solid #4b5563;">
-          📦 v1 전체 소개
+          📦 v1 개요로 돌아가기
         </a>
         <a href="/bot-v1-gamepanel.html"
-           style="padding:8px 14px; border-radius:999px; font-size:13px;
+           style="padding:8px 14px; border-radius:999px; font-size:14px;
                   background:#111827; color:#e5e7eb; text-decoration:none;
                   border:1px solid #4b5563;">
-          🎮 게임 패널 시작하기
+          🎮 RLNL 게임 패널 보기
         </a>
         <a href="/bot-v1-checkin.html"
-           style="padding:8px 14px; border-radius:999px; font-size:13px;
+           style="padding:8px 14px; border-radius:999px; font-size:14px;
                   background:#111827; color:#e5e7eb; text-decoration:none;
                   border:1px solid #4b5563;">
-          📅 출석 기능 시작하기
+          📅 출석 · 위로금 · 레벨 보기
         </a>
       </div>
     </section>
 
     <section>
-      <h2>1. /setup 파라미터 설명</h2>
-      <div class="two-col">
-        <div>
-          <h3>기본 형식</h3>
-          <div class="block">
-            /setup<br />
-            &nbsp;&nbsp;announce_channel: #공지-채널<br />
-            &nbsp;&nbsp;enable_game: true / false<br />
-            &nbsp;&nbsp;result_channel: #게임-결과-채널 (옵션)
-          </div>
-          <ul>
-            <li><code>announce_channel</code> : 공지 임베드를 보낼 디스코드 채널입니다.</li>
-            <li><code>enable_game</code> : RLNL 바카라/출석/위로금 기능을 켤지 여부입니다.</li>
-            <li><code>result_channel</code> : 게임 결과 임베드를 모아볼 채널 (비우면 버튼 누른 채널 사용).</li>
-          </ul>
-        </div>
-        <div>
-          <h3>실제 코드 동작</h3>
-          <p>내부적으로는 <code>guilds</code> 테이블에 다음 값이 저장됩니다.</p>
-          <ul>
-            <li><code>guild_id</code> – 서버 ID (PRIMARY KEY)</li>
-            <li><code>announce_channel_id</code> – 공지 채널 ID</li>
-            <li><code>game_enabled</code> – RLNL 게임 ON(1)/OFF(0)</li>
-            <li><code>result_channel_id</code> – 결과 채널 ID (nullable)</li>
-          </ul>
-        </div>
+      <h2>1. /setup으로 설정하는 항목</h2>
+      <ul>
+        <li><strong>공지 채널</strong> (<code>announce_channel</code>)  
+          → 공지 임베드를 보낼 디스코드 채널.</li>
+        <li><strong>RLNL 게임 ON/OFF</strong> (<code>enable_game</code>)  
+          → 바카라, 출석, 위로금, 리필 기능을 사용할지 여부.</li>
+        <li><strong>게임 결과 채널</strong> (<code>result_channel</code>, 선택)  
+          → 바카라 결과 임베드를 모아볼 채널. 비우면 게임 버튼을 누른 채널로 전송.</li>
+      </ul>
+      <div class="block">
+기본 예시:
+/setup
+  announce_channel: #📢-서버-공지
+  enable_game: true
+  result_channel: #🎴-rlnl-게임-결과
       </div>
     </section>
 
     <section>
-      <h2>2. 사용 예시</h2>
+      <h2>2. 자주 쓰는 패턴</h2>
 
-      <h3>2-1) 게임까지 함께 사용하는 서버</h3>
-      <p>공지 + RLNL 게임을 모두 사용하고, 게임 결과를 따로 모아보고 싶다면 이렇게 설정할 수 있습니다.</p>
-      <div class="block">
-        /setup<br />
-        &nbsp;&nbsp;announce_channel: #📢-서버-공지<br />
-        &nbsp;&nbsp;enable_game: true<br />
-        &nbsp;&nbsp;result_channel: #🎴-rlnl-게임-결과
-      </div>
+      <h3>2-1) 공지 + RLNL 게임 같이 쓰는 서버</h3>
       <ul>
-        <li>공지 모달로 작성한 공지는 <code>#📢-서버-공지</code> 채널에 전송됩니다.</li>
-        <li>RLNL 바카라 / 출석 / 일일 위로금 / 30분 리필 기능이 활성화됩니다.</li>
-        <li>바카라 결과 임베드는 항상 <code>#🎴-rlnl-게임-결과</code> 채널로 전송됩니다.</li>
+        <li>공지 채널은 따로, RLNL 게임 결과는 전용 채널로 모아서 보고 싶을 때.</li>
+        <li>추천 설정: 공지 채널 1개, RLNL 결과 채널 1개, <code>enable_game: true</code>.</li>
       </ul>
 
-      <h3>2-2) 공지만 사용하고 싶은 서버</h3>
-      <p>게임 기능 없이 공지 기능만 쓰고 싶은 경우:</p>
-      <div class="block">
-        /setup<br />
-        &nbsp;&nbsp;announce_channel: #📢-서버-공지<br />
-        &nbsp;&nbsp;enable_game: false
-      </div>
+      <h3>2-2) 공지만 쓰고 싶은 서버</h3>
       <ul>
-        <li>공지 기능은 정상 동작하지만, RLNL 게임 관련 버튼/명령은 모두 비활성화됩니다.</li>
-        <li>나중에 게임 기능을 켜고 싶으면 <code>enable_game: true</code>로 다시 설정하면 됩니다.</li>
+        <li>공지 기능만 쓰고, RLNL 게임은 아예 끄고 싶은 경우.</li>
+        <li>추천 설정: 공지 채널만 선택, <code>enable_game: false</code>, 결과 채널은 비워둠.</li>
       </ul>
     </section>
 
     <section>
-      <h2>3. /panel · 관리자 패널</h2>
+      <h2>3. /panel · 관리자 패널과 연결</h2>
       <p>
-        <strong>/setup</strong>으로 기본 설정을 마쳤다면, 이제 <code>/panel</code> 명령어로
-        관리자 패널을 열 수 있습니다.
+        <code>/setup</code>으로 설정을 마친 뒤에는 <code>/panel</code> 명령어로 관리자 패널을 열 수 있습니다.
+        여기서 공지 모달 버튼과 RLNL 상태를 한눈에 확인할 수 있습니다.
       </p>
-      <div class="block">
-        /panel
-      </div>
       <ul>
-        <li>서버 관리 권한이 있는 관리자만 사용할 수 있습니다.</li>
-        <li>패널에는 <strong>✍ 공지 작성 (모달)</strong> 버튼이 포함됩니다.</li>
-        <li>현재 RLNL 게임 ON/OFF 상태와 결과 채널 정보도 같이 표시됩니다.</li>
+        <li><strong>✍ 공지 작성 (모달)</strong> 버튼으로 공지 임베드를 바로 생성.</li>
+        <li>현재 RLNL 게임이 <strong>ON/OFF</strong>인지, 결과 채널이 어떤 채널인지 표시.</li>
+        <li>설정을 바꾸고 싶을 때는 다시 <code>/setup</code>을 호출해서 덮어쓰기.</li>
       </ul>
-
-      <h3>3-1) 공지 작성 (모달)</h3>
-      <p>패널에서 <strong>✍ 공지 작성 (모달)</strong> 버튼을 누르면, 아래와 같은 UI가 뜹니다.</p>
-      <ul>
-        <li><strong>공지 제목</strong> – 임베드 타이틀.</li>
-        <li><strong>공지 내용</strong> – 임베드 본문.</li>
-      </ul>
-      <p>작성 완료 후 제출하면, 코드에서 설정된 <code>announce_channel_id</code> 채널로 임베드 공지가 발송됩니다.</p>
-      <div class="note">
-        👉 공지 색상/아이콘은 매번 랜덤으로 선택되며, 서버 아이콘이 있으면 썸네일로 자동 첨부됩니다.
-      </div>
     </section>
 
     <section>
       <h2>4. RLNL 게임과의 연동</h2>
       <p>
-        <strong>/setup</strong>에서 <code>enable_game: true</code>로 설정해 두면,
-        이 서버에서 RLNL 관련 명령어와 패널이 정상 동작합니다.
+        <code>enable_game</code>을 <code>true</code>로 설정해 두면 RLNL 관련 명령어와 패널이 정상 동작합니다.
+        꺼져 있으면 유저에게 “이 서버에서는 RLNL 게임 기능이 꺼져 있습니다.” 라는 안내가 표시됩니다.
       </p>
       <ul>
-        <li><code>/gamepanel</code> – 유저용 RLNL 게임 패널을 띄움.</li>
-        <li>패널 버튼 <strong>🎮 RLNL 게임 시작</strong> – 바카라 베팅·결과를 내부 DB와 결과 채널에 기록.</li>
-        <li>패널 버튼 <strong>💸 일일 위로금</strong> – 하루 1회 무료 포인트 지급.</li>
-        <li>패널 버튼 <strong>🔁 30분 리필</strong> – 30분 쿨타임 리필 포인트 지급.</li>
+        <li><code>/gamepanel</code> – 유저용 RLNL 게임 패널을 띄우는 명령어.</li>
+        <li>RLNL 패널 버튼 – 바카라, 출석, 일일 위로금, 30분 리필 기능 제공.</li>
+        <li>바카라 결과는 설정된 결과 채널이 있으면 그쪽으로, 없으면 게임을 누른 채널로 전송.</li>
       </ul>
-      <p>
-        이 모든 기능은 <code>guilds</code> 테이블의 <code>game_enabled</code> 값이 1일 때만
-        활성화되며, 0이면 “이 서버에서는 RLNL 게임 기능이 꺼져 있습니다.” 라는 안내가 표시됩니다.
-      </p>
     </section>
 
     <section>
       <h2>5. 자주 묻는 질문</h2>
-      <h3>Q. /setup 을 여러 번 써도 되나요?</h3>
+      <h3>Q. /setup을 여러 번 써도 되나요?</h3>
       <p>
-        네, 가능합니다. 같은 <code>guild_id</code>로 다시 호출하면
-        <code>ON CONFLICT(guild_id) DO UPDATE</code> 로 기존 설정을 덮어씁니다.
+        네. 같은 서버에서 다시 실행하면 기존 설정 위에 덮어쓰게 됩니다.
+        공지 채널이나 결과 채널을 바꾸고 싶을 때는 그대로 다시 호출하면 됩니다.
       </p>
 
-      <h3>Q. 결과 채널을 나중에만 설정하고 싶어요.</h3>
+      <h3>Q. 나중에 결과 채널만 따로 설정할 수 있나요?</h3>
       <p>
-        처음에는 <code>result_channel</code>를 비워두고, 나중에 다시 /setup을 호출해서 채널만 추가해도 됩니다.
-        설정 전에는 바카라 결과가 버튼을 누른 채널로 전송됩니다.
+        처음에는 결과 채널을 비워둔 뒤, 나중에 채널을 만든 다음 다시 <code>/setup</code>으로 결과 채널만 지정해도 됩니다.
       </p>
 
-      <h3>Q. 게임 기능만 끄고 싶어요.</h3>
+      <h3>Q. 게임 기능만 잠깐 끄고 싶어요.</h3>
       <p>
-        공지는 유지하고 RLNL 게임만 끄고 싶다면 <code>enable_game: false</code>로 다시 /setup 을 실행하세요.
+        공지 기능은 그대로 두고 RLNL 게임만 끄고 싶다면 <code>enable_game: false</code>로 다시 <code>/setup</code>을 실행하면 됩니다.
       </p>
     </section>
   </div>
