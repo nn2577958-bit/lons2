@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>배포봇 v1 | /setup 시작하기</title>
+  <title>배포봇 v1 | RLNL · 공지 · 출석 올인원</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -16,11 +16,14 @@
         "Segoe UI Emoji",
         "Noto Color Emoji",
         sans-serif;
-      background: #020617;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.18), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(236,72,153,0.15), transparent 55%),
+        #020617;
       color: #e5e7eb;
     }
     .wrap {
-      max-width: 900px;
+      max-width: 960px;
       margin: 0 auto;
       padding: 32px 16px 64px;
     }
@@ -35,8 +38,8 @@
       margin-bottom: 4px;
     }
     header h1 {
-      font-size: 26px;
-      margin: 0 0 4px;
+      font-size: 28px;
+      margin: 0 0 6px;
     }
     header .meta {
       font-size: 13px;
@@ -45,13 +48,6 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 6px;
-    }
-    header code {
-      background: #020617;
-      border-radius: 4px;
-      padding: 2px 6px;
-      border: 1px solid rgba(75,85,99,0.8);
-      font-size: 12px;
     }
     .tag {
       font-size: 12px;
@@ -63,15 +59,161 @@
       color: #9ca3af;
     }
 
+    a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* 상단 디스코드 서버 배너 */
+    .discord-banner {
+      margin: 8px 0 18px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.35), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(236,72,153,0.3), transparent 55%),
+        #020617;
+      border: 1px solid rgba(55,65,81,0.9);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      box-shadow:
+        0 18px 40px rgba(15,23,42,0.85),
+        0 0 0 1px rgba(15,23,42,0.9);
+    }
+    .discord-banner-main {
+      flex: 1 1 200px;
+      min-width: 0;
+    }
+    .discord-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #0b1120;
+      text-decoration: none;
+      background: linear-gradient(135deg,#60a5fa,#a855f7,#f97316);
+      background-size: 200% 200%;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.9);
+      border: 1px solid rgba(248,250,252,0.2);
+      transition:
+        transform 160ms ease-out,
+        box-shadow 160ms ease-out,
+        background-position 220ms ease-out;
+    }
+    .discord-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(15,23,42,0.95);
+      background-position: 100% 0;
+      text-decoration: none;
+    }
+
+    /* 탭 네비게이션 */
+    .tabs-row {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tab-btn {
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 13px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+      text-decoration: none;
+      transition:
+        background 160ms ease-out,
+        border-color 160ms ease-out,
+        transform 160ms ease-out,
+        box-shadow 160ms ease-out;
+      box-shadow: 0 6px 18px rgba(15,23,42,0.75);
+    }
+    .tab-btn:hover {
+      background: radial-gradient(circle at top left, rgba(59,130,246,0.45), #020617 60%);
+      border-color: rgba(59,130,246,0.9);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(15,23,42,0.9);
+      text-decoration: none;
+    }
+
+    /* 기능 카드 */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    @media (max-width: 900px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+    }
+    .card {
+      position: relative;
+      padding: 18px 18px 20px;
+      border-radius: 16px;
+      background: radial-gradient(circle at top left, rgba(59,130,246,0.25), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(236,72,153,0.22), transparent 55%),
+                  #020617;
+      border: 1px solid rgba(55,65,81,0.9);
+      box-shadow:
+        0 18px 40px rgba(15,23,42,0.75),
+        0 0 0 1px rgba(15,23,42,0.9);
+      overflow: hidden;
+      transition:
+        transform 180ms ease-out,
+        box-shadow 180ms ease-out,
+        border-color 180ms ease-out,
+        background 220ms ease-out;
+    }
+    .card:hover {
+      transform: translateY(-6px) translateZ(0);
+      box-shadow:
+        0 24px 60px rgba(15,23,42,0.9),
+        0 0 0 1px rgba(37,99,235,0.8);
+      border-color: rgba(59,130,246,0.9);
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.45), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(236,72,153,0.4), transparent 55%),
+        #020617;
+    }
+    .card-icon {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, #e5e7eb, #93c5fd);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .card-sub {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    /* 간단 소개/성향 섹션 */
     h2 {
       font-size: 20px;
-      margin-top: 32px;
+      margin-top: 28px;
       border-bottom: 1px solid rgba(55,65,81,0.7);
       padding-bottom: 4px;
-    }
-    h3 {
-      font-size: 16px;
-      margin-top: 20px;
     }
     p {
       font-size: 14px;
@@ -87,217 +229,103 @@
     li + li {
       margin-top: 4px;
     }
-    code {
-      font-family: "JetBrains Mono", "Fira Code", monospace;
-      font-size: 13px;
-      background: #020617;
-      padding: 1px 5px;
-      border-radius: 4px;
-      border: 1px solid rgba(55,65,81,0.8);
-    }
-    .note {
-      margin: 16px 0;
-      padding: 10px 12px;
-      border-radius: 6px;
-      background: rgba(30,64,175,0.15);
-      border-left: 3px solid #60a5fa;
-      font-size: 13px;
-      color: #bfdbfe;
-    }
-    .block {
-      background: #020617;
-      border-radius: 8px;
-      padding: 12px 14px;
-      border: 1px solid rgba(55,65,81,0.9);
-      font-size: 13px;
-      margin: 10px 0;
-      white-space: pre-line;
-    }
-    .two-col {
-      display: grid;
-      grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
-      gap: 24px;
-    }
-    @media (max-width: 800px) {
-      .two-col {
-        grid-template-columns: 1fr;
-      }
-    }
-    a {
-      color: #60a5fa;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="path">배포봇 v1 &gt; 설정 &gt; /setup</div>
-      <h1>/setup 시작하기</h1>
+      <div class="path">배포봇 v1</div>
+      <h1>배포봇 v1 · RLNL + 공지 + 출석</h1>
       <div class="meta">
-        <code>/setup</code>
-        <span class="tag">서버 관리자 전용</span>
-        <span class="tag">공지 채널 · RLNL 게임 · 결과 채널</span>
+        <span class="tag">RLNL 카지노 스타일 포인트 게임</span>
+        <span class="tag">공지 모달 · 출석 · 위로금 · 리필</span>
+        <span class="tag">서버 관리자 친화 설정</span>
       </div>
     </header>
 
+    <!-- 공식 디스코드 서버 배너 -->
     <section>
-      <p>
-        <strong>/setup</strong>은 배포봇 v1이 서버에서 어떻게 동작할지 한 번에 설정하는 명령어입니다.
-        공지 채널, RLNL 게임 기능 ON/OFF, 게임 결과를 보낼 채널까지 한 번에 지정할 수 있습니다.
-      </p>
-      <div class="note">
-        👉 이 명령어는 <strong>서버 관리 권한</strong>이 있는 관리자만 사용할 수 있습니다.
-      </div>
-
-      <!-- 다른 페이지로 가는 버튼 묶음 -->
-      <div style="margin-top:16px; display:flex; flex-wrap:wrap; gap:8px;">
-        <a href="/bot-v1.html"
-           style="padding:8px 14px; border-radius:999px; font-size:13px;
-                  background:#111827; color:#e5e7eb; text-decoration:none;
-                  border:1px solid #4b5563;">
-          ⚙ /setup 시작하기
-        </a>
-        <a href="/bot-v1-gamepanel.html"
-           style="padding:8px 14px; border-radius:999px; font-size:13px;
-                  background:#111827; color:#e5e7eb; text-decoration:none;
-                  border:1px solid #4b5563;">
-          🎮 게임 패널 시작하기
-        </a>
-        <a href="/bot-v1-checkin.html"
-           style="padding:8px 14px; border-radius:999px; font-size:13px;
-                  background:#111827; color:#e5e7eb; text-decoration:none;
-                  border:1px solid #4b5563;">
-          📅 출석 기능 시작하기
-        </a>
-      </div>
-    </section>
-
-    <section>
-      <h2>1. /setup 파라미터 설명</h2>
-      <div class="two-col">
-        <div>
-          <h3>기본 형식</h3>
-          <div class="block">
-            /setup<br />
-            &nbsp;&nbsp;announce_channel: #공지-채널<br />
-            &nbsp;&nbsp;enable_game: true / false<br />
-            &nbsp;&nbsp;result_channel: #게임-결과-채널 (옵션)
+      <div class="discord-banner">
+        <div class="discord-banner-main">
+          <div style="font-size:13px; color:#9ca3af; margin-bottom:4px;">
+            공식 디스코드 서버
           </div>
-          <ul>
-            <li><code>announce_channel</code> : 공지 임베드를 보낼 디스코드 채널입니다.</li>
-            <li><code>enable_game</code> : RLNL 바카라/출석/위로금 기능을 켤지 여부입니다.</li>
-            <li><code>result_channel</code> : 게임 결과 임베드를 모아볼 채널 (비우면 버튼 누른 채널 사용).</li>
-          </ul>
+          <div style="font-size:16px; font-weight:600; margin-bottom:2px;">
+            RLNL · 배포봇 v1 지원 서버
+          </div>
+          <div style="font-size:12px; color:#9ca3af;">
+            실제 운영 중인 RLNL 게임, 공지 예시, 오류 제보·기능 요청은 모두 이 서버에서 받고 있습니다.
+          </div>
         </div>
-        <div>
-          <h3>실제 코드 동작</h3>
-          <p>내부적으로는 <code>guilds</code> 테이블에 다음 값이 저장됩니다.</p>
-          <ul>
-            <li><code>guild_id</code> – 서버 ID (PRIMARY KEY)</li>
-            <li><code>announce_channel_id</code> – 공지 채널 ID</li>
-            <li><code>game_enabled</code> – RLNL 게임 ON(1)/OFF(0)</li>
-            <li><code>result_channel_id</code> – 결과 채널 ID (nullable)</li>
-          </ul>
+        <div style="flex:0 0 auto;">
+          <a href="https://discord.gg/yEym2KZ9BU" target="_blank" rel="noopener noreferrer" class="discord-btn">
+            <span>🚀 디스코드 서버 입장</span>
+          </a>
         </div>
       </div>
     </section>
 
+    <!-- 탭 네비게이션 -->
     <section>
-      <h2>2. 사용 예시</h2>
-
-      <h3>2-1) 게임까지 함께 사용하는 서버</h3>
-      <p>공지 + RLNL 게임을 모두 사용하고, 게임 결과를 따로 모아보고 싶다면 이렇게 설정할 수 있습니다.</p>
-      <div class="block">
-        /setup<br />
-        &nbsp;&nbsp;announce_channel: #📢-서버-공지<br />
-        &nbsp;&nbsp;enable_game: true<br />
-        &nbsp;&nbsp;result_channel: #🎴-rlnl-게임-결과
+      <div class="tabs-row">
+        <a href="/bot-v1.html" class="tab-btn">📦 v1 개요</a>
+        <a href="/bot-v1-setup.html" class="tab-btn">⚙ /setup 설정</a>
+        <a href="/bot-v1-gamepanel.html" class="tab-btn">🎮 RLNL 게임 패널</a>
+        <a href="/bot-v1-checkin.html" class="tab-btn">📅 출석 · 위로금 · 리필</a>
       </div>
-      <ul>
-        <li>공지 모달로 작성한 공지는 <code>#📢-서버-공지</code> 채널에 전송됩니다.</li>
-        <li>RLNL 바카라 / 출석 / 일일 위로금 / 30분 리필 기능이 활성화됩니다.</li>
-        <li>바카라 결과 임베드는 항상 <code>#🎴-rlnl-게임-결과</code> 채널로 전송됩니다.</li>
-      </ul>
+    </section>
 
-      <h3>2-2) 공지만 사용하고 싶은 서버</h3>
-      <p>게임 기능 없이 공지 기능만 쓰고 싶은 경우:</p>
-      <div class="block">
-        /setup<br />
-        &nbsp;&nbsp;announce_channel: #📢-서버-공지<br />
-        &nbsp;&nbsp;enable_game: false
+    <!-- 기능 카드 3D -->
+    <section>
+      <div class="cards">
+        <a href="/bot-v1-setup.html" class="card-link">
+          <div class="card">
+            <div class="card-icon">⚙</div>
+            <div class="card-title>/setup · 기본 설정</div>
+            <div class="card-sub">
+              공지 채널 지정, RLNL 게임 ON/OFF, 결과 채널까지 한 번에 세팅하는 관리자용 명령어.
+            </div>
+          </div>
+        </a>
+
+        <a href="/bot-v1-gamepanel.html" class="card-link">
+          <div class="card">
+            <div class="card-icon">🎮</div>
+            <div class="card-title>/gamepanel · RLNL 패널</div>
+            <div class="card-sub">
+              바카라, 출석, 일일 위로금, 30분 리필 버튼이 한 번에 뜨는 유저용 게임 패널.
+            </div>
+          </div>
+        </a>
+
+        <a href="/bot-v1-checkin.html" class="card-link">
+          <div class="card">
+            <div class="card-icon">📅</div>
+            <div class="card-title>출석 · 위로금 · 리필</div>
+            <div class="card-sub">
+              출석/보상 포인트 규칙과 쿨타임 등 RLNL 포인트 시스템 정리용 문서.
+            </div>
+          </div>
+        </a>
       </div>
+    </section>
+
+    <!-- 서버 성향 / 어울리는 서버 -->
+    <section>
+      <h2>이 봇이 잘 맞는 서버</h2>
       <ul>
-        <li>공지 기능은 정상 동작하지만, RLNL 게임 관련 버튼/명령은 모두 비활성화됩니다.</li>
-        <li>나중에 게임 기능을 켜고 싶으면 <code>enable_game: true</code>로 다시 설정하면 됩니다.</li>
+        <li>카지노·RLNL 같은 포인트 게임으로 소규모 커뮤니티 분위기를 살리고 싶은 서버.</li>
+        <li>공지 채널과 게임 채널을 깔끔하게 분리해서 운영하고 싶은 서버.</li>
+        <li>운영진이 “오늘 이벤트/배포 일정” 같은 공지를 자주 올리는 서버.</li>
+        <li>유저들이 출석, 일일 위로금, 30분 리필로 천천히 포인트를 모으는 구조를 선호하는 서버.</li>
       </ul>
     </section>
 
     <section>
-      <h2>3. /panel · 관리자 패널</h2>
+      <h2>빠른 시작</h2>
       <p>
-        <strong>/setup</strong>으로 기본 설정을 마쳤다면, 이제 <code>/panel</code> 명령어로
-        관리자 패널을 열 수 있습니다.
-      </p>
-      <div class="block">
-        /panel
-      </div>
-      <ul>
-        <li>서버 관리 권한이 있는 관리자만 사용할 수 있습니다.</li>
-        <li>패널에는 <strong>✍ 공지 작성 (모달)</strong> 버튼이 포함됩니다.</li>
-        <li>현재 RLNL 게임 ON/OFF 상태와 결과 채널 정보도 같이 표시됩니다.</li>
-      </ul>
-
-      <h3>3-1) 공지 작성 (모달)</h3>
-      <p>패널에서 <strong>✍ 공지 작성 (모달)</strong> 버튼을 누르면, 아래와 같은 UI가 뜹니다.</p>
-      <ul>
-        <li><strong>공지 제목</strong> – 임베드 타이틀.</li>
-        <li><strong>공지 내용</strong> – 임베드 본문.</li>
-      </ul>
-      <p>작성 완료 후 제출하면, 코드에서 설정된 <code>announce_channel_id</code> 채널로 임베드 공지가 발송됩니다.</p>
-      <div class="note">
-        👉 공지 색상/아이콘은 매번 랜덤으로 선택되며, 서버 아이콘이 있으면 썸네일로 자동 첨부됩니다.
-      </div>
-    </section>
-
-    <section>
-      <h2>4. RLNL 게임과의 연동</h2>
-      <p>
-        <strong>/setup</strong>에서 <code>enable_game: true</code>로 설정해 두면,
-        이 서버에서 RLNL 관련 명령어와 패널이 정상 동작합니다.
-      </p>
-      <ul>
-        <li><code>/gamepanel</code> – 유저용 RLNL 게임 패널을 띄움.</li>
-        <li>패널 버튼 <strong>🎮 RLNL 게임 시작</strong> – 바카라 베팅·결과를 내부 DB와 결과 채널에 기록.</li>
-        <li>패널 버튼 <strong>💸 일일 위로금</strong> – 하루 1회 무료 포인트 지급.</li>
-        <li>패널 버튼 <strong>🔁 30분 리필</strong> – 30분 쿨타임 리필 포인트 지급.</li>
-      </ul>
-      <p>
-        이 모든 기능은 <code>guilds</code> 테이블의 <code>game_enabled</code> 값이 1일 때만
-        활성화되며, 0이면 “이 서버에서는 RLNL 게임 기능이 꺼져 있습니다.” 라는 안내가 표시됩니다.
-      </p>
-    </section>
-
-    <section>
-      <h2>5. 자주 묻는 질문</h2>
-      <h3>Q. /setup 을 여러 번 써도 되나요?</h3>
-      <p>
-        네, 가능합니다. 같은 <code>guild_id</code>로 다시 호출하면
-        <code>ON CONFLICT(guild_id) DO UPDATE</code> 로 기존 설정을 덮어씁니다.
-      </p>
-
-      <h3>Q. 결과 채널을 나중에만 설정하고 싶어요.</h3>
-      <p>
-        처음에는 <code>result_channel</code>를 비워두고, 나중에 다시 /setup을 호출해서 채널만 추가해도 됩니다.
-        설정 전에는 바카라 결과가 버튼을 누른 채널로 전송됩니다.
-      </p>
-
-      <h3>Q. 게임 기능만 끄고 싶어요.</h3>
-      <p>
-        공지는 유지하고 RLNL 게임만 끄고 싶다면 <code>enable_game: false</code>로 다시 /setup 을 실행하세요.
+        처음 사용하는 경우, <strong>/setup</strong> 페이지에서 공지 채널과 RLNL 게임 여부만 먼저 설정한 뒤,
+        <strong>/gamepanel</strong>을 원하는 채널에 한 번만 띄워두면 대부분의 기능을 바로 쓸 수 있습니다.
       </p>
     </section>
   </div>
