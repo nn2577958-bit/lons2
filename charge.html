@@ -1,0 +1,10 @@
+<button onclick="pay()">결제 테스트</button>
+
+<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+<script>
+  async function pay() {
+    await PortOne.requestPayment({
+      storeId: "store-16f9ad0b-fe2e-4c30-89d9-65943e891642",
+    });
+  }
+</script>
