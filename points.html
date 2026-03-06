@@ -14,22 +14,22 @@ body {
   min-height:100vh;
   font-family:'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background:
-    radial-gradient(circle at 0% 0%, #dbeafe 0, transparent 55%),
-    radial-gradient(circle at 100% 0%, #fee2e2 0, transparent 55%),
-    linear-gradient(180deg,#f9fafb,#e5e7eb);
-  color:#0f172a;
+    radial-gradient(circle at 0% 0%, rgba(56,189,248,.12), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(244,114,182,.12), transparent 55%),
+    #020617;
+  color:#e5e7eb;
 }
 
-/* 상단 헤더 영역 */
-.header {
+/* 상단 바 */
+.topbar {
   width:100%;
-  padding:18px 16px 10px;
-  border-bottom:1px solid rgba(148,163,184,.35);
-  background:linear-gradient(120deg,rgba(15,23,42,.04),rgba(59,130,246,.06));
+  border-bottom:1px solid rgba(31,41,55,.9);
+  background:linear-gradient(90deg,#020617,#020617,#020617);
 }
-.header-inner {
+.topbar-inner {
   max-width:1080px;
   margin:0 auto;
+  padding:14px 16px 12px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -41,12 +41,11 @@ body {
   gap:10px;
 }
 .brand-logo {
-  width:40px;
-  height:40px;
-  border-radius:14px;
+  width:34px;
+  height:34px;
+  border-radius:10px;
   overflow:hidden;
   border:1px solid rgba(148,163,184,.6);
-  box-shadow:0 10px 26px rgba(15,23,42,.4);
   background:#020617;
 }
 .brand-logo img {
@@ -60,129 +59,127 @@ body {
   gap:2px;
 }
 .brand-name {
-  font-size:17px;
+  font-size:15px;
   font-weight:700;
-  letter-spacing:.04em;
+  letter-spacing:.03em;
 }
 .brand-sub {
   font-size:11px;
-  color:#4b5563;
+  color:#9ca3af;
 }
-.header-pill {
-  padding:6px 10px;
-  border-radius:999px;
+.top-tag {
   font-size:11px;
+  padding:4px 9px;
+  border-radius:999px;
   border:1px solid rgba(148,163,184,.6);
-  background:rgba(255,255,255,.8);
+  background:rgba(15,23,42,.9);
+  color:#e5e7eb;
   display:inline-flex;
   align-items:center;
   gap:6px;
-  color:#374151;
 }
 
-/* 메인 컨테이너 */
+/* 메인 영역 */
 .main {
   width:100%;
-  padding:18px 16px 24px;
 }
 .main-inner {
-  max-width:1080px;
+  max-width:960px;
   margin:0 auto;
+  padding:20px 16px 26px;
 }
 
-/* 상단 소개 블록 */
-.hero-title {
+/* 헤더 블록 */
+.title-kicker {
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:#64748b;
+}
+.title-main {
+  margin-top:4px;
   font-size:22px;
   font-weight:700;
-  color:#111827;
+  color:#f9fafb;
 }
-.hero-sub {
+.title-sub {
   margin-top:6px;
   font-size:13px;
-  color:#4b5563;
+  color:#cbd5f5;
 }
-.hero-badge-row {
+.chip-row {
   margin-top:10px;
   display:flex;
   flex-wrap:wrap;
   gap:8px;
   font-size:11px;
 }
-.hero-badge {
-  padding:6px 10px;
+.chip {
+  padding:5px 10px;
   border-radius:999px;
-  background:white;
-  border:1px solid rgba(148,163,184,.5);
-  color:#374151;
+  border:1px solid rgba(148,163,184,.45);
+  background:rgba(15,23,42,.9);
+  color:#e5e7eb;
 }
-.hero-badge strong { font-weight:700; }
+.chip strong { font-weight:600; color:#a5b4fc; }
 
-/* 사업자 정보 박스 */
-.business-box {
+/* 사업자 정보 플랫 박스 */
+.biz-box {
   margin-top:14px;
   padding:10px 12px;
-  border-radius:12px;
-  background:white;
-  border:1px solid rgba(148,163,184,.55);
+  border-radius:10px;
+  background:#020617;
+  border:1px solid rgba(55,65,81,.9);
   font-size:12px;
-  color:#111827;
+  color:#e5e7eb;
   line-height:1.6;
+}
+.biz-box b { color:#4ade80; }
+
+/* 섹션 공통 */
+.section-list {
+  margin-top:20px;
+  border-top:1px solid rgba(30,41,59,.9);
+}
+.section {
+  padding:14px 0 12px;
+  border-bottom:1px solid rgba(30,41,59,.9);
+}
+.section-header {
   display:flex;
-  flex-wrap:wrap;
-  gap:6px 16px;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:6px;
 }
-.business-box b { color:#15803d; }
-
-/* 타임라인 스타일 섹션 */
-.timeline {
-  margin-top:18px;
-  padding-left:4px;
-  border-left:2px solid rgba(148,163,184,.6);
-}
-.block {
-  position:relative;
-  padding:10px 0 4px 14px;
-}
-.block::before {
-  content:'';
-  position:absolute;
-  left:-6px;
-  top:14px;
-  width:9px;
-  height:9px;
-  border-radius:999px;
-  background:#2563eb;
-  box-shadow:0 0 0 4px rgba(37,99,235,.15);
-}
-.block:first-child { padding-top:2px; }
-
-.block-title {
-  font-size:13px;
-  font-weight:700;
-  color:#111827;
-  margin-bottom:4px;
-}
-.block-desc {
+.section-num {
   font-size:11px;
-  color:#6b7280;
-  margin-bottom:4px;
+  font-weight:600;
+  color:#64748b;
+  min-width:52px;
 }
-
-/* 조항 리스트 */
-.terms {
+.section-title {
+  font-size:14px;
+  font-weight:600;
+  color:#e5e7eb;
+}
+.section-desc {
+  margin-top:2px;
+  font-size:11px;
+  color:#94a3b8;
+}
+.section-body {
+  margin-top:4px;
   font-size:12px;
-  line-height:1.8;
-  color:#111827;
+  color:#e5e7eb;
+  line-height:1.7;
 }
-.terms h2 {
-  font-size:13px;
-  margin:10px 0 4px;
-}
-.terms ol, .terms ul {
+.section-body ol,
+.section-body ul {
   margin:4px 0 4px 18px;
 }
-.terms li { margin:2px 0; }
-.terms p { margin:4px 0; }
+.section-body li { margin:2px 0; }
+.section-body p { margin:3px 0; }
 
 /* 하단 버튼 */
 .footer-actions {
@@ -191,207 +188,77 @@ body {
   flex-wrap:wrap;
   gap:8px;
   justify-content:flex-end;
+  font-size:12px;
 }
 .btn {
   padding:7px 14px;
   border-radius:999px;
-  border:1px solid rgba(148,163,184,.7);
-  cursor:pointer;
+  border:1px solid rgba(75,85,99,.9);
+  background:#020617;
+  color:#e5e7eb;
   font-size:12px;
   font-weight:600;
+  cursor:pointer;
   display:inline-flex;
   align-items:center;
   gap:6px;
-  background:white;
-  color:#111827;
   transition:background .15s, transform .15s, box-shadow .15s, border-color .15s;
 }
 .btn:hover {
-  background:#e5e7eb;
+  background:#111827;
 }
 .btn-primary {
-  background:linear-gradient(135deg,#2563eb,#22c55e);
-  color:white;
   border-color:transparent;
-  box-shadow:0 8px 18px rgba(37,99,235,.28);
+  background:linear-gradient(135deg,#4f46e5,#22c55e);
+  color:#f9fafb;
+  box-shadow:0 0 20px rgba(79,70,229,.35);
 }
 .btn-primary:hover {
   transform:translateY(-1px);
-  box-shadow:0 10px 22px rgba(37,99,235,.35);
+  box-shadow:0 0 26px rgba(79,70,229,.45);
 }
 
 /* 모바일 */
 @media (max-width:640px){
-  .hero-title { font-size:19px; }
-  .header-inner { flex-direction:column; align-items:flex-start; }
+  .topbar-inner { flex-direction:column; align-items:flex-start; }
+  .title-main { font-size:19px; }
 }
 </style>
 </head>
 <body>
-<header class="header">
-  <div class="header-inner">
+<header class="topbar">
+  <div class="topbar-inner">
     <div class="brand">
       <div class="brand-logo">
         <img src="https://cdn.phototourl.com/uploads/2026-02-28-90909391-9783-4299-a370-a3766a19e150.png" alt="라니 로고" />
       </div>
       <div class="brand-text">
         <div class="brand-name">라니 디지털</div>
-        <div class="brand-sub">라니 MALL · 포인트 · 게임 이용 정책</div>
+        <div class="brand-sub">라니 MALL · 포인트 · 게임 이용 안내</div>
       </div>
     </div>
-    <div class="header-pill">
+    <div class="top-tag">
       <span>⚖️</span>
-      <span>등록된 개인사업자 · 사업자등록번호 663-19-92378</span>
+      <span>등록 개인사업자 · 사업자등록번호 663-19-92378</span>
     </div>
   </div>
 </header>
 
 <main class="main">
   <div class="main-inner">
-    <h1 class="hero-title">포인트 · 결제 · 게임 이용 정책</h1>
-    <p class="hero-sub">
-      포인트 충전·사용, 환불 기준, 게임(말경주·블랙잭·바카라) 이용 규정과 사업자 등록 정보를 한 곳에서 확인할 수 있는 안내 페이지입니다.
+    <div class="title-kicker">POINT · GAME POLICY</div>
+    <h1 class="title-main">포인트 · 결제 · 게임 이용 정책</h1>
+    <p class="title-sub">
+      포인트 충전·사용, 환불 기준, 제공된 게임 이용 규정과 사업자 등록 정보를 한 번에 확인할 수 있는 안내 페이지입니다.
     </p>
 
-    <div class="hero-badge-row">
-      <div class="hero-badge"><strong>운영 주체</strong> 라니 디지털 (개인사업자)</div>
-      <div class="hero-badge"><strong>사업자등록번호</strong> 663-19-92378</div>
-      <div class="hero-badge"><strong>적용 대상</strong> 라니 MALL · 디스코드 봇 · 말경주 · 블랙잭 · 바카라</div>
+    <div class="chip-row">
+      <div class="chip"><strong>운영 주체</strong> 라니 디지털 (개인사업자)</div>
+      <div class="chip"><strong>사업자등록번호</strong> 663-19-92378</div>
+      <div class="chip"><strong>적용 범위</strong> 라니 MALL · 디스코드 봇 · 게임</div>
     </div>
 
-    <div class="business-box">
-      <span><b>· 상호</b> 라니 디지털</span>
-      <span><b>· 사업자등록번호</b> 663-19-92378</span>
-      <span><b>· 성격</b> 디지털 용역(디스코드 봇·서버 세팅·디자인) 및 포인트 기반 내부 서비스 운영</span>
-      <span><b>· 고지</b> 사업자 정보는 디스코드 공지 및 홈페이지 하단에도 함께 표시됩니다.</span>
-    </div>
-
-    <section class="timeline">
-      <!-- 제0조 -->
-      <article class="block">
-        <div class="block-title">제0조 (운영 주체 및 사업자 정보)</div>
-        <div class="block-desc">서비스를 누가, 어떤 형태의 사업자로 운영하는지에 대한 기본 안내입니다.</div>
-        <div class="terms">
-          <ol>
-            <li>본 서비스(라니 디지털, 라니 MALL 및 관련 디스코드 봇·게임)는 「라니 디지털」 상호로 운영됩니다.</li>
-            <li>라니 디지털은 대한민국에 정상적으로 등록된 개인사업자이며, 사업자등록번호는 663-19-92378입니다.</li>
-            <li>사업자등록은 국세청 홈택스 및 관련 법령에 따라 진행되었으며, 세법 등 관련 법규를 준수하는 것을 원칙으로 합니다.</li>
-            <li>사업자 정보(상호, 사업자등록번호 등)는 디스코드 공지 및 홈페이지 하단에도 고지되며, 변경 시 즉시 공지합니다.</li>
-          </ol>
-        </div>
-      </article>
-
-      <!-- 제1조 -->
-      <article class="block">
-        <div class="block-title">제1조 (포인트의 성격)</div>
-        <div class="block-desc">포인트가 ‘돈’이 아닌, 서비스 내부 전용 점수라는 점을 명확히 합니다.</div>
-        <div class="terms">
-          <ol>
-            <li>포인트는 라니 디지털 및 라니 MALL, 그리고 운영자가 별도로 지정한 상점·홈페이지 내에서만 사용 가능한 가상의 점수이며, 법정통화 또는 가상자산이 아닙니다.</li>
-            <li>포인트는 어떠한 경우에도 현금, 라이트코인(LTC) 등 가상자산, 기타 실물 자산으로 직접 환전·출금·양도·매매할 수 없습니다.</li>
-            <li>포인트는 서비스 내 상품 구매, 상점(라니 MALL) 결제, 홈페이지 내 유료 기능 이용, 게임 참여, 이벤트 참가 등 내부 서비스 용도로만 사용됩니다.</li>
-          </ol>
-        </div>
-      </article>
-
-      <!-- 제2조 -->
-      <article class="block">
-        <div class="block-title">제2조 (포인트 충전 및 적립)</div>
-        <div class="block-desc">충전 방법과 적립 방식, 자동·온체인 연동이 없다는 점을 안내합니다.</div>
-        <div class="terms">
-          <ol>
-            <li>포인트 충전은 디스코드 DM, 계좌 이체, 기타 사전 합의된 방법을 통해 운영자와 개별 협의 후 수동 반영됩니다.</li>
-            <li>포인트 적립 및 차감 내역은 디스코드 봇 및 로그 채널을 통해 기록되며, 회원은 언제든지 충전/사용 내역을 문의할 수 있습니다.</li>
-            <li>온체인 가상자산(LTC 등)을 직접 연동하여 자동으로 포인트를 충전하는 기능은 제공하지 않습니다.</li>
-            <li>포인트 충전 시, 결제 수단·금액·충전 포인트·시점 등은 내부 기록 및 세무 신고를 위해 일정 기간 보관될 수 있습니다.</li>
-          </ol>
-        </div>
-      </article>
-
-      <!-- 제3조 -->
-      <article class="block">
-        <div class="block-title">제3조 (포인트 사용, 환불 및 책임)</div>
-        <div class="block-desc">포인트 사용 가능 범위, 환불 불가 원칙, 이용자 책임 범위를 규정합니다.</div>
-        <div class="terms">
-          <ol>
-            <li>구매(충전)한 포인트는 라니 MALL 상점 및 라니 디지털이 운영하는 홈페이지 내에서만 사용 가능하며, 그 외의 용도(대여, 재판매, 제3자 결제 등)로 사용할 수 없습니다.</li>
-            <li>이미 사용된 포인트(상품 구매, 디자인·호스팅 작업 진행, 게임 참여 등)에 대해서는 원칙적으로 환불이 불가합니다.</li>
-            <li>잘못된 충전, 중복 결제 등 운영자 측 과실로 인한 문제는 개별 확인 후 포인트 조정 또는 환불을 진행할 수 있습니다.</li>
-            <li>포인트는 서비스 내부에서만 사용 가능한 전용 점수이며, 어떤 사유로도 현금화, 출금, 제3자 간 매매·교환·증여를 지원하지 않습니다.</li>
-            <li>이용자가 포인트를 임의로 현금화하거나, 제3자와 사적 거래·매매·환전 등을 시도·진행하는 경우, 해당 행위에 따른 법적·금전적 책임은 전적으로 이용자 본인에게 있으며, 운영자는 그로 인한 손해에 대해 어떠한 책임도 지지 않습니다.</li>
-            <li>법령 또는 감독기관의 지침에 의해 환불이 요구되는 경우, 관련 규정에 따라 합리적인 범위 내에서 환불 절차를 진행할 수 있습니다.</li>
-            <li>환불 기준, 가능 기간, 절차는 디스코드 공지 및 개별 안내를 우선으로 합니다.</li>
-          </ol>
-        </div>
-      </article>
-
-      <!-- 제4조 -->
-      <article class="block">
-        <div class="block-title">제4조 (게임 - 말경주 · 블랙잭 · 바카라 등)</div>
-        <div class="block-desc">게임은 엔터테인먼트 기능이며, 도박·환전과는 무관함을 명시합니다.</div>
-        <div class="terms">
-          <ol>
-            <li>말경주, 블랙잭, 바카라 등 게임은 포인트를 사용하는 엔터테인먼트 기능으로, 실제 도박 서비스가 아닙니다.</li>
-            <li>게임 참여에 사용·획득되는 포인트는 모두 게임 및 서비스 이용을 위한 전용 포인트이며, 어떠한 경우에도 재산적 가치가 있는 ‘돈’으로 인정되지 않습니다.</li>
-            <li>게임 참여로 획득한 포인트 역시 서비스 내에서만 사용 가능하며, 어떠한 경우에도 현금 및 가상자산으로 인출·환전할 수 없습니다.</li>
-            <li>외부 사이트나 불법 도박과 연계하는 행위, 승·패를 이용한 현금 거래, 사설 환전·매매 행위는 엄격히 금지됩니다.</li>
-            <li>게임 시스템 악용, 버그 이용, 자동화(매크로) 사용, 다중 계정 악용 등은 계정 제한, 포인트 회수 및 서비스 이용 정지 사유가 될 수 있습니다.</li>
-            <li>게임 결과(승·패, 포인트 변동 등)는 시스템 로그 및 봇 기록을 기준으로 하며, 이 기록에 따른 정산 결과에 대해 운영자는 고의 또는 중대한 과실이 없는 한 책임을 지지 않습니다.</li>
-          </ol>
-        </div>
-      </article>
-
-      <!-- 제5조 -->
-      <article class="block">
-        <div class="block-title">제5조 (마케팅 및 커뮤니티 관련)</div>
-        <div class="block-desc">홍보·마케팅 봇 이용 시 허용 범위를 정의합니다.</div>
-        <div class="terms">
-          <ol>
-            <li>마케팅 봇, 홍보 메시지 송출 등은 사전 동의된 서버 및 채널에 한하여 진행합니다.</li>
-            <li>특정 불법 사이트, 도박, 음란물, 사기성 서비스 등에 대한 홍보는 일절 허용되지 않으며, 적발 시 즉시 서비스 이용 제한 조치를 취할 수 있습니다.</li>
-          </ol>
-        </div>
-      </article>
-
-      <!-- 제6조 -->
-      <article class="block">
-        <div class="block-title">제6조 (자금세탁 방지 및 법적 준수)</div>
-        <div class="block-desc">불법 이용 차단과 법령 준수 의무를 안내합니다.</div>
-        <div class="terms">
-          <ol>
-            <li>서비스 제공자는 자금세탁, 불법 도박, 범죄 수익 은닉 등 불법 행위에 이용되지 않도록 합리적인 범위에서 관리하며, 의심스러운 활동이 발견될 경우 거래를 중단하고 관련 정보를 보관할 수 있습니다.</li>
-            <li>필요 시 관련 법령 및 수사기관의 요청에 따라 협조할 수 있습니다.</li>
-            <li>국내외 게임·전자상거래·가상자산 관련 법령 및 감독기관의 가이드라인이 변경될 경우, 그에 맞추어 서비스 정책을 조정할 수 있습니다.</li>
-          </ol>
-        </div>
-      </article>
-
-      <!-- 제7조 -->
-      <article class="block">
-        <div class="block-title">제7조 (정책 변경 안내)</div>
-        <div class="block-desc">정책 변경 시 안내 방법을 고지합니다.</div>
-        <div class="terms">
-          <p>
-            포인트·결제 및 게임 관련 정책은 서비스 운영 상황과 법령 변화에 따라 변경될 수 있으며,
-            변경 시 디스코드 공지 및 사이트를 통해 안내합니다.
-          </p>
-        </div>
-      </article>
-    </section>
-
-    <div class="footer-actions">
-      <button class="btn" type="button" onclick="history.back()">← 이전 페이지</button>
-      <button class="btn btn-primary" id="home-btn">🏠 라니 MALL 홈으로</button>
-    </div>
-  </div>
-</main>
-
-<script>
-  document.getElementById("home-btn").onclick = () => {
-    // 배포 시 실제 홈 URL로 교체
-    // 예: window.location.href = "home.html";
-    alert("현재는 안내용 페이지입니다.\n정식 오픈 시 라니 MALL 홈으로 이동하도록 변경됩니다.");
-  };
-</script>
-</body>
-</html>
+    <div class="biz-box">
+      <b>· 상호</b> 라니 디지털 &nbsp;&nbsp;
+      <b>· 사업자등록번호</b> 663-19-92378<br>
+      <b>· 성격</b> 디지털 용역(디스코드 봇·서버 세팅·디자인) 및 포인트 기반 내부
