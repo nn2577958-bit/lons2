@@ -5,6 +5,13 @@
   async function pay() {
     await PortOne.requestPayment({
       storeId: "store-16f9ad0b-fe2e-4c30-89d9-65943e891642",
+      channelKey: "포트원에서 받은 채널키",  // 나중에 정확히 넣자
+      paymentId: "test-" + Date.now(),       // 테스트용 아이디
+      orderName: "포인트 충전 테스트",
+      amount: {
+        currency: "KRW",
+        value: 1000
+      }
     });
   }
 </script>
