@@ -23,10 +23,11 @@
         const response = await PortOne.requestPayment({
           storeId: "store-16f9ad0b-fe2e-4c30-89d9-65943e891642",
           channelKey: "channel-key-72dd528f-1c37-407b-b5a7-40faa63f46ce",  // KG 채널키
-          paymentId: "test-" + Date.now(),
-          orderName: "포인트 충전 테스트",
+          paymentId: "order-" + Date.now(),
+          orderName: "포인트 충전",
           totalAmount: 1000,
           currency: "KRW",
+          payMethod: "CARD",   // 카드 결제
           customData: {
             discord_id: discordId
           }
