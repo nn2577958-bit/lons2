@@ -12,7 +12,7 @@
 * { box-sizing:border-box; margin:0; padding:0 }
 body {
   min-height:100vh;
-  font-family:'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   background:
     radial-gradient(circle at 0% 0%, rgba(56,189,248,.12), transparent 55%),
     radial-gradient(circle at 100% 0%, rgba(244,114,182,.12), transparent 55%),
@@ -24,12 +24,12 @@ body {
 .topbar {
   width:100%;
   border-bottom:1px solid rgba(31,41,55,.9);
-  background:linear-gradient(90deg,#020617,#020617,#020617);
+  background:#020617;
 }
 .topbar-inner {
   max-width:1080px;
   margin:0 auto;
-  padding:14px 16px 12px;
+  padding:10px 16px 8px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -38,12 +38,12 @@ body {
 .brand {
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:8px;
 }
 .brand-logo {
-  width:34px;
-  height:34px;
-  border-radius:10px;
+  width:28px;
+  height:28px;
+  border-radius:8px;
   overflow:hidden;
   border:1px solid rgba(148,163,184,.6);
   background:#020617;
@@ -56,23 +56,23 @@ body {
 .brand-text {
   display:flex;
   flex-direction:column;
-  gap:2px;
 }
 .brand-name {
-  font-size:15px;
+  font-size:13px;
   font-weight:700;
-  letter-spacing:.03em;
+  letter-spacing:.06em;
+  text-transform:uppercase;
 }
 .brand-sub {
   font-size:11px;
   color:#9ca3af;
 }
 .top-tag {
-  font-size:11px;
+  font-size:10px;
   padding:4px 9px;
   border-radius:999px;
   border:1px solid rgba(148,163,184,.6);
-  background:rgba(15,23,42,.9);
+  background:rgba(15,23,42,.96);
   color:#e5e7eb;
   display:inline-flex;
   align-items:center;
@@ -80,16 +80,14 @@ body {
 }
 
 /* 메인 영역 */
-.main {
-  width:100%;
-}
+.main { width:100%; }
 .main-inner {
   max-width:960px;
   margin:0 auto;
-  padding:20px 16px 26px;
+  padding:20px 16px 30px;
 }
 
-/* 헤더 블록 */
+/* 상단 인트로 */
 .title-kicker {
   font-size:11px;
   font-weight:600;
@@ -99,13 +97,13 @@ body {
 }
 .title-main {
   margin-top:4px;
-  font-size:22px;
+  font-size:19px;
   font-weight:700;
   color:#f9fafb;
 }
 .title-sub {
   margin-top:6px;
-  font-size:13px;
+  font-size:12px;
   color:#cbd5f5;
 }
 .chip-row {
@@ -116,16 +114,16 @@ body {
   font-size:11px;
 }
 .chip {
-  padding:5px 10px;
+  padding:4px 9px;
   border-radius:999px;
   border:1px solid rgba(148,163,184,.45);
-  background:rgba(15,23,42,.9);
+  background:rgba(15,23,42,.94);
   color:#e5e7eb;
 }
 .chip strong { font-weight:600; color:#a5b4fc; }
 
-/* 사업자 정보 플랫 박스 */
-.biz-box {
+/* 사업자 정보 카드 (플랫) */
+.biz-card {
   margin-top:14px;
   padding:10px 12px;
   border-radius:10px;
@@ -135,55 +133,141 @@ body {
   color:#e5e7eb;
   line-height:1.6;
 }
-.biz-box b { color:#4ade80; }
+.biz-card b { color:#4ade80; }
 
-/* 섹션 공통 */
+/* 바깥 셸 + LED 테두리 (포인트 정책 전용 스타일) */
+.policy-shell {
+  margin-top:16px;
+  border-radius:14px;
+  background:radial-gradient(circle at 0% 0%,rgba(56,189,248,.16),transparent 55%),
+             radial-gradient(circle at 100% 0%,rgba(244,114,182,.16),transparent 55%),
+             rgba(15,23,42,.98);
+  border:1px solid rgba(30,64,175,.8);
+  box-shadow:0 18px 40px rgba(15,23,42,.95);
+  padding:14px 14px 16px;
+  position:relative;
+  overflow:hidden;
+}
+.policy-shell::before {
+  content:"// RLNL Point · Game Policy";
+  position:absolute;
+  top:8px;
+  right:14px;
+  font-size:11px;
+  color:#475569;
+}
+
+/* LED 외곽 라인 (약관이랑 다른 스타일) */
+.policy-shell::after {
+  content:'';
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  background:
+    conic-gradient(from 0deg,
+      rgba(56,189,248,.9),
+      rgba(129,140,248,.9),
+      rgba(244,114,182,.9),
+      rgba(56,189,248,.9));
+  opacity:.45;
+  mix-blend-mode:screen;
+  animation:policyGlow 7s linear infinite;
+  pointer-events:none;
+  z-index:-1;
+}
+@keyframes policyGlow {
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+
+/* 섹션 리스트 */
 .section-list {
-  margin-top:20px;
-  border-top:1px solid rgba(30,41,59,.9);
+  margin-top:10px;
 }
-.section {
-  padding:14px 0 12px;
-  border-bottom:1px solid rgba(30,41,59,.9);
+
+/* 각 조항 LED 카드 */
+.policy-card {
+  border-radius:10px;
+  background:rgba(15,23,42,.98);
+  border:1px solid rgba(30,41,59,.9);
+  padding:11px 11px 10px;
+  margin-top:10px;
+  position:relative;
+  overflow:hidden;
 }
+
+/* 카드 내부 LED 바 (약관과 다르게 왼쪽 세로바) */
+.policy-card::before {
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  width:3px;
+  height:100%;
+  background:linear-gradient(
+    180deg,
+    #4f46e5,
+    #22c55e,
+    #38bdf8,
+    #f97316,
+    #4f46e5
+  );
+  background-size:100% 200%;
+  animation:cardBar 4s linear infinite;
+}
+@keyframes cardBar {
+  0%{background-position:0 0}
+  100%{background-position:0 100%}
+}
+
+/* 조항 헤더/본문 */
+.card-inner { margin-left:8px; } /* 왼쪽 LED 바 공간 */
+
 .section-header {
   display:flex;
   align-items:flex-start;
-  gap:10px;
-  margin-bottom:6px;
+  gap:8px;
+  margin-bottom:4px;
 }
-.section-num {
+.section-num-badge {
   font-size:11px;
-  font-weight:600;
-  color:#64748b;
-  min-width:52px;
+  padding:2px 7px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,.6);
+  background:rgba(15,23,42,.9);
+  color:#cbd5f5;
+}
+.section-header-main {
+  display:flex;
+  flex-direction:column;
+  gap:1px;
 }
 .section-title {
-  font-size:14px;
+  font-size:15px;
   font-weight:600;
   color:#e5e7eb;
 }
 .section-desc {
-  margin-top:2px;
   font-size:11px;
   color:#94a3b8;
 }
+
 .section-body {
   margin-top:4px;
-  font-size:12px;
+  font-size:14px;
   color:#e5e7eb;
   line-height:1.7;
 }
+.section-body p { margin:3px 0; }
 .section-body ol,
 .section-body ul {
-  margin:4px 0 4px 18px;
+  margin:6px 0 6px 20px;
 }
 .section-body li { margin:2px 0; }
-.section-body p { margin:3px 0; }
 
 /* 하단 버튼 */
 .footer-actions {
-  margin-top:18px;
+  margin-top:14px;
   display:flex;
   flex-wrap:wrap;
   gap:8px;
@@ -191,12 +275,12 @@ body {
   font-size:12px;
 }
 .btn {
-  padding:7px 14px;
+  padding:6px 13px;
   border-radius:999px;
   border:1px solid rgba(75,85,99,.9);
   background:#020617;
   color:#e5e7eb;
-  font-size:12px;
+  font-size:11px;
   font-weight:600;
   cursor:pointer;
   display:inline-flex;
@@ -211,17 +295,17 @@ body {
   border-color:transparent;
   background:linear-gradient(135deg,#4f46e5,#22c55e);
   color:#f9fafb;
-  box-shadow:0 0 20px rgba(79,70,229,.35);
+  box-shadow:0 0 20px rgba(79,70,229,.4);
 }
 .btn-primary:hover {
   transform:translateY(-1px);
-  box-shadow:0 0 26px rgba(79,70,229,.45);
+  box-shadow:0 0 26px rgba(79,70,229,.5);
 }
 
 /* 모바일 */
 @media (max-width:640px){
   .topbar-inner { flex-direction:column; align-items:flex-start; }
-  .title-main { font-size:19px; }
+  .title-main { font-size:17px; }
 }
 </style>
 </head>
@@ -233,7 +317,7 @@ body {
         <img src="https://cdn.phototourl.com/uploads/2026-02-28-90909391-9783-4299-a370-a3766a19e150.png" alt="라니 로고" />
       </div>
       <div class="brand-text">
-        <div class="brand-name">라니 디지털</div>
+        <div class="brand-name">RANI DIGITAL</div>
         <div class="brand-sub">라니 MALL · 포인트 · 게임 이용 안내</div>
       </div>
     </div>
@@ -258,198 +342,220 @@ body {
       <div class="chip"><strong>적용 범위</strong> 라니 MALL · 디스코드 봇 · 게임</div>
     </div>
 
-    <div class="biz-box">
+    <div class="biz-card">
       <b>· 상호</b> 라니 디지털 &nbsp;&nbsp;
       <b>· 사업자등록번호</b> 663-19-92378<br>
       <b>· 성격</b> 디지털 용역(디스코드 봇·서버 세팅·디자인) 및 포인트 기반 내부 서비스 운영<br>
       <b>· 고지</b> 사업자 정보는 디스코드 공지 및 홈페이지 하단에도 함께 표시되며, 변경 시 즉시 안내합니다.
     </div>
 
-    <div class="section-list">
-      <!-- 제0조 -->
-      <section class="section">
-        <div class="section-header">
-          <div class="section-num">제0조</div>
-          <div>
-            <div class="section-title">운영 주체 및 사업자 정보</div>
-            <div class="section-desc">서비스를 누가, 어떤 형태의 사업자로 운영하는지에 대한 기본 안내입니다.</div>
-          </div>
-        </div>
-        <div class="section-body">
-          <ol>
-            <li>본 서비스(라니 디지털, 라니 MALL 및 관련 디스코드 봇·게임)는 「라니 디지털」 상호로 운영됩니다.</li>
-            <li>라니 디지털은 대한민국에 정상적으로 등록된 개인사업자이며, 사업자등록번호는 663-19-92378입니다.</li>
-            <li>사업자등록은 국세청 홈택스 및 관련 법령에 따라 진행되었으며, 세법 등 관련 법규를 준수하는 것을 원칙으로 합니다.</li>
-            <li>사업자 정보(상호, 사업자등록번호 등)는 디스코드 공지 및 홈페이지 하단에도 고지되며, 변경 시 즉시 공지합니다.</li>
-          </ol>
-        </div>
-      </section>
+    <!-- 🔷 LED 외곽 박스 + 조항 카드들 -->
+    <div class="policy-shell">
+      <div class="section-list">
 
-      <!-- 제1조 -->
-      <section class="section">
-        <div class="section-header">
-          <div class="section-num">제1조</div>
-          <div>
-            <div class="section-title">포인트의 성격</div>
-            <div class="section-desc">포인트가 ‘돈’이 아닌, 서비스 내부 전용 점수라는 점을 명확히 합니다.</div>
+        <!-- 제0조 -->
+        <section class="policy-card">
+          <div class="card-inner">
+            <div class="section-header">
+              <span class="section-num-badge">제 0 조</span>
+              <div class="section-header-main">
+                <div class="section-title">운영 주체 및 사업자 정보</div>
+                <div class="section-desc">서비스를 누가, 어떤 형태의 사업자로 운영하는지에 대한 기본 안내입니다.</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <ol>
+                <li>본 서비스(라니 디지털, 라니 MALL 및 관련 디스코드 봇·게임)는 「라니 디지털」 상호로 운영됩니다.</li>
+                <li>라니 디지털은 대한민국에 정상적으로 등록된 개인사업자이며, 사업자등록번호는 663-19-92378입니다.</li>
+                <li>사업자등록은 국세청 홈택스 및 관련 법령에 따라 진행되었으며, 세법 등 관련 법규를 준수하는 것을 원칙으로 합니다.</li>
+                <li>사업자 정보(상호, 사업자등록번호 등)는 디스코드 공지 및 홈페이지 하단에도 고지되며, 변경 시 즉시 공지합니다.</li>
+              </ol>
+            </div>
           </div>
-        </div>
-        <div class="section-body">
-          <ol>
-            <li>포인트는 라니 디지털 및 라니 MALL, 그리고 운영자가 별도로 지정한 상점·홈페이지 내에서만 사용 가능한 가상의 점수이며, 법정통화 또는 가상자산이 아닙니다.</li>
-            <li>포인트는 어떠한 경우에도 현금, 라이트코인(LTC) 등 가상자산, 기타 실물 자산으로 직접 환전·출금·양도·매매할 수 없습니다.</li>
-            <li>포인트는 서비스 내 상품 구매, 상점(라니 MALL) 결제, 홈페이지 내 유료 기능 이용, 게임 참여, 이벤트 참가 등 내부 서비스 용도로만 사용됩니다.</li>
-          </ol>
-        </div>
-      </section>
+        </section>
 
-      <!-- 제2조 -->
-      <section class="section">
-        <div class="section-header">
-          <div class="section-num">제2조</div>
-          <div>
-            <div class="section-title">포인트 충전 및 적립</div>
-            <div class="section-desc">충전 경로와 적립 방식, 온체인 자동충전이 없다는 점을 안내합니다.</div>
+        <!-- 제1조 -->
+        <section class="policy-card">
+          <div class="card-inner">
+            <div class="section-header">
+              <span class="section-num-badge">제 1 조</span>
+              <div class="section-header-main">
+                <div class="section-title">포인트의 성격</div>
+                <div class="section-desc">포인트가 ‘돈’이 아닌, 서비스 내부 전용 점수라는 점을 명확히 합니다.</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <ol>
+                <li>포인트는 라니 디지털 및 라니 MALL, 그리고 운영자가 별도로 지정한 상점·홈페이지 내에서만 사용 가능한 가상의 점수이며, 법정통화 또는 가상자산이 아닙니다.</li>
+                <li>포인트는 어떠한 경우에도 현금, 라이트코인(LTC) 등 가상자산, 기타 실물 자산으로 직접 환전·출금·양도·매매할 수 없습니다.</li>
+                <li>포인트는 서비스 내 상품 구매, 상점(라니 MALL) 결제, 홈페이지 내 유료 기능 이용, 게임 참여, 이벤트 참가 등 내부 서비스 용도로만 사용됩니다.</li>
+              </ol>
+            </div>
           </div>
-        </div>
-        <div class="section-body">
-          <ol>
-            <li>포인트 충전은 디스코드 DM, 계좌 이체, 기타 사전 합의된 방법을 통해 운영자와 개별 협의 후 수동 반영됩니다.</li>
-            <li>포인트 적립 및 차감 내역은 디스코드 봇 및 로그 채널을 통해 기록되며, 회원은 언제든지 충전/사용 내역을 문의할 수 있습니다.</li>
-            <li>온체인 가상자산(LTC 등)을 직접 연동하여 자동으로 포인트를 충전하는 기능은 제공하지 않습니다.</li>
-            <li>포인트 충전 시, 결제 수단·금액·충전 포인트·시점 등은 내부 기록 및 세무 신고를 위해 일정 기간 보관될 수 있습니다.</li>
-          </ol>
-        </div>
-      </section>
+        </section>
 
-      <!-- 제3조 -->
-      <section class="section">
-        <div class="section-header">
-          <div class="section-num">제3조</div>
-          <div>
-            <div class="section-title">포인트 사용, 환불 및 책임</div>
-            <div class="section-desc">사용 가능 범위, 환불 원칙, 이용자 책임을 규정합니다.</div>
+        <!-- 제2조 -->
+        <section class="policy-card">
+          <div class="card-inner">
+            <div class="section-header">
+              <span class="section-num-badge">제 2 조</span>
+              <div class="section-header-main">
+                <div class="section-title">포인트 충전 및 적립</div>
+                <div class="section-desc">충전 경로와 적립 방식, 온체인 자동충전이 없다는 점을 안내합니다.</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <ol>
+                <li>포인트 충전은 디스코드 DM, 계좌 이체, 기타 사전 합의된 방법을 통해 운영자와 개별 협의 후 수동 반영됩니다.</li>
+                <li>포인트 적립 및 차감 내역은 디스코드 봇 및 로그 채널을 통해 기록되며, 회원은 언제든지 충전/사용 내역을 문의할 수 있습니다.</li>
+                <li>온체인 가상자산(LTC 등)을 직접 연동하여 자동으로 포인트를 충전하는 기능은 제공하지 않습니다.</li>
+                <li>포인트 충전 시, 결제 수단·금액·충전 포인트·시점 등은 내부 기록 및 세무 신고를 위해 일정 기간 보관될 수 있습니다.</li>
+              </ol>
+            </div>
           </div>
-        </div>
-        <div class="section-body">
-          <ol>
-            <li>구매(충전)한 포인트는 라니 MALL 상점 및 라니 디지털이 운영하는 홈페이지 내에서만 사용 가능하며, 그 외의 용도(대여, 재판매, 제3자 결제 등)로 사용할 수 없습니다.</li>
-            <li>이미 사용된 포인트(상품 구매, 디자인·호스팅 작업 진행, 게임 참여 등)에 대해서는 원칙적으로 환불이 불가합니다.</li>
-            <li>잘못된 충전, 중복 결제 등 운영자 측 과실로 인한 문제는 개별 확인 후 포인트 조정 또는 환불을 진행할 수 있습니다.</li>
-            <li>포인트는 서비스 내부에서만 사용 가능한 전용 점수이며, 어떤 사유로도 현금화, 출금, 제3자 간 매매·교환·증여를 지원하지 않습니다.</li>
-            <li>이용자가 포인트를 임의로 현금화하거나, 제3자와 사적 거래·매매·환전 등을 시도·진행하는 경우, 해당 행위에 따른 법적·금전적 책임은 전적으로 이용자 본인에게 있으며, 운영자는 그로 인한 손해에 대해 어떠한 책임도 지지 않습니다.</li>
-            <li>법령 또는 감독기관의 지침에 의해 환불이 요구되는 경우, 관련 규정에 따라 합리적인 범위 내에서 환불 절차를 진행할 수 있습니다.</li>
-            <li>환불 기준, 가능 기간, 절차는 디스코드 공지 및 개별 안내를 우선으로 합니다.</li>
-          </ol>
-        </div>
-      </section>
+        </section>
 
-      <!-- 제4조 -->
-      <section class="section">
-        <div class="section-header">
-          <div class="section-num">제4조</div>
-          <div>
-            <div class="section-title">게임 등</div>
-            <div class="section-desc">게임은 엔터테인먼트 기능이며, 도박·환전과는 무관함을 명시합니다.</div>
+        <!-- 제3조 -->
+        <section class="policy-card">
+          <div class="card-inner">
+            <div class="section-header">
+              <span class="section-num-badge">제 3 조</span>
+              <div class="section-header-main">
+                <div class="section-title">포인트 사용, 환불 및 책임</div>
+                <div class="section-desc">사용 가능 범위, 환불 원칙, 이용자 책임을 규정합니다.</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <ol>
+                <li>구매(충전)한 포인트는 라니 MALL 상점 및 라니 디지털이 운영하는 홈페이지 내에서만 사용 가능하며, 그 외의 용도(대여, 재판매, 제3자 결제 등)로 사용할 수 없습니다.</li>
+                <li>이미 사용된 포인트(상품 구매, 디자인·호스팅 작업 진행, 게임 참여 등)에 대해서는 원칙적으로 환불이 불가합니다.</li>
+                <li>잘못된 충전, 중복 결제 등 운영자 측 과실로 인한 문제는 개별 확인 후 포인트 조정 또는 환불을 진행할 수 있습니다.</li>
+                <li>포인트는 서비스 내부에서만 사용 가능한 전용 점수이며, 어떤 사유로도 현금화, 출금, 제3자 간 매매·교환·증여를 지원하지 않습니다.</li>
+                <li>이용자가 포인트를 임의로 현금화하거나, 제3자와 사적 거래·매매·환전 등을 시도·진행하는 경우, 해당 행위에 따른 법적·금전적 책임은 전적으로 이용자 본인에게 있으며, 운영자는 그로 인한 손해에 대해 어떠한 책임도 지지 않습니다.</li>
+                <li>법령 또는 감독기관의 지침에 의해 환불이 요구되는 경우, 관련 규정에 따라 합리적인 범위 내에서 환불 절차를 진행할 수 있습니다.</li>
+                <li>환불 기준, 가능 기간, 절차는 디스코드 공지 및 개별 안내를 우선으로 합니다.</li>
+              </ol>
+            </div>
           </div>
-        </div>
-        <div class="section-body">
-          <ol>
-            <li>제공되는 게임은 포인트를 사용하는 엔터테인먼트 기능으로, 실제 도박 서비스가 아닙니다.</li>
-            <li>게임 참여에 사용·획득되는 포인트는 모두 게임 및 서비스 이용을 위한 전용 포인트이며, 어떠한 경우에도 재산적 가치가 있는 ‘돈’으로 인정되지 않습니다.</li>
-            <li>게임 참여로 획득한 포인트 역시 서비스 내에서만 사용 가능하며, 어떠한 경우에도 현금 및 가상자산으로 인출·환전할 수 없습니다.</li>
-            <li>외부 사이트나 불법 도박과 연계하는 행위, 승·패를 이용한 현금 거래, 사설 환전·매매 행위는 엄격히 금지됩니다.</li>
-            <li>게임 시스템 악용, 버그 이용, 자동화(매크로) 사용, 다중 계정 악용 등은 계정 제한, 포인트 회수 및 서비스 이용 정지 사유가 될 수 있습니다.</li>
-            <li>게임 결과(승·패, 포인트 변동 등)는 시스템 로그 및 봇 기록을 기준으로 하며, 이 기록에 따른 정산 결과에 대해 운영자는 고의 또는 중대한 과실이 없는 한 책임을 지지 않습니다.</li>
-          </ol>
-        </div>
-      </section>
+        </section>
 
-      <!-- 제5조 -->
-      <section class="section">
-        <div class="section-header">
-          <div class="section-num">제5조</div>
-          <div>
-            <div class="section-title">마케팅 및 커뮤니티 관련</div>
-            <div class="section-desc">홍보·마케팅 봇 이용 시 허용 범위를 정의합니다.</div>
+        <!-- 제4조 -->
+        <section class="policy-card">
+          <div class="card-inner">
+            <div class="section-header">
+              <span class="section-num-badge">제 4 조</span>
+              <div class="section-header-main">
+                <div class="section-title">게임 등</div>
+                <div class="section-desc">게임은 엔터테인먼트 기능이며, 도박·환전과는 무관함을 명시합니다.</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <ol>
+                <li>제공되는 게임은 포인트를 사용하는 엔터테인먼트 기능으로, 실제 도박 서비스가 아닙니다.</li>
+                <li>게임 참여에 사용·획득되는 포인트는 모두 게임 및 서비스 이용을 위한 전용 포인트이며, 어떠한 경우에도 재산적 가치가 있는 ‘돈’으로 인정되지 않습니다.</li>
+                <li>게임 참여로 획득한 포인트 역시 서비스 내에서만 사용 가능하며, 어떠한 경우에도 현금 및 가상자산으로 인출·환전할 수 없습니다.</li>
+                <li>외부 사이트나 불법 도박과 연계하는 행위, 승·패를 이용한 현금 거래, 사설 환전·매매 행위는 엄격히 금지됩니다.</li>
+                <li>게임 시스템 악용, 버그 이용, 자동화(매크로) 사용, 다중 계정 악용 등은 계정 제한, 포인트 회수 및 서비스 이용 정지 사유가 될 수 있습니다.</li>
+                <li>게임 결과(승·패, 포인트 변동 등)는 시스템 로그 및 봇 기록을 기준으로 하며, 이 기록에 따른 정산 결과에 대해 운영자는 고의 또는 중대한 과실이 없는 한 책임을 지지 않습니다.</li>
+              </ol>
+            </div>
           </div>
-        </div>
-        <div class="section-body">
-          <ol>
-            <li>마케팅 봇, 홍보 메시지 송출 등은 사전 동의된 서버 및 채널에 한하여 진행합니다.</li>
-            <li>특정 불법 사이트, 도박, 음란물, 사기성 서비스 등에 대한 홍보는 일절 허용되지 않으며, 적발 시 즉시 서비스 이용 제한 조치를 취할 수 있습니다.</li>
-          </ol>
-        </div>
-      </section>
+        </section>
 
-      <!-- 제6조 -->
-      <section class="section">
-        <div class="section-header">
-          <div class="section-num">제6조</div>
-          <div>
-            <div class="section-title">자금세탁 방지 및 법적 준수</div>
-            <div class="section-desc">불법 이용 차단과 법령 준수 의무를 안내합니다.</div>
+        <!-- 제5조 -->
+        <section class="policy-card">
+          <div class="card-inner">
+            <div class="section-header">
+              <span class="section-num-badge">제 5 조</span>
+              <div class="section-header-main">
+                <div class="section-title">마케팅 및 커뮤니티 관련</div>
+                <div class="section-desc">홍보·마케팅 봇 이용 시 허용 범위를 정의합니다.</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <ol>
+                <li>마케팅 봇, 홍보 메시지 송출 등은 사전 동의된 서버 및 채널에 한하여 진행합니다.</li>
+                <li>특정 불법 사이트, 도박, 음란물, 사기성 서비스 등에 대한 홍보는 일절 허용되지 않으며, 적발 시 즉시 서비스 이용 제한 조치를 취할 수 있습니다.</li>
+              </ol>
+            </div>
           </div>
-        </div>
-        <div class="section-body">
-          <ol>
-            <li>서비스 제공자는 자금세탁, 불법 도박, 범죄 수익 은닉 등 불법 행위에 이용되지 않도록 합리적인 범위에서 관리하며, 의심스러운 활동이 발견될 경우 거래를 중단하고 관련 정보를 보관할 수 있습니다.</li>
-            <li>필요 시 관련 법령 및 수사기관의 요청에 따라 협조할 수 있습니다.</li>
-            <li>국내외 게임·전자상거래·가상자산 관련 법령 및 감독기관의 가이드라인이 변경될 경우, 그에 맞추어 서비스 정책을 조정할 수 있습니다.</li>
-          </ol>
-        </div>
-      </section>
+        </section>
 
-      <!-- 제7조: 외주/봇 제공 관련 -->
-      <section class="section">
-        <div class="section-header">
-          <div class="section-num">제7조</div>
-          <div>
-            <div class="section-title">외주 작업 및 봇 제공 관련</div>
-            <div class="section-desc">라니 디지털이 제작·제공하는 봇·패널의 허용 용도를 명시합니다.</div>
+        <!-- 제6조 -->
+        <section class="policy-card">
+          <div class="card-inner">
+            <div class="section-header">
+              <span class="section-num-badge">제 6 조</span>
+              <div class="section-header-main">
+                <div class="section-title">자금세탁 방지 및 법적 준수</div>
+                <div class="section-desc">불법 이용 차단과 법령 준수 의무를 안내합니다.</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <ol>
+                <li>서비스 제공자는 자금세탁, 불법 도박, 범죄 수익 은닉 등 불법 행위에 이용되지 않도록 합리적인 범위에서 관리하며, 의심스러운 활동이 발견될 경우 거래를 중단하고 관련 정보를 보관할 수 있습니다.</li>
+                <li>필요 시 관련 법령 및 수사기관의 요청에 따라 협조할 수 있습니다.</li>
+                <li>국내외 게임·전자상거래·가상자산 관련 법령 및 감독기관의 가이드라인이 변경될 경우, 그에 맞추어 서비스 정책을 조정할 수 있습니다.</li>
+              </ol>
+            </div>
           </div>
-        </div>
-        <div class="section-body">
-          <ol>
-            <li>라니 디지털이 외주·판매·배포 등의 방식으로 제공하는 디스코드 봇, 게임 패널, 스크립트 등(이하 “제작물”)은 커뮤니티 운영, 엔터테인먼트, 자동화 편의 기능 제공을 목적으로 합니다.</li>
-            <li>회원 및 의뢰인은 제작물을 이용하여 불법 온라인 도박, 사설 카지노·바카라 서버, 불법 환전·중개, 자금세탁 등 관련 법령을 위반하는 용도로 사용할 수 없습니다.</li>
-            <li>제작물에 포함된 포인트·게임 기능은 내부 포인트 기반 엔터테인먼트용으로만 제공되며, 운영자의 사전 동의 없이 현금·가상자산과의 직접 또는 간접적인 배팅·환전·정산 시스템과 연동하는 행위는 금지됩니다.</li>
-            <li>라니 디지털은 명백한 도박·환전 용도를 전제로 한 외주 요청(“카지노/바카라 도박 서버를 만들고 싶다” 등)에 대하여 작업을 거절할 수 있으며, 이와 관련하여 어떠한 책임도 부담하지 않습니다.</li>
-            <li>제작물이 회원 또는 제3자에 의해 불법 도박·환전·범죄 행위에 악용되는 정황이 확인될 경우, 라니 디지털은 해당 제작물에 대한 업데이트 중단, 기술 지원 중단, 라이선스 회수 및 관련 계정 차단 등의 조치를 취할 수 있습니다.</li>
-            <li>라니 디지털은 합법적인 커뮤니티·엔터테인먼트·업무용 자동화를 전제로 제작물을 제공하며, 위 금지 행위를 사전에 인지하거나 이를 용인한 사실이 없는 한, 회원의 위법 행위에 대해 형사·민사상 책임을 지지 않습니다.</li>
-          </ol>
-        </div>
-      </section>
+        </section>
 
-      <!-- 제8조 -->
-      <section class="section">
-        <div class="section-header">
-          <div class="section-num">제8조</div>
-          <div>
-            <div class="section-title">정책 변경 안내</div>
-            <div class="section-desc">정책 변경 시 안내 방법을 고지합니다.</div>
+        <!-- 제7조 -->
+        <section class="policy-card">
+          <div class="card-inner">
+            <div class="section-header">
+              <span class="section-num-badge">제 7 조</span>
+              <div class="section-header-main">
+                <div class="section-title">외주 작업 및 봇 제공 관련</div>
+                <div class="section-desc">라니 디지털이 제작·제공하는 봇·패널의 허용 용도를 명시합니다.</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <ol>
+                <li>라니 디지털이 외주·판매·배포 등의 방식으로 제공하는 디스코드 봇, 게임 패널, 스크립트 등(이하 “제작물”)은 커뮤니티 운영, 엔터테인먼트, 자동화 편의 기능 제공을 목적으로 합니다.</li>
+                <li>회원 및 의뢰인은 제작물을 이용하여 불법 온라인 도박, 사설 카지노·바카라 서버, 불법 환전·중개, 자금세탁 등 관련 법령을 위반하는 용도로 사용할 수 없습니다.</li>
+                <li>제작물에 포함된 포인트·게임 기능은 내부 포인트 기반 엔터테인먼트용으로만 제공되며, 운영자의 사전 동의 없이 현금·가상자산과의 직접 또는 간접적인 배팅·환전·정산 시스템과 연동하는 행위는 금지됩니다.</li>
+                <li>라니 디지털은 명백한 도박·환전 용도를 전제로 한 외주 요청(“카지노/바카라 도박 서버를 만들고 싶다” 등)에 대하여 작업을 거절할 수 있으며, 이와 관련하여 어떠한 책임도 부담하지 않습니다.</li>
+                <li>제작물이 회원 또는 제3자에 의해 불법 도박·환전·범죄 행위에 악용되는 정황이 확인될 경우, 라니 디지털은 해당 제작물에 대한 업데이트 중단, 기술 지원 중단, 라이선스 회수 및 관련 계정 차단 등의 조치를 취할 수 있습니다.</li>
+                <li>라니 디지털은 합법적인 커뮤니티·엔터테인먼트·업무용 자동화를 전제로 제작물을 제공하며, 위 금지 행위를 사전에 인지하거나 이를 용인한 사실이 없는 한, 회원의 위법 행위에 대해 형사·민사상 책임을 지지 않습니다.</li>
+              </ol>
+            </div>
           </div>
-        </div>
-        <div class="section-body">
-          <p>
-            포인트·결제 및 게임 관련 정책은 서비스 운영 상황과 법령 변화에 따라 변경될 수 있으며,
-            변경 시 디스코드 공지 및 사이트를 통해 안내합니다.
-          </p>
-        </div>
-      </section>
-    </div>
+        </section>
 
-    <div class="footer-actions">
-      <button class="btn" type="button" onclick="history.back()">← 이전 페이지</button>
-      <button class="btn btn-primary" id="home-btn">🏠 라니 MALL 홈으로</button>
+        <!-- 제8조 -->
+        <section class="policy-card">
+          <div class="card-inner">
+            <div class="section-header">
+              <span class="section-num-badge">제 8 조</span>
+              <div class="section-header-main">
+                <div class="section-title">정책 변경 안내</div>
+                <div class="section-desc">정책 변경 시 안내 방법을 고지합니다.</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <p>
+                포인트·결제 및 게임 관련 정책은 서비스 운영 상황과 법령 변화에 따라 변경될 수 있으며,
+                변경 시 디스코드 공지 및 사이트를 통해 안내합니다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="footer-actions">
+        <button class="btn" type="button" onclick="history.back()">← 이전 페이지</button>
+        <button class="btn btn-primary" id="home-btn">🏠 라니 MALL 홈으로</button>
+      </div>
     </div>
   </div>
 </main>
 
 <script>
   document.getElementById("home-btn").onclick = () => {
-    // 배포 시 실제 홈 URL로 교체
-    // 예: location.href = "https://mall.rani-mall.xyz/index.html";
+    // 실제 배포 시 홈 URL로 변경
     alert("현재는 안내용 페이지입니다.\n라니 MALL 홈으로 이동하도록 변경됩니다.");
   };
 </script>
