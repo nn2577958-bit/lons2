@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="description"
-      content="디스코드 봇 제작, 서버 세팅, 로고 디자인까지 한 번에 맡길 수 있는 라니MALL. 실제 운영 중인 RLNL 게임/공지/출석 봇과 서버 세팅 예시를 보고, 디스코드/Google 계정으로 바로 이용해 보세요.">
+      content="디스코드 봇 제작, 서버 세팅, 로고 디자인까지 한 번에 맡길 수 있는 라니MALL. 실제 운영 중인 RLNL 게임/공지/출석 봇과 서버 세팅 예시를 보고, Google 계정으로 바로 이용해 보세요.">
 
 <link rel="icon" type="image/png"
       href="https://cdn.discordapp.com/attachments/1083101135096795201/1479323459073867941/apple-touch-icon.png?ex=69ab9ed5&is=69aa4d55&hm=27698736fb541c68520d785517aa103392008f1ffbad142d5ba24a0807ab7973">
@@ -153,6 +153,8 @@ body {
   flex-wrap:wrap;
   gap:10px;
 }
+
+/* 디스코드 견적 버튼 */
 .btn-main {
   padding:10px 18px;
   border-radius:999px;
@@ -172,18 +174,23 @@ body {
   transform:translateY(-1px);
   box-shadow:0 16px 34px rgba(37,99,235,1);
 }
-.btn-sub {
-  padding:9px 14px;
+
+/* 상단 Google 버튼 */
+.google-btn-top {
+  padding:9px 16px;
   border-radius:999px;
   border:1px solid rgba(75,85,99,0.9);
   background:#020617;
   color:#e5e7eb;
-  font-size:12px;
-  font-weight:500;
+  font-size:13px;
+  font-weight:600;
   cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
   text-decoration:none;
 }
-.btn-sub:hover {
+.google-btn-top:hover {
   background:#111827;
 }
 
@@ -283,7 +290,7 @@ body {
   color:#9ca3af;
 }
 
-/* 로그인 박스 */
+/* 로그인 박스 (Google만) */
 .login-box {
   margin-top:24px;
   padding:16px 18px 18px;
@@ -303,67 +310,12 @@ body {
   margin-bottom:12px;
 }
 
-.form-group { margin-bottom:10px; }
-label {
-  display:block;
-  font-size:12px;
-  color:rgba(209,213,219,0.95);
-  margin-bottom:4px;
-}
-input {
-  width:100%;
-  padding:9px 11px;
-  border-radius:10px;
-  border:1px solid rgba(55,65,81,0.9);
-  background:rgba(15,23,42,0.95);
-  color:#e5e7eb;
-  font-size:13px;
-  outline:none;
-  transition:border-color .2s, box-shadow .2s, background .2s;
-}
-input::placeholder { color:rgba(148,163,184,0.8); }
-input:focus {
-  border-color:#6366f1;
-  box-shadow:0 0 0 1px rgba(99,102,241,0.5);
-  background:rgba(15,23,42,1);
-}
-
-.form-extra {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
-}
-.form-extra a {
-  font-size:11px;
-  color:rgba(129,140,248,0.95);
-  text-decoration:none;
-}
-.form-extra a:hover { text-decoration:underline; }
-
-.primary-btn {
-  width:100%;
-  padding:9px 18px;
-  border:none;
-  border-radius:10px;
-  font-weight:600;
-  font-size:13px;
-  cursor:pointer;
-  background:#020617;
-  color:#e5e7eb;
-  border:1px solid rgba(75,85,99,0.9);
-  transition:all .2s;
-}
-.primary-btn:hover {
-  background:#111827;
-}
-
-/* Google 버튼 */
+/* Google 버튼 (하단 박스) */
 .divider {
   display:flex;
   align-items:center;
   gap:10px;
-  margin:16px 0 10px;
+  margin:4px 0 12px;
 }
 .divider-line {
   flex:1;
@@ -405,14 +357,14 @@ input:focus {
 .google-btn:hover::before { left:100%; }
 .google-btn:active { transform:translateY(0); }
 
-.google-icon {
-  width:18px;height:18px;margin-right:8px;display:inline-block;
-  background:linear-gradient(135deg,#fff,#f8f9fa);border-radius:4px;
-  mask:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25	H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" opacity=".6"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53	H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07	H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>') no-repeat center;
-  -webkit-mask:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25	H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" opacity=".6"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53	H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07	H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>') no-repeat center;
-  mask-size:16px;
+.google-icon, .google-icon-top {
+  width:18px;
+  height:18px;
+  border-radius:4px;
+  flex-shrink:0;
 }
 
+/* 로딩 인디케이터 */
 .loading {
   display:inline-block;
   width:16px;height:16px;
@@ -504,7 +456,13 @@ input:focus {
         <a href="https://discord.gg/yEym2KZ9BU" target="_blank" rel="noopener noreferrer" class="btn-main">
           <span>💬 디스코드로 견적 문의</span>
         </a>
-        <a href="bot-v1.html" class="btn-sub">라니봇 v1 실제 예시 보기</a>
+        <!-- 상단 Google 계속하기 버튼 -->
+        <button id="google-login-btn-top" class="google-btn-top" type="button">
+          <img class="google-icon-top"
+               src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+               alt="Google 아이콘">
+          <span id="btn-text-top">Google로 계속</span>
+        </button>
       </div>
     </div>
 
@@ -593,40 +551,26 @@ input:focus {
     </div>
   </section>
 
-  <!-- 로그인 박스 -->
+  <!-- 로그인 박스 (Google만) -->
   <section class="login-box">
-    <div class="login-title">라니MALL 계정으로 로그인</div>
+    <div class="login-title">라니MALL 계정으로 계속</div>
     <p class="login-sub">
       주문 내역, 포인트, 진행 중인 작업을 확인하려면 Google 계정으로 로그인해 주세요.
     </p>
 
-    <form id="email-login-form">
-      <div class="form-group">
-        <label for="email">이메일 (준비 중)</label>
-        <input id="email" type="email" placeholder="example@domain.com" autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label for="password">비밀번호</label>
-        <input id="password" type="password" placeholder="비밀번호" autocomplete="current-password">
-      </div>
-
-      <div class="form-extra">
-        <span style="font-size:11px;color:#6b7280;">이메일 로그인은 추후 지원 예정입니다.</span>
-        <a href="#">비밀번호를 잊으셨나요?</a>
-      </div>
-
-      <button type="submit" class="primary-btn">이메일 로그인 (준비 중)</button>
-    </form>
-
     <div class="divider">
       <div class="divider-line"></div>
-      <div class="divider-text">또는</div>
+      <div class="divider-text">Google 계정으로 로그인</div>
       <div class="divider-line"></div>
     </div>
 
-    <button id="google-login-btn" class="google-btn">
-      <span class="google-icon" aria-hidden="true"></span>
-      <span id="btn-text">Google로 계속</span>
+    <button id="google-login-btn" class="google-btn" type="button">
+      <span id="btn-text">
+        <img class="google-icon"
+             src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+             alt="Google 아이콘">
+        <span>Google로 계속</span>
+      </span>
     </button>
 
     <div id="error-box" class="error"></div>
@@ -647,27 +591,29 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// 로그인 되어 있으면 바로 home.html
+// 이미 로그인 되어 있으면 바로 home.html
 onAuthStateChanged(auth, user => {
   if (user) window.location.href = "home.html";
 });
 
-// 이메일/비밀번호 로그인은 아직 미구현
-const emailForm = document.getElementById("email-login-form");
-const errorBox = document.getElementById("error-box");
-emailForm.addEventListener("submit", e => {
-  e.preventDefault();
-  errorBox.textContent = "현재는 Google 로그인만 지원합니다.";
-});
-
 const provider = new GoogleAuthProvider();
 const loginBtn = document.getElementById("google-login-btn");
+const loginBtnTop = document.getElementById("google-login-btn-top");
+const errorBox = document.getElementById("error-box");
 const btnText = document.getElementById("btn-text");
+const btnTextTop = document.getElementById("btn-text-top");
 
-loginBtn.addEventListener("click", async () => {
-  loginBtn.disabled = true;
+async function handleGoogleLogin(fromTop = false) {
+  const targetBtn = fromTop ? loginBtnTop : loginBtn;
+  const targetText = fromTop ? btnTextTop : btnText;
+
+  targetBtn.disabled = true;
   errorBox.textContent = "";
-  btnText.innerHTML = '<span class="loading"></span>로그인 중...';
+  if (fromTop) {
+    targetText.innerHTML = '<span class="loading"></span>로그인 중...';
+  } else {
+    targetText.innerHTML = '<span class="loading"></span>로그인 중...';
+  }
 
   try {
     const result = await signInWithPopup(auth, provider);
@@ -675,10 +621,17 @@ loginBtn.addEventListener("click", async () => {
   } catch (err) {
     console.error("로그인 오류:", err);
     errorBox.textContent = "로그인 실패: " + (err.message || "다시 시도해 주세요.");
-    loginBtn.disabled = false;
-    btnText.textContent = "Google로 계속";
+    targetBtn.disabled = false;
+    if (fromTop) {
+      targetText.textContent = "Google로 계속";
+    } else {
+      targetText.innerHTML = '<span>Google로 계속</span>';
+    }
   }
-});
+}
+
+loginBtn.addEventListener("click", () => handleGoogleLogin(false));
+loginBtnTop.addEventListener("click", () => handleGoogleLogin(true));
 </script>
 </body>
 </html>
