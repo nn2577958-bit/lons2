@@ -30,8 +30,8 @@
 
       try {
         const response = await PortOne.requestPayment({
-          // 네가 준 값들로 세팅
-          storeId: "iamporttest_3",
+          // 네가 준 값 그대로 사용
+          storeId: "test_ck_lpP2YxJ4K877JAdv7KX8RGZwXLOb",
           channelKey: "channel-key-abc196b1-4a38-4fcd-9f48-ba2e5df74326",
           isTestChannel: true,
 
@@ -45,7 +45,6 @@
             discord_id: discordId
           },
 
-          // 테스트용 완료 페이지 (원하면 나중에 네 도메인으로 변경)
           redirectUrl: "https://example.com/charge-complete.html"
         });
 
