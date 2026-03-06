@@ -2,20 +2,20 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <title>포인트 충전 테스트</title>
+  <title>포인트 충전</title>
 </head>
 <body>
   디스코드 ID:
   <input id="discordId" placeholder="예: 713675224356487220"><br><br>
 
-  <button onclick="pay()">결제 테스트</button>
+  <button onclick="pay()">결제하기</button>
 
   <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
   <script>
     async function pay() {
       const discordId = document.getElementById("discordId").value;
       if (!discordId) {
-        alert("713675224356487220");
+        alert("디스코드 ID를 입력해 주세요.");
         return;
       }
 
@@ -23,18 +23,19 @@
         const response = await PortOne.requestPayment({
           storeId: "store-16f9ad0b-fe2e-4c30-89d9-65943e891642",
           channelKey: "channel-key-72dd528f-1c37-407b-b5a7-40faa63f46ce",  // KG 채널키
-          paymentId: "order-" + Date.now(),
+          paymentId: "order-" + Date.now(),   // 유니크 결제 ID
           orderName: "포인트 충전",
           totalAmount: 1000,
           currency: "KRW",
-          payMethod: "CARD",   // 카드 결제
+          payMethod: "CARD",                  // 카드결제
           customData: {
-            discord_id: discordId
+            discord_id: discordId             // 디코 ID 같이 전달
           }
         });
-        console.log(response);
+
+        console.log("결제 응답:", response);
       } catch (e) {
-        console.error(e);
+        console.error("결제 에러:", e);
         alert("에러: " + e);
       }
     }
