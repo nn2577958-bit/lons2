@@ -179,15 +179,15 @@ body {
 }
 .notice-box b { color:#f97373; }
 
-/* 약관 카드 레이아웃 */
+/* 약관 카드 레이아웃 – 3열 */
 .tos {
   margin-top:12px;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  grid-template-columns:repeat(3, minmax(0,1fr));
   gap:10px;
 }
 
-/* 각 조항 카드 */
+/* 각 카드 */
 .tos-card {
   border-radius:9px;
   border:1px solid rgba(30,41,59,.9);
@@ -273,16 +273,17 @@ body {
   box-shadow:0 0 22px rgba(79,70,229,.55);
 }
 
-/* 링크 막기용 스타일 */
+/* 링크 스타일 */
 a {
   color:#38bdf8;
   text-decoration:underline;
   cursor:pointer;
 }
 
-/* 모바일 */
-@media (max-width:640px){
+/* 반응형 – 모바일에서는 1열 */
+@media (max-width:768px){
   .header-inner { flex-direction:column; align-items:flex-start; }
+  .tos { grid-template-columns:repeat(1, minmax(0,1fr)); }
 }
 </style>
 </head>
@@ -296,7 +297,7 @@ a {
       </div>
       <div class="brand-text">
         <div class="brand-name">RANI DIGITAL</div>
-        <div class="brand-sub">tos-preview.js · 안내용 약관 페이지</div>
+        <div class="brand-sub">안내용 약관 페이지</div>
       </div>
     </div>
     <div class="header-pill">
@@ -312,7 +313,8 @@ a {
       <div class="dot red"></div>
       <div class="dot yellow"></div>
       <div class="dot green"></div>
-      <span>src/terms/tos_preview.ts</span>
+      <!-- 여기만 한글로 변경 -->
+      <span>라니 디지털 · 이용 약관</span>
     </div>
     <div class="type-line">typing &gt; 라니 디지털 약관(안) 로드 중...</div>
 
@@ -320,7 +322,7 @@ a {
       <div class="page-kicker">// TERMS (BETA)</div>
       <h1 class="page-title">서비스 이용 약관 (요약 안내)</h1>
       <p class="page-sub">
-        정식 서비스 오픈 전, 라니 디지털 서비스 이용 흐름과 기본적인 권리·의무를 미리 확인할 수 있도록 구성된 안내용 약관입니다.
+        라니 디지털 서비스 이용 흐름과 기본적인 권리·의무를 미리 확인할 수 있도록 구성된 안내용 약관입니다.
       </p>
       <p class="meta-row">
         // latest: 2026-02-28 · 이 문서는 내부 안내 및 사용자 미리보기용 초안입니다.
@@ -331,19 +333,28 @@ a {
         정식 오픈 시, 별도의 정식 이용 약관 및 개인정보 처리방침이 고지될 예정입니다.
       </div>
 
-      <!-- 조항 카드 그리드 -->
+      <!-- 카드 3칸×여러 줄 -->
       <section class="tos">
         <!-- 1조 -->
         <article class="tos-card">
           <div class="tos-card-header">
             <span class="tos-badge">제 1 조</span>
-            <h2 class="tos-title">서비스 개요</h2>
+            <h2 class="tos-title">서비스 개요 (1)</h2>
           </div>
           <div class="tos-body">
             <p>
               라니 디지털(이하 ‘회사’)은 디스코드 기반의 커뮤니티 운영, 디지털 콘텐츠 제작 및 제공,
               라니 MALL을 통한 디지털 용역(디스코드 봇, 서버 세팅, 디자인 등)을 주요 목적으로 하는 온라인 서비스를 제공합니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 1 조</span>
+            <h2 class="tos-title">서비스 개요 (2)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               본 약관(안)은 회원이 회사가 제공하는 서비스를 이용함에 있어 필요한 기본적인 권리, 의무 및 책임 사항을
               미리 안내하기 위한 문서입니다.
@@ -355,17 +366,35 @@ a {
         <article class="tos-card">
           <div class="tos-card-header">
             <span class="tos-badge">제 2 조</span>
-            <h2 class="tos-title">회원 가입 및 계정</h2>
+            <h2 class="tos-title">회원 가입 및 계정 (1)</h2>
           </div>
           <div class="tos-body">
             <p>
               현재 페이지는 <b>안내용 페이지</b>로, 실제 회원 가입 및 로그인 기능은 제공되지 않습니다.
               정식 서비스 오픈 이후, 회사가 별도로 안내하는 절차에 따라 계정 생성 및 이용이 가능해집니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 2 조</span>
+            <h2 class="tos-title">회원 가입 및 계정 (2)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               실제 서비스 이용 시에는, 회원은 본인의 이메일 및 디스코드 계정을 기반으로 식별되며,
               계정 보안을 위해 비밀번호 관리, 2차 인증(도입 시) 등에 주의해야 합니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 2 조</span>
+            <h2 class="tos-title">회원 가입 및 계정 (3)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               타인의 정보를 도용하여 가입하거나, 허위 정보로 가입하는 행위는 제한될 수 있으며,
               이로 인해 발생하는 문제에 대해 회사는 책임을 지지 않습니다.
@@ -377,17 +406,35 @@ a {
         <article class="tos-card">
           <div class="tos-card-header">
             <span class="tos-badge">제 3 조</span>
-            <h2 class="tos-title">서비스 이용 범위 및 변경</h2>
+            <h2 class="tos-title">서비스 이용 범위 및 변경 (1)</h2>
           </div>
           <div class="tos-body">
             <p>
               회사는 디스코드 봇, 서버 세팅, 디지털 디자인, 포인트 기반 게임(말경주·블랙잭·바카라) 등
               다양한 기능을 제공할 수 있으며, 서비스 내용은 운영 상황에 따라 추가·변경·중단될 수 있습니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 3 조</span>
+            <h2 class="tos-title">서비스 이용 범위 및 변경 (2)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               서비스 안정성 확보, 보안, 불법 이용 방지 등을 위하여, 회사는 필요 시 일부 기능을 제한하거나
               점검을 위한 일시 중단을 진행할 수 있습니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 3 조</span>
+            <h2 class="tos-title">서비스 이용 범위 및 변경 (3)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               주요 변경 사항이 있는 경우, 디스코드 공지·홈페이지 공지 등을 통해 사전에 또는 사후에 안내합니다.
             </p>
@@ -398,18 +445,36 @@ a {
         <article class="tos-card">
           <div class="tos-card-header">
             <span class="tos-badge">제 4 조</span>
-            <h2 class="tos-title">이용 제한 및 책임</h2>
+            <h2 class="tos-title">이용 제한 및 책임 (1)</h2>
           </div>
           <div class="tos-body">
             <p>
               회사는 이용자가 관련 법령, 공서양속 또는 회사의 정책·약관(정식 버전)을 위반하는 경우,
               서비스 이용 제한, 계정 정지, 포인트 회수 등 필요한 조치를 취할 수 있습니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 4 조</span>
+            <h2 class="tos-title">이용 제한 및 책임 (2)</h2>
+          </div>
+          <div class="tos-body">
             <ul>
               <li>타인의 계정 또는 결제 정보를 무단으로 사용하는 경우</li>
               <li>불법적인 도박·환전·사설 매매와 연계하여 서비스를 이용하는 경우</li>
               <li>서비스 또는 시스템을 악의적으로 공격·변조·자동화(매크로)로 남용하는 경우</li>
             </ul>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 4 조</span>
+            <h2 class="tos-title">이용 제한 및 책임 (3)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               이용자의 귀책 사유로 인해 발생한 손해에 대해서는 회사가 책임을 지지 않으며,
               제3자에게 손해가 발생한 경우 해당 이용자가 모든 법적 책임을 부담합니다.
@@ -421,7 +486,7 @@ a {
         <article class="tos-card">
           <div class="tos-card-header">
             <span class="tos-badge">제 5 조</span>
-            <h2 class="tos-title">포인트 및 결제와의 관계</h2>
+            <h2 class="tos-title">포인트 및 결제와의 관계 (1)</h2>
           </div>
           <div class="tos-body">
             <p>
@@ -429,6 +494,15 @@ a {
               별도 페이지인 「포인트 · 결제 · 게임 정책」 문서에서 규정하며,
               이 약관(안)은 해당 정책과 함께 해석됩니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 5 조</span>
+            <h2 class="tos-title">포인트 및 결제와의 관계 (2)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               포인트는 서비스 내부에서만 사용 가능한 전용 점수이며,
               어떤 경우에도 현금·가상자산으로의 직접 환전·출금을 지원하지 않습니다.
@@ -440,26 +514,62 @@ a {
         <article class="tos-card">
           <div class="tos-card-header">
             <span class="tos-badge">제 6 조</span>
-            <h2 class="tos-title">외주 작업 및 봇·게임 기능</h2>
+            <h2 class="tos-title">외주 작업 및 봇·게임 기능 (1)</h2>
           </div>
           <div class="tos-body">
             <p>
               회사가 외주, 커미션, 판매, 배포 등의 방식으로 제공하는 디스코드 봇, 게임 패널, 스크립트, 웹 패널 등은
               커뮤니티 운영, 엔터테인먼트, 자동화 편의 기능 제공을 목적으로 합니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 6 조</span>
+            <h2 class="tos-title">외주 작업 및 봇·게임 기능 (2)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               이용자 및 의뢰인은 이러한 기능을 이용하여 불법 온라인 도박, 사설 카지노·바카라 서버, 불법 환전·중개,
               자금세탁 등 관련 법령을 위반하는 용도로 사용할 수 없습니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 6 조</span>
+            <h2 class="tos-title">외주 작업 및 봇·게임 기능 (3)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               포인트·게임 기능은 내부 포인트 기반 엔터테인먼트용으로만 제공되며,
               회사의 사전 동의 없이 현금·가상자산과의 직접 또는 간접적인 배팅·환전·정산 시스템과 연동하는
               행위는 금지됩니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 6 조</span>
+            <h2 class="tos-title">외주 작업 및 봇·게임 기능 (4)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               회사는 명백한 도박·환전 용도를 전제로 한 요청(예: “도박 서버를 만들고 싶다”는 취지)에 대하여
               작업을 거절할 수 있으며, 이와 관련하여 어떠한 책임도 부담하지 않습니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 6 조</span>
+            <h2 class="tos-title">외주 작업 및 봇·게임 기능 (5)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               기능이 이용자 또는 제3자에 의해 불법 도박·환전·범죄 행위에 악용되는 정황이 확인될 경우,
               회사는 해당 기능에 대한 업데이트·기술 지원 중단, 라이선스 회수, 계정 차단 등의 조치를 취할 수 있습니다.
@@ -471,7 +581,7 @@ a {
         <article class="tos-card">
           <div class="tos-card-header">
             <span class="tos-badge">제 7 조</span>
-            <h2 class="tos-title">개인정보 및 보안</h2>
+            <h2 class="tos-title">개인정보 및 보안 (1)</h2>
           </div>
           <div class="tos-body">
             <p>
@@ -479,6 +589,15 @@ a {
               정식 서비스 오픈 시 별도의 「개인정보 처리방침」을 통해
               수집 항목, 보관 기간, 이용 목적 등을 투명하게 고지할 예정입니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 7 조</span>
+            <h2 class="tos-title">개인정보 및 보안 (2)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               회원은 본인의 계정 및 비밀번호 관리에 책임을 가지며,
               계정 공유·양도 등으로 발생하는 문제에 대해 회사는 책임을 지지 않습니다.
@@ -490,13 +609,22 @@ a {
         <article class="tos-card">
           <div class="tos-card-header">
             <span class="tos-badge">제 8 조</span>
-            <h2 class="tos-title">약관(안) 변경 및 고지</h2>
+            <h2 class="tos-title">약관(안) 변경 및 고지 (1)</h2>
           </div>
           <div class="tos-body">
             <p>
               이 문서는 정식 약관이 아닌 <b>안내용/초안</b> 성격의 문서이며,
               실제 서비스 출시 및 법령 변화, 서비스 구조 변경 등에 따라 내용이 수정·보완될 수 있습니다.
             </p>
+          </div>
+        </article>
+
+        <article class="tos-card">
+          <div class="tos-card-header">
+            <span class="tos-badge">제 8 조</span>
+            <h2 class="tos-title">약관(안) 변경 및 고지 (2)</h2>
+          </div>
+          <div class="tos-body">
             <p>
               정식 서비스 오픈 시에는, 최종 확정된 이용 약관과 함께
               디스코드 공지 및 홈페이지를 통해 공지할 예정입니다.
