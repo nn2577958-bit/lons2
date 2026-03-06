@@ -3,15 +3,23 @@
 <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 <script>
   async function pay() {
-    await PortOne.requestPayment({
-      storeId: "store-16f9ad0b-fe2e-4c30-89d9-65943e891642",
-      channelKey: "포트원에서 받은 채널키",  // 나중에 정확히 넣자
-      paymentId: "test-" + Date.now(),       // 테스트용 아이디
-      orderName: "포인트 충전 테스트",
-      amount: {
-        currency: "KRW",
-        value: 1000
-      }
-    });
+    try {
+      alert("버튼 눌림");  // 1단계: 이거 먼저 확인
+
+      const response = await PortOne.requestPayment({
+        storeId: "store-16f9ad0b-fe2e-4c30-89d9-65943e891642",
+        channelKey: "test",  // 일단 더미값
+        paymentId: "test-" + Date.now(),
+        orderName: "포인트 충전 테스트",
+        amount: {
+          currency: "KRW",
+          value: 1000
+        }
+      });
+
+      alert("response: " + JSON.stringify(response));
+    } catch (e) {
+      alert("에러: " + e);
+    }
   }
 </script>
