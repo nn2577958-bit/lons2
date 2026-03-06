@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>디스코드 봇·서버세팅·로고디자인┃라니MALL</title>
+<title>라니MALL 로그인 · 디스코드 봇·서버세팅·로고디자인</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="description"
       content="디스코드 봇 제작, 서버 세팅, 로고 디자인까지 한 번에 맡길 수 있는 라니MALL입니다. 커스텀 봇과 서버 브랜딩으로 커뮤니티 퀄리티를 올려보세요.">
@@ -12,54 +12,62 @@
       href="https://cdn.discordapp.com/attachments/1083101135096795201/1479323459073867941/apple-touch-icon.png?ex=69ab9ed5&is=69aa4d55&hm=27698736fb541c68520d785517aa103392008f1ffbad142d5ba24a0807ab7973">
 
 <style>
-* { box-sizing:border-box; margin:0; padding:0; }
+* { box-sizing:border-box; margin:0; padding:0 }
 
-/* ==== 전체 네온 그라데이션 배경 ==== */
+/* ==== 전체 배경 (강도 살짝 다운) ==== */
 body {
-  height:100vh;
-  font-family:'Segoe UI',sans-serif;
+  min-height:100vh;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Noto Color Emoji",
+    sans-serif;
   background:
-    radial-gradient(circle at 0% 0%, #020617 0%, #020617 40%, #020617 100%),
-    linear-gradient(-45deg, #020617, #0b1220, #111827, #020617);
-  background-size:200% 200%;
+    radial-gradient(circle at top left, rgba(59,130,246,0.16), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(236,72,153,0.13), transparent 55%),
+    #020617;
+  background-size:180% 180%;
   animation:bgWave 32s ease-in-out infinite;
-  color:#fff;
+  color:#e5e7eb;
   display:flex;
   justify-content:center;
   align-items:center;
-  overflow:hidden;
+  padding:20px;
   position:relative;
+  overflow:hidden;
 }
 
-/* 부드럽게 움직이는 네온 안개 */
+/* 안개/링은 기존보다 투명도만 살짝 줄임 */
 body::before {
   content:'';
   position:fixed;
   inset:-30%;
   background:
-    radial-gradient(circle at 0% 20%, rgba(59,130,246,0.35), transparent 55%),
-    radial-gradient(circle at 80% 0%, rgba(45,212,191,0.3), transparent 55%),
-    radial-gradient(circle at 20% 100%, rgba(96,165,250,0.25), transparent 55%);
+    radial-gradient(circle at 0% 20%, rgba(59,130,246,0.28), transparent 55%),
+    radial-gradient(circle at 80% 0%, rgba(45,212,191,0.24), transparent 55%),
+    radial-gradient(circle at 20% 100%, rgba(96,165,250,0.18), transparent 55%);
   filter:blur(14px);
   animation:calmNebula 26s ease-in-out infinite;
   z-index:-2;
 }
-
-/* 도는 링 */
 .bg-orbit {
   position:fixed;
-  width:900px;
-  height:900px;
+  width:820px;
+  height:820px;
   border-radius:50%;
   background:conic-gradient(
     from 0deg,
-    rgba(59,130,246,0.00),
-    rgba(59,130,246,0.32),
-    rgba(45,212,191,0.28),
-    rgba(37,99,235,0.32),
-    rgba(59,130,246,0.00)
+    rgba(59,130,246,0.0),
+    rgba(59,130,246,0.25),
+    rgba(45,212,191,0.2),
+    rgba(37,99,235,0.24),
+    rgba(59,130,246,0.0)
   );
-  opacity:0.65;
+  opacity:0.5;
   mix-blend-mode:screen;
   animation:slowOrbit 48s linear infinite;
   z-index:-1;
@@ -67,36 +75,33 @@ body::before {
 .bg-orbit::before {
   content:'';
   position:absolute;
-  inset:140px;
+  inset:130px;
   border-radius:50%;
   background:radial-gradient(circle, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
 }
 
-/* 배경 전체가 물결처럼 */
 @keyframes bgWave {
   0%   { background-position:0% 50%; }
   50%  { background-position:100% 50%; }
   100% { background-position:0% 50%; }
 }
-
-/* 안개 이동 */
 @keyframes calmNebula {
   0%,100% { transform:scale(1) translate(0,0); }
-  50%     { transform:scale(1.06) translate(-20px, 18px); }
+  50%     { transform:scale(1.06) translate(-18px, 14px); }
 }
-
-/* 링 회전 */
 @keyframes slowOrbit {
   to { transform:rotate(360deg); }
 }
 
-/* ==== 2열 카드 ==== */
+/* ==== 카드 ==== */
 .card {
-  position:relative; z-index:1;
-  width:100%; max-width:880px;
-  height:70vh; max-height:520px;
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:880px;
+  max-height:560px;
   background:rgba(15,23,42,0.96);
-  backdrop-filter:blur(24px);
+  backdrop-filter:blur(22px);
   border-radius:24px;
   border:1px solid rgba(148,163,184,0.55);
   box-shadow:
@@ -106,22 +111,21 @@ body::before {
   overflow:hidden;
 }
 
-/* 왼쪽 소개 영역 */
+/* 왼쪽 소개 */
 .card-left {
   flex:1.1;
   position:relative;
-  padding:34px 34px 34px 32px;
+  padding:32px 32px 30px;
   background:
-    radial-gradient(circle at top left, rgba(59,130,246,0.35), transparent 60%),
-    radial-gradient(circle at bottom right, rgba(45,212,191,0.28), transparent 55%),
-    linear-gradient(135deg, #020617, #020617);
-  overflow:hidden;
+    radial-gradient(circle at top left, rgba(59,130,246,0.3), transparent 60%),
+    radial-gradient(circle at bottom right, rgba(45,212,191,0.26), transparent 55%),
+    #020617;
 }
 .card-left::before {
   content:'';
   position:absolute;
   inset:-30%;
-  background:radial-gradient(circle at 0% 0%, rgba(248,250,252,0.14), transparent 65%);
+  background:radial-gradient(circle at 0% 0%, rgba(248,250,252,0.13), transparent 65%);
   opacity:0.7;
 }
 .left-inner {
@@ -131,33 +135,29 @@ body::before {
   flex-direction:column;
   justify-content:space-between;
 }
-
-/* 왼쪽 문구 */
 .left-brand {
-  font-size:20px;
+  font-size:18px;
   font-weight:700;
-  letter-spacing:1px;
-  margin-bottom:4px;
-  background:linear-gradient(135deg,#e5e7eb,#ffffff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+  color:#e5e7eb;
 }
 .left-title {
-  font-size:30px;
+  font-size:28px;
   font-weight:800;
   line-height:1.25;
-  margin:10px 0 10px;
+  margin:8px 0 10px;
   background:linear-gradient(130deg,#38bdf8,#22c55e,#a855f7,#f97316,#38bdf8);
   background-size:220% 220%;
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   animation:leftTitleGlow 7s ease-in-out infinite;
-  text-shadow:0 0 18px rgba(56,189,248,0.35);
 }
 .left-desc {
   font-size:13px;
-  color:rgba(226,232,240,0.9);
-  max-width:260px;
+  color:rgba(226,232,240,0.92);
+  max-width:270px;
 }
 .left-tag {
   align-self:flex-start;
@@ -169,16 +169,16 @@ body::before {
 }
 
 @keyframes leftTitleGlow {
-  0%   { background-position:0% 50%;   text-shadow:0 0 12px rgba(56,189,248,0.3); }
-  50%  { background-position:100% 50%; text-shadow:0 0 20px rgba(45,212,191,0.55); }
-  100% { background-position:0% 50%;   text-shadow:0 0 12px rgba(56,189,248,0.3); }
+  0%   { background-position:0% 50%;   text-shadow:0 0 10px rgba(56,189,248,0.3); }
+  50%  { background-position:100% 50%; text-shadow:0 0 18px rgba(45,212,191,0.5); }
+  100% { background-position:0% 50%;   text-shadow:0 0 10px rgba(56,189,248,0.3); }
 }
 
-/* 오른쪽 로그인 영역 */
+/* 오른쪽 로그인 */
 .card-right {
   flex:1;
   background:rgba(15,23,42,0.98);
-  padding:40px 40px 36px;
+  padding:34px 38px 32px;
   position:relative;
   display:flex;
   align-items:center;
@@ -187,48 +187,51 @@ body::before {
   content:'';
   position:absolute;
   inset:0;
-  background:radial-gradient(circle at top right, rgba(59,130,246,0.24), transparent 55%);
+  background:radial-gradient(circle at top right, rgba(59,130,246,0.22), transparent 55%);
   opacity:0.9;
 }
 .right-inner {
-  position:relative; z-index:2;
+  position:relative;
+  z-index:2;
   width:100%;
 }
 
-/* 상단 제목/부제 */
-.logo {
-  font-size:24px;
-  font-weight:800;
+/* 상단 로고 영역 */
+.logo-line {
+  font-size:13px;
+  color:#9ca3af;
+  margin-bottom:4px;
+}
+.logo-main {
+  font-size:20px;
+  font-weight:700;
   margin-bottom:6px;
 }
 .subtitle {
-  font-size:14px;
+  font-size:12px;
   margin-bottom:6px;
-  background:linear-gradient(135deg,#e5e7eb,#ffffff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  color:#cbd5f5;
 }
 
 /* 네온 안내 문구 */
 .hint {
-  font-size:13px;
+  font-size:12px;
   font-weight:600;
-  margin-bottom:20px;
+  margin-bottom:18px;
   background:linear-gradient(130deg,#38bdf8,#22c55e,#a855f7,#f97316,#38bdf8);
   background-size:250% 250%;
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   animation:hintGlow 6s ease-in-out infinite;
-  text-shadow:0 0 14px rgba(56,189,248,0.55);
 }
 @keyframes hintGlow {
-  0%   { background-position:0% 50%;   text-shadow:0 0 10px rgba(56,189,248,0.45); }
-  50%  { background-position:100% 50%; text-shadow:0 0 20px rgba(45,212,191,0.65); }
-  100% { background-position:0% 50%;   text-shadow:0 0 10px rgba(56,189,248,0.45); }
+  0%   { background-position:0% 50%;   text-shadow:0 0 8px rgba(56,189,248,0.45); }
+  50%  { background-position:100% 50%; text-shadow:0 0 16px rgba(45,212,191,0.6); }
+  100% { background-position:0% 50%;   text-shadow:0 0 8px rgba(56,189,248,0.45); }
 }
 
 /* 입력 폼 */
-.form-group { margin-bottom:14px; }
+.form-group { margin-bottom:12px; }
 label {
   display:block;
   font-size:12px;
@@ -237,14 +240,14 @@ label {
 }
 input {
   width:100%;
-  padding:10px 11px;
+  padding:9px 11px;
   border-radius:10px;
   border:1px solid rgba(55,65,81,0.9);
   background:rgba(15,23,42,0.95);
   color:#e5e7eb;
   font-size:13px;
   outline:none;
-  transition:border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  transition:border-color .2s, box-shadow .2s, background .2s;
 }
 input::placeholder { color:rgba(148,163,184,0.8); }
 input:focus {
@@ -257,7 +260,7 @@ input:focus {
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:16px;
+  margin-bottom:14px;
 }
 .form-extra a {
   font-size:11px;
@@ -266,25 +269,23 @@ input:focus {
 }
 .form-extra a:hover { text-decoration:underline; }
 
-/* 기본 로그인 버튼 */
+/* 기본 로그인 버튼 (보조 액션 느낌) */
 .primary-btn {
   width:100%;
-  padding:11px 20px;
+  padding:9px 18px;
   border:none;
-  border-radius:12px;
-  font-weight:700;
-  font-size:14px;
+  border-radius:10px;
+  font-weight:600;
+  font-size:13px;
   cursor:pointer;
-  background:linear-gradient(135deg,#4f46e5,#6366f1);
-  color:#f9fafb;
-  box-shadow:0 10px 24px rgba(79,70,229,0.8);
-  transition:all 0.22s;
+  background:#020617;
+  color:#e5e7eb;
+  border:1px solid rgba(75,85,99,0.9);
+  transition:all .2s;
 }
 .primary-btn:hover {
-  transform:translateY(-2px);
-  box-shadow:0 14px 34px rgba(79,70,229,0.9);
+  background:#111827;
 }
-.primary-btn:active { transform:translateY(0); }
 
 /* 구분선 + Google 버튼 */
 .divider {
@@ -305,13 +306,13 @@ input:focus {
 
 .google-btn {
   width:100%;
-  padding:12px 20px;
+  padding:11px 20px;
   border:none;
   border-radius:12px;
   font-weight:700;
   font-size:14px;
   cursor:pointer;
-  transition:all 0.25s;
+  transition:all .25s;
   background:linear-gradient(135deg,#3b82f6,#22c55e);
   color:#fff;
   box-shadow:0 10px 26px rgba(37,99,235,0.8);
@@ -324,11 +325,11 @@ input:focus {
 .google-btn::before {
   content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,0.33),transparent);
-  transition:left 0.55s;
+  transition:left .55s;
 }
 .google-btn:hover {
-  transform:translateY(-2px);
-  box-shadow:0 14px 34px rgba(37,99,235,0.95);
+  transform:translateY(-1px);
+  box-shadow:0 14px 32px rgba(37,99,235,0.95);
 }
 .google-btn:hover::before { left:100%; }
 .google-btn:active { transform:translateY(0); }
@@ -359,11 +360,13 @@ input:focus {
   min-height:16px;
 }
 
-/* 모바일: 1열로 전환 */
+/* 모바일 */
 @media (max-width:768px) {
+  body {
+    padding:16px;
+  }
   .card {
     max-width:420px;
-    height:auto;
     max-height:none;
     flex-direction:column;
   }
@@ -371,16 +374,14 @@ input:focus {
     display:none;
   }
   .card-right {
-    padding:32px 26px 28px;
+    padding:26px 22px 22px;
   }
 }
 </style>
 </head>
 <body>
-  <!-- 네온 링 배경 요소 -->
   <div class="bg-orbit"></div>
 
-  <!-- 2열 로그인 카드 -->
   <div class="card">
     <!-- 왼쪽 소개 -->
     <div class="card-left">
@@ -400,12 +401,14 @@ input:focus {
     <!-- 오른쪽 로그인 -->
     <div class="card-right">
       <div class="right-inner">
-        <div class="subtitle">로그인</div>
-        <div class="hint">디스코드 봇 · 서버 세팅 · 로고 디자인을 한 번에 만나보세요.</div>
+        <div class="logo-line">라니MALL 로그인</div>
+        <div class="logo-main">라니MALL 계정으로 계속</div>
+        <div class="subtitle">커스텀 봇과 서버 브랜딩을 한 번에 관리하세요.</div>
+        <div class="hint">지금은 Google 로그인으로만 접속할 수 있습니다.</div>
 
         <form id="email-login-form">
           <div class="form-group">
-            <label for="email">이메일</label>
+            <label for="email">이메일 (준비 중)</label>
             <input id="email" type="email" placeholder="example@domain.com" autocomplete="email">
           </div>
           <div class="form-group">
@@ -414,11 +417,11 @@ input:focus {
           </div>
 
           <div class="form-extra">
-            <span></span>
+            <span style="font-size:11px;color:#6b7280;">이메일 로그인은 추후 지원 예정입니다.</span>
             <a href="#">비밀번호를 잊으셨나요?</a>
           </div>
 
-          <button type="submit" class="primary-btn">이메일로 로그인</button>
+          <button type="submit" class="primary-btn">이메일 로그인 (준비 중)</button>
         </form>
 
         <div class="divider">
@@ -437,7 +440,7 @@ input:focus {
     </div>
   </div>
 
-  <!-- 배경 음악 토글 버튼 + 오디오 -->
+  <!-- 음악 토글은 그대로 유지 -->
   <button id="music-toggle" style="
     position:fixed;
     bottom:20px;
@@ -472,7 +475,7 @@ onAuthStateChanged(auth, user => {
   if (user) window.location.href = "home.html";
 });
 
-// 이메일/비밀번호 로그인은 아직 미구현이라 알림만
+// 이메일/비밀번호 로그인은 아직 미구현
 const emailForm = document.getElementById("email-login-form");
 const errorBox = document.getElementById("error-box");
 emailForm.addEventListener("submit", e => {
@@ -500,7 +503,7 @@ loginBtn.addEventListener("click", async () => {
   }
 });
 
-// ===== 배경 음악 토글 =====
+// 배경 음악 토글
 const bgMusic = document.getElementById("bg-music");
 const musicToggle = document.getElementById("music-toggle");
 
