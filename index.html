@@ -193,6 +193,12 @@ body {
 .google-btn-top:hover {
   background:#111827;
 }
+.google-icon-top {
+  width:18px;
+  height:18px;
+  border-radius:4px;
+  flex-shrink:0;
+}
 
 /* 오른쪽 예시 */
 .hero-examples {
@@ -290,80 +296,6 @@ body {
   color:#9ca3af;
 }
 
-/* 로그인 박스 (Google만) */
-.login-box {
-  margin-top:24px;
-  padding:16px 18px 18px;
-  border-radius:18px;
-  background:rgba(15,23,42,0.97);
-  border:1px solid rgba(55,65,81,0.95);
-  box-shadow:0 18px 50px rgba(15,23,42,0.95);
-}
-.login-title {
-  font-size:15px;
-  font-weight:600;
-  margin-bottom:4px;
-}
-.login-sub {
-  font-size:12px;
-  color:#9ca3af;
-  margin-bottom:12px;
-}
-
-/* Google 버튼 (하단 박스) */
-.divider {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin:4px 0 12px;
-}
-.divider-line {
-  flex:1;
-  height:1px;
-  background:rgba(55,65,81,0.9);
-}
-.divider-text {
-  font-size:11px;
-  color:rgba(148,163,184,0.9);
-}
-
-.google-btn {
-  width:100%;
-  padding:11px 20px;
-  border:none;
-  border-radius:12px;
-  font-weight:700;
-  font-size:14px;
-  cursor:pointer;
-  transition:all .25s;
-  background:linear-gradient(135deg,#3b82f6,#22c55e);
-  color:#fff;
-  box-shadow:0 10px 26px rgba(37,99,235,0.8);
-  position:relative;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.google-btn::before {
-  content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.33),transparent);
-  transition:left .55s;
-}
-.google-btn:hover {
-  transform:translateY(-1px);
-  box-shadow:0 14px 32px rgba(37,99,235,0.95);
-}
-.google-btn:hover::before { left:100%; }
-.google-btn:active { transform:translateY(0); }
-
-.google-icon, .google-icon-top {
-  width:18px;
-  height:18px;
-  border-radius:4px;
-  flex-shrink:0;
-}
-
 /* 로딩 인디케이터 */
 .loading {
   display:inline-block;
@@ -432,7 +364,7 @@ body {
       <div class="hero-kicker">디스코드 커뮤니티·게임 서버 운영자를 위한</div>
       <h1 class="hero-title">
         <span>봇 제작 · 서버 세팅 · 로고 디자인</span>을<br>
-        디엠 한 번으로 끝냅니다.
+        한 번에 맡기고 관리하세요.
       </h1>
       <p class="hero-sub">
         RLNL 포인트 게임, 공지/출석 올인원 봇, 커스텀 서버 구조까지.<br>
@@ -456,7 +388,7 @@ body {
         <a href="https://discord.gg/yEym2KZ9BU" target="_blank" rel="noopener noreferrer" class="btn-main">
           <span>💬 디스코드로 견적 문의</span>
         </a>
-        <!-- 상단 Google 계속하기 버튼 -->
+        <!-- 상단 Google 계속하기 버튼 (유일한 로그인 버튼) -->
         <button id="google-login-btn-top" class="google-btn-top" type="button">
           <img class="google-icon-top"
                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -464,6 +396,8 @@ body {
           <span id="btn-text-top">Google로 계속</span>
         </button>
       </div>
+
+      <div id="error-box" class="error"></div>
     </div>
 
     <div class="hero-examples">
@@ -551,31 +485,6 @@ body {
     </div>
   </section>
 
-  <!-- 로그인 박스 (Google만) -->
-  <section class="login-box">
-    <div class="login-title">라니MALL 계정으로 계속</div>
-    <p class="login-sub">
-      주문 내역, 포인트, 진행 중인 작업을 확인하려면 Google 계정으로 로그인해 주세요.
-    </p>
-
-    <div class="divider">
-      <div class="divider-line"></div>
-      <div class="divider-text">Google 계정으로 로그인</div>
-      <div class="divider-line"></div>
-    </div>
-
-    <button id="google-login-btn" class="google-btn" type="button">
-      <span id="btn-text">
-        <img class="google-icon"
-             src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-             alt="Google 아이콘">
-        <span>Google로 계속</span>
-      </span>
-    </button>
-
-    <div id="error-box" class="error"></div>
-  </section>
-
   <footer class="footer">
     <span>© 2026 라니MALL · RLNL Digital Service</span>
     <span>디스코드 문의: soyugwon (예시) · <a href="points.html">포인트/게임 정책</a> · <a href="tos.html">약관(안)</a></span>
@@ -597,23 +506,14 @@ onAuthStateChanged(auth, user => {
 });
 
 const provider = new GoogleAuthProvider();
-const loginBtn = document.getElementById("google-login-btn");
 const loginBtnTop = document.getElementById("google-login-btn-top");
 const errorBox = document.getElementById("error-box");
-const btnText = document.getElementById("btn-text");
 const btnTextTop = document.getElementById("btn-text-top");
 
-async function handleGoogleLogin(fromTop = false) {
-  const targetBtn = fromTop ? loginBtnTop : loginBtn;
-  const targetText = fromTop ? btnTextTop : btnText;
-
-  targetBtn.disabled = true;
+async function handleGoogleLogin() {
+  loginBtnTop.disabled = true;
   errorBox.textContent = "";
-  if (fromTop) {
-    targetText.innerHTML = '<span class="loading"></span>로그인 중...';
-  } else {
-    targetText.innerHTML = '<span class="loading"></span>로그인 중...';
-  }
+  btnTextTop.innerHTML = '<span class="loading"></span>로그인 중...';
 
   try {
     const result = await signInWithPopup(auth, provider);
@@ -621,17 +521,12 @@ async function handleGoogleLogin(fromTop = false) {
   } catch (err) {
     console.error("로그인 오류:", err);
     errorBox.textContent = "로그인 실패: " + (err.message || "다시 시도해 주세요.");
-    targetBtn.disabled = false;
-    if (fromTop) {
-      targetText.textContent = "Google로 계속";
-    } else {
-      targetText.innerHTML = '<span>Google로 계속</span>';
-    }
+    loginBtnTop.disabled = false;
+    btnTextTop.textContent = "Google로 계속";
   }
 }
 
-loginBtn.addEventListener("click", () => handleGoogleLogin(false));
-loginBtnTop.addEventListener("click", () => handleGoogleLogin(true));
+loginBtnTop.addEventListener("click", handleGoogleLogin);
 </script>
 </body>
 </html>
