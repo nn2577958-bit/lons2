@@ -15,13 +15,11 @@
     try {
       const response = await PortOne.requestPayment({
         storeId: "store-16f9ad0b-fe2e-4c30-89d9-65943e891642",
-        channelKey: "test",  // 임시
+        channelKey: "test",            // 임시
         paymentId: "test-" + Date.now(),
         orderName: "포인트 충전 테스트",
-        amount: {
-          currency: "KRW",
-          value: 1000
-        },
+        totalAmount: 1000,             // ★ 여기가 필수
+        currency: "KRW",
         customData: {
           discord_id: discordId
         }
@@ -29,6 +27,8 @@
       console.log(response);
     } catch (e) {
       console.error(e);
+      alert("에러: " + e);
     }
   }
 </script>
+
