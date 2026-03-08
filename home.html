@@ -485,6 +485,9 @@ body {
   </div>
 </div>
 
+<!-- 포트원(아임포트) JS SDK - KG 이니시스 결제용 -->
+<script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script> <!-- [web:606][web:610] -->
+
 <script type="module">
 import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -502,7 +505,7 @@ const discordBtn  = document.getElementById("discord-btn");
 
 // 상품 목록
 const products = [
-  { name: "🚀 디스코드 봇 일반",        price: "₩15,000 ~", desc: "기능 맞춤 제작 1개 (기본 봇 제작)", tag: "bot",     badge: "기본 봇 제작",   cost: 15000 },
+  { name: "🚀 디스코드 봇 일반",        price: "₩15,000 ~", desc: "기능 맞춤 제작 1개 (기본 봇 제작)",        tag: "bot",     badge: "기본 봇 제작",   cost: 15000 },
   { name: "🚀 디스코드 봇 고급",        price: "₩30,000 ~", desc: "게임/시스템 등 고급 기능 포함 맞춤 제작",        tag: "bot",     badge: "고급 기능",     cost: 30000 },
   { name: "☁️ 디스코드 템플릿",        price: "₩5,000 ~",  desc: "역할 · 채널 · 카테고리 기본 세팅 템플릿 제공",      tag: "bot",     badge: "템플릿",       cost: 5000 },
 
@@ -691,7 +694,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// 포인트 충전하기 버튼
+// ✅ KG 이니시스(포트원)로 포인트 충전하기 (1원 = 1포인트)
 chargeBtn?.addEventListener("click", async () => {
   const user = auth.currentUser;
   if (!user) {
@@ -707,37 +710,63 @@ chargeBtn?.addEventListener("click", async () => {
   const current  = data.points ?? 0;
 
   const input = prompt(
-    `현재 보유 포인트: ${current}점\n\n충전 요청할 포인트(숫자)를 입력해 주세요. (실제 반영은 운영진 확인 후 이루어집니다)`
+    `현재 보유 포인트: ${current}점\n\n충전할 금액(원) = 포인트를 입력해 주세요.\n(예: 10000 입력 → 10,000원 결제 후 10,000포인트 충전)`
   );
   if (!input) return;
 
-  const addPoints = Number(input);
-  if (!Number.isFinite(addPoints) || addPoints <= 0) {
+  const amount = Number(input);
+  if (!Number.isFinite(amount) || amount <= 0) {
     alert("올바른 숫자를 입력해 주세요.");
     return;
   }
 
-  const requestedTotal = current + addPoints;
+  const IMP = window.IMP;
+  if (!IMP) {
+    alert("결제 모듈이 로드되지 않았습니다. 잠시 후 다시 시도해 주세요.");
+    return;
+  }
 
-  const msg = `⚡ 라니 MALL 포인트 충전 요청
+  // TODO: 여기를 네 포트원 가맹점 식별코드로 변경
+  IMP.init("imp47048402");  // [web:606][web:610]
 
-👤 닉네임: ${nickname}
-📧 이메일: ${user.email}
+  const merchantUid = "rlnl_" + Date.now();
 
-현재 포인트: ${current}점
-충전 요청 포인트: ${addPoints}점
-충전 후 예상 포인트: ${requestedTotal}점
+  IMP.request_pay(
+    {
+      pg: "html5_inicis",              // KG 이니시스
+      pay_method: "card",
+      merchant_uid: merchantUid,
+      name: "라니MALL 포인트 충전",
+      amount: amount,                  // 결제 금액 (원)
+      buyer_email: user.email,
+      buyer_name: nickname,
+    },
+    async (rsp) => {
+      if (!rsp.success) {
+        alert("결제 실패: " + rsp.error_msg);
+        return;
+      }
 
-결제 방법 / 영수증 제출 안내 부탁드립니다.`;
+      try {
+        const latestSnap = await getDoc(userRef);
+        const latestData = latestSnap.data() || {};
+        const currentPoints = latestData.points ?? 0;
+        const newPoints = currentPoints + amount; // 1원 = 1포인트
 
-  navigator.clipboard.writeText(msg).then(() => {
-    alert("포인트 충전 요청 텍스트가 복사되었습니다. 디스코드에서 붙여넣기 해 주세요.");
-    window.open("https://discord.gg/yEym2KZ9BU", "_blank");
-  }).catch(() => {
-    alert("아래 내용을 디스코드로 보내주세요.");
-    prompt("디스코드로 보낼 내용을 복사해 주세요:", msg);
-    window.open("https://discord.gg/yEym2KZ9BU", "_blank");
-  });
+        await updateDoc(userRef, { points: newPoints });
+
+        welcomeEl.textContent =
+          `환영합니다, ${nickname}님! (포인트: ${newPoints}점) 👋`;
+
+        alert(
+          `결제가 완료되었습니다!\n\n충전 금액: ${amount}원\n충전된 포인트: ${amount}점\n현재 포인트: ${newPoints}점`
+        );
+      } catch (e) {
+        console.error("포인트 충전 처리 오류:", e);
+        alert("결제는 성공했지만 포인트 반영 중 오류가 발생했습니다.\n운영진에게 문의해 주세요.");
+      }
+    }
+  );
 });
 
 // 로그아웃
