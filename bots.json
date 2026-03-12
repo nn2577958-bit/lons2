@@ -23,7 +23,7 @@
   {
     "id": "coin",
     "name": "🪙 코인 봇",
-    "status": "maintenance",
+    "status": "online",
     "category": "utility",
     "desc": "코인 관련 유틸"
   },
@@ -37,14 +37,14 @@
   {
     "id": "v1",
     "name": "🧪 v1 배포용 봇",
-    "status": "testing",
+    "status": "online",
     "category": "utility",
     "desc": "테스트/배포용"
   },
   {
     "id": "music",
     "name": "🎵 뮤직 봇",
-    "status": "offline",
+    "status": "online",
     "category": "music",
     "desc": "음악 재생"
   },
@@ -65,7 +65,7 @@
   {
     "id": "record",
     "name": "📊 전적봇",
-    "status": "maintenance",
+    "status": "online",
     "category": "game",
     "desc": "게임 전적 조회"
   },
