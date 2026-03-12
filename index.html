@@ -679,8 +679,7 @@ body {
 import { auth } from "./firebase.js";
 import {
   GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged
+  signInWithPopup
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const provider = new GoogleAuthProvider();
@@ -723,8 +722,7 @@ entryNormal.addEventListener("click", () => {
   window.location.href = "login.html";
 });
 
-// onAuthStateChanged 에서 index 자동 튕김은 제거함
-// (로그인 돼 있어도 index + 모달 먼저 보이게 유지)
+// onAuthStateChanged 없음: index에서는 자동 리다이렉트 안 함
 </script>
 </body>
 </html>
