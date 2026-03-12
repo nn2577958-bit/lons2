@@ -1,90 +1,13 @@
 [
-  {
-    "id": "game",
-    "name": "RLNL 게임 봇",
-    "status": "online",
-    "category": "game",
-    "icon": "🎮",
-    "desc": "RLNL 전용 게임·이벤트 진행"
-  },
-  {
-    "id": "backup",
-    "name": "백업봇",
-    "status": "online",
-    "category": "utility",
-    "icon": "💾",
-    "desc": "채널·역할·설정 백업 및 복원"
-  },
-  {
-    "id": "detect",
-    "name": "감지봇",
-    "status": "online",
-    "category": "security",
-    "icon": "🛡️",
-    "desc": "로그 수집 및 이상 행위 감지"
-  },
-  {
-    "id": "coin",
-    "name": "코인 봇",
-    "status": "maintenance",
-    "category": "utility",
-    "icon": "🪙",
-    "desc": "코인 관련 유틸 및 계산 기능"
-  },
-  {
-    "id": "coinprice",
-    "name": "코인 시세 봇",
-    "status": "online",
-    "category": "utility",
-    "icon": "📈",
-    "desc": "실시간 코인 KRW 시세 조회"
-  },
-  {
-    "id": "v1",
-    "name": "v1 배포용 봇",
-    "status": "testing",
-    "category": "utility",
-    "icon": "🧪",
-    "desc": "테스트·배포용 통합 봇"
-  },
-  {
-    "id": "music",
-    "name": "뮤직 봇",
-    "status": "offline",
-    "category": "music",
-    "icon": "🎵",
-    "desc": "음악 재생 및 플레이리스트 관리"
-  },
-  {
-    "id": "shop",
-    "name": "상점봇",
-    "status": "online",
-    "category": "shop",
-    "icon": "🛒",
-    "desc": "상품·라이선스 판매 및 관리"
-  },
-  {
-    "id": "bank",
-    "name": "은행봇",
-    "status": "online",
-    "category": "bank",
-    "icon": "🏦",
-    "desc": "포인트·잔액·입출금 관리"
-  },
-  {
-    "id": "record",
-    "name": "전적봇",
-    "status": "maintenance",
-    "category": "game",
-    "icon": "📊",
-    "desc": "게임 전적 조회 및 기록"
-  },
-  {
-    "id": "report",
-    "name": "제보봇",
-    "status": "online",
-    "category": "security",
-    "icon": "🚨",
-    "desc": "사기 제보·관리자 승인·공개 알림"
-  }
+  { "id": "game",      "name": "RLNL 게임 봇",   "status": "online",      "category": "game",    "desc": "게임·이벤트 진행" },
+  { "id": "backup",    "name": "백업봇",         "status": "online",      "category": "utility", "desc": "채널/서버 백업" },
+  { "id": "detect",    "name": "감지봇",         "status": "online",      "category": "security","desc": "로그·이상 행위 감지" },
+  { "id": "coin",      "name": "코인 봇",       "status": "maintenance", "category": "utility", "desc": "코인 관련 유틸" },
+  { "id": "coinprice", "name": "코인 시세 봇",  "status": "online",      "category": "utility", "desc": "실시간 시세 조회" },
+  { "id": "v1",        "name": "v1 배포용 봇",  "status": "testing",     "category": "utility", "desc": "테스트/배포용" },
+  { "id": "music",     "name": "뮤직 봇",       "status": "offline",     "category": "music",   "desc": "음악 재생" },
+  { "id": "shop",      "name": "상점봇",        "status": "online",      "category": "shop",    "desc": "상품/라이선스 판매" },
+  { "id": "bank",      "name": "은행봇",        "status": "online",      "category": "bank",    "desc": "포인트·잔액 관리" },
+  { "id": "record",    "name": "전적봇",        "status": "maintenance", "category": "game",    "desc": "게임 전적 조회" },
+  { "id": "report",    "name": "제보봇",        "status": "online",      "category": "security","desc": "사기 제보/공개" }
 ]
