@@ -298,7 +298,7 @@ body {
   margin-bottom:6px;
 }
 .service-card ul { padding-left:16px; }
-service-card li { margin-bottom:3px; }
+.service-card li { margin-bottom:3px; }
 
 /* 프로세스 */
 .process-grid {
@@ -683,11 +683,6 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// 이미 로그인 되어 있으면 바로 home.html
-onAuthStateChanged(auth, user => {
-  if (user) window.location.href = "home.html";
-});
-
 const provider = new GoogleAuthProvider();
 const loginBtnTop = document.getElementById("google-login-btn-top");
 const errorBox = document.getElementById("error-box");
@@ -727,6 +722,9 @@ entryGoogle.addEventListener("click", () => {
 entryNormal.addEventListener("click", () => {
   window.location.href = "login.html";
 });
+
+// onAuthStateChanged 에서 index 자동 튕김은 제거함
+// (로그인 돼 있어도 index + 모달 먼저 보이게 유지)
 </script>
 </body>
 </html>
