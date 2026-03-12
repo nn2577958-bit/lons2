@@ -362,146 +362,181 @@ body {
 @media (max-width:640px){
   body { padding:16px; }
 }
-
-/* ==== 진입 모달 (한 다리) ==== */
-.entry-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:
-    radial-gradient(circle at 10% 20%, rgba(96,165,250,0.35), transparent 55%),
-    radial-gradient(circle at 80% 80%, rgba(244,114,182,0.35), transparent 55%),
-    rgba(15,23,42,0.92);
-  backdrop-filter: blur(18px);
-}
-.entry-panel {
-  width: 100%;
-  max-width: 420px;
-  border-radius: 22px;
-  padding: 18px 18px 16px;
-  background: radial-gradient(circle at top left, rgba(56,189,248,0.18), transparent 55%),
-              radial-gradient(circle at bottom right, rgba(147,51,234,0.18), transparent 55%),
-              rgba(15,23,42,0.98);
-  border: 1px solid rgba(148,163,184,0.8);
-  box-shadow:
-    0 0 0 1px rgba(15,23,42,1),
-    0 20px 50px rgba(15,23,42,1),
-    0 0 40px rgba(37,99,235,0.6);
-}
-.entry-header {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:8px;
-}
-.entry-dot {
-  width:9px;
-  height:9px;
-  border-radius:999px;
-  background:linear-gradient(135deg,#38bdf8,#22c55e,#a855f7);
-  box-shadow:0 0 14px rgba(56,189,248,0.9);
-}
-.entry-title {
-  font-size:1rem;
-  font-weight:600;
-  letter-spacing:.06em;
-}
-.entry-sub {
-  font-size:.82rem;
-  color:#9ca3af;
-  margin-bottom:10px;
-}
-.entry-note {
-  font-size:.78rem;
-  padding:6px 9px;
-  border-radius:12px;
-  background:rgba(15,23,42,0.98);
-  border:1px solid rgba(148,163,184,0.7);
-  margin-bottom:10px;
-}
-.entry-actions {
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  margin-top:4px;
-}
-.entry-btn {
-  width:100%;
-  border-radius:999px;
-  border:none;
-  padding:8px 10px;
-  font-size:.86rem;
-  font-weight:600;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-.entry-btn-main {
-  background:linear-gradient(135deg,#2563eb,#22c55e);
-  color:#f9fafb;
-  box-shadow:0 4px 12px rgba(15,23,42,0.9);
-}
-.entry-btn-main:hover {
-  transform:translateY(-1px);
-  box-shadow:0 6px 16px rgba(15,23,42,1);
-}
-.entry-btn-sub {
-  background:rgba(15,23,42,0.98);
-  color:#e5e7eb;
-  border:1px solid rgba(148,163,184,0.8);
-}
-.entry-btn-sub:hover {
-  background:rgba(15,23,42,1);
-}
-.entry-helper {
-  font-size:.76rem;
-  color:#9ca3af;
-  margin-top:10px;
-}
-.entry-helper a {
-  color:#c4b5fd;
-  text-decoration:underline;
-}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <!-- 여기 안에는 네가 원래 쓰던 메인 컨텐츠 그대로 (상품 카드 등) 넣으면 됨 -->
-</div>
+  <header class="site-header">
+    <div class="site-brand">
+      <div class="site-logo">
+        <img src="https://cdn.discordapp.com/attachments/1463400037416439869/1479824232824438916/apple-touch-icon.png?ex=69ad7136&is=69ac1fb6&hm=ad9cf6f1f4d8c848d71386b3a04c460fb83a3371b8c5387e98c3d49348b49d46&" alt="라니 로고">
+      </div>
+      <div class="site-title">
+        <div class="site-title-main">RLNL Studio</div>
+        <div class="site-title-sub">디스코드 봇 · 서버 세팅 · 로고 디자인</div>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="points.html">포인트/ 정책</a>
+      <a href="tos.html">이용 약관(안)</a>
+      <a href="bot-v1.html" class="nav-main-bot">라니봇 v1 패널</a>
+    </nav>
+  </header>
 
-<!-- 진입 모달 -->
-<div class="entry-overlay" id="entry-overlay">
-  <div class="entry-panel">
-    <div class="entry-header">
-      <span class="entry-dot"></span>
-      <div class="entry-title">라니MALL 진입</div>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-main">
+      <div class="hero-kicker">디스코드 커뮤니티· 서버 운영자를 위한</div>
+      <h1 class="hero-title">
+        <span>봇 제작 · 서버 세팅 · 로고 디자인</span>
+      </h1>
+      <p class="hero-sub">
+        RLNL 포인트 게임, 공지/출석 올인원 봇, 커스텀 서버 구조까지.<br>
+        지금 실제로 돌고 있는 세팅 그대로, 당신 서버에 맞춰서 옮겨드립니다.
+      </p>
+
+      <ul class="hero-points">
+        <li>모든 봇 + 출석/위로금/공지까지 한 번에 세팅</li>
+        <li>서버 구조, 권한, 채널 카테고리 정리까지 “깨끗한 첫판” 서버 세팅</li>
+        <li>서버용 로고/배너/역할 아이콘까지 통일감 있게 제작</li>
+      </ul>
+
+      <div class="hero-price">
+        대략 가격대<br>
+        · 간단 디스코드 봇/수정: 3만~<br>
+        · 서버 세팅 패키지: 2만~<br>
+        · 로고/배너 디자인: 1만~ (정확한 금액은 디엠으로 협의)<br>
+        <br>
+        <strong>
+          ※ 서비스 제공 기간: 모든 상품은 디지털 서비스로, 결제(포인트 충전) 완료 후
+          디스코드 문의를 통해 즉시 이용 절차가 진행되며, 작업 범위에 따라 통상 1~3일 이내,
+          최대 7일 이내 순차적으로 제공됩니다.
+        </strong>
+      </div>
+
+      <div class="hero-actions">
+        <a href="https://discord.gg/yEym2KZ9BU" target="_blank" rel="noopener noreferrer" class="btn-main">
+          <span>💬 디스코드로 견적 문의</span>
+        </a>
+        <button id="google-login-btn-top" class="google-btn-top" type="button">
+          <img class="google-icon-top"
+               src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+               alt="Google 아이콘">
+          <span id="btn-text-top">Google로 계속</span>
+        </button>
+        <!-- 일반 회원가입/로그인 링크 -->
+        <a href="login.html"
+           style="font-size:11px;color:#9ca3af;text-decoration:underline;display:inline-block;margin-top:6px;">
+          일반 회원가입/로그인은 여기서 진행
+        </a>
+      </div>
+
+      <div id="error-box" class="error"></div>
     </div>
-    <p class="entry-sub">
-      RLNL · 라니 관련 결제·세팅을 관리하는 페이지입니다.<br>
-      아래에서 이용 방식을 선택해 주세요.
+
+    <div class="hero-examples">
+      <div class="hero-card">
+        <div class="hero-card-title">RLNL · 라니봇 v1 올인원 봇 실제 운영 중</div>
+        <p>
+          공지 모달 + RLNL 포인트 게임 + 출석/위로금 기능이 모두 들어간<br>
+          “올인원 봇”을 지금도 디스코드 서버에서 공개 되고 있습니다
+        </p>
+        <div class="hero-tag-row">
+          <span class="hero-tag">공지 모달</span>
+          <span class="hero-tag">포인트 게임</span>
+          <span class="hero-tag">출석/레벨</span>
+        </div>
+        <div class="hero-image">
+          <img src="https://cdn.discordapp.com/attachments/1463400037416439869/1479824232199229662/OIP.JPG?ex=69ad7136&is=69ac1fb6&hm=1c0e0b5b6deb1367fb7ddf571b91f9ed112afd6b90cd04e958086d31e7562058&"
+               alt="라니봇 v1 패널 예시 화면">
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-card-title">실제 서버 세팅 예시</div>
+        <p>
+          새 서버 오픈용 채널/권한 구조, 자동 역할 부여, 로그·티켓·게임 채널까지<br>
+          “마인/게임/커뮤니티” 서버에 맞춰 템플릿처럼 세팅해 드립니다.
+        </p>
+        <div class="hero-tag-row">
+          <span class="hero-tag">권한·역할 구조</span>
+          <span class="hero-tag">카테고리 정리</span>
+          <span class="hero-tag">봇 연동</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 서비스 카드 -->
+  <section>
+    <h2 class="section-title">이런 작업을 주로 합니다</h2>
+    <p class="section-sub">
+      아래는 자주 요청되는 패키지 예시입니다. 정확한 범위와 금액은 디스코드로 편하게 이야기 주시면 맞춰 드립니다.
     </p>
-    <div class="entry-note">
-      · Google 로그인 계정 기준으로 봇/서버 세팅 내역이 관리됩니다.<br>
-      · 지인 / 테스트 계정은 일반 회원가입(이메일/비밀번호)으로도 이용 가능합니다.
+
+    <div class="service-grid">
+      <div class="service-card">
+        <div class="service-card-title">① 디스코드 봇 제작/수정</div>
+        <div class="service-card-price">기본 3만~ · RLNL 연동/게임/자동화는 협의</div>
+        <ul>
+          <li>공지 모달, 출석/위로금, 포인트 시스템</li>
+          <li>서버 로그, 자동 역할, 티켓/문의 처리</li>
+          <li>기존 봇 수정·기능 추가도 가능 (소스 상황에 따라)</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <div class="service-card-title">② 서버 세팅 패키지</div>
+        <div class="service-card-price">기본 2만~ 서버 규모·봇 종류에 따라 변동</div>
+        <ul>
+          <li>채널/카테고리/권한 구조 전체 설계</li>
+          <li>봇 연결 및 기본 명령어 셋업</li>
+          <li>운영진/유저용 안내 채널 템플릿 제공</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <div class="service-card-title">③ 로고/배너/역할 아이콘</div>
+        <div class="service-card-price">로고 1만~ / 패키지 2.5만~</div>
+        <ul>
+          <li>서버 로고, 배너, 초대 링크 썸네일</li>
+          <li>역할 아이콘, 카테고리용 이모지 스타일 통일</li>
+          <li>봇/웹 페이지용 간단 썸네일도 제작 가능</li>
+        </ul>
+      </div>
     </div>
-    <div class="entry-actions">
-      <button type="button" class="entry-btn entry-btn-main" id="entry-google">
-        🔥 Google 계정으로 계속
-      </button>
-      <button type="button" class="entry-btn entry-btn-sub" id="entry-normal">
-        일반 회원가입 / 로그인으로 계속
-      </button>
+  </section>
+
+  <!-- 프로세스 -->
+  <section style="margin-top:22px;">
+    <h2 class="section-title">진행 방식은 이렇게</h2>
+    <div class="process-grid">
+      <div class="process-item">
+        <div class="process-step">STEP 1</div>
+        <div><strong>디스코드로 간단히 문의</strong><br>원하는 기능/서버 용도/대략 예산만 말해 주세요.</div>
+      </div>
+      <div class="process-item">
+        <div class="process-step">STEP 2</div>
+        <div><strong>범위·견적 합의</strong><br>필요한 기능 리스트·작업 범위를 정리해서 금액/기간을 정합니다.</div>
+      </div>
+      <div class="process-item">
+        <div class="process-step">STEP 3</div>
+        <div><strong>작업 · 테스트 · 적용</strong><br>테스트 서버/실서버에 적용 후, 피드백 반영해서 마무리합니다.</div>
+      </div>
     </div>
-    <p class="entry-helper">
-      이 안내는 라니MALL 진입 시에만 한 번 표시됩니다.<br>
-      실제 상품·세팅 내용은 아래 메인 화면에서 그대로 확인할 수 있습니다.
-    </p>
-  </div>
+  </section>
+
+  <footer class="footer">
+    <span>© 2026 라니MALL · RLNL Digital Service</span>
+    <span>
+      상호명: 라니 디지털 · 대표자: 박현준 · 사업자 등록번호: 663-19-02378<br>
+      사업장 주소: 경상북도 칠곡군 왜관읍 (사업자등록증 기준)<br>
+      대표전화: 010-6569-8252 · 대표이메일: nn2577958@gmail.com<br>
+      ※ 위 채널 외 연락처나 계정으로 결제/개인정보를 요구하는 경우 모두 사칭일 수 있습니다.<br>
+      <a href="points.html">포인트/게임 정책</a>
+      <a href="tos.html">약관(안)</a>
+    </span>
+  </footer>
 </div>
 
 <!-- Firebase 로그인 스크립트 -->
@@ -513,12 +548,16 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-const provider    = new GoogleAuthProvider();
-const loginBtnTop = document.getElementById("google-login-btn-top");
-const errorBox    = document.getElementById("error-box");
-const btnTextTop  = document.getElementById("btn-text-top");
+// 이미 로그인 되어 있으면 바로 home.html
+onAuthStateChanged(auth, user => {
+  if (user) window.location.href = "home.html";
+});
 
-// 원래 구조: 로그인 성공하면 바로 HOME 이동
+const provider = new GoogleAuthProvider();
+const loginBtnTop = document.getElementById("google-login-btn-top");
+const errorBox = document.getElementById("error-box");
+const btnTextTop = document.getElementById("btn-text-top");
+
 async function handleGoogleLogin() {
   loginBtnTop.disabled = true;
   errorBox.textContent = "";
@@ -537,26 +576,10 @@ async function handleGoogleLogin() {
 }
 
 loginBtnTop.addEventListener("click", handleGoogleLogin);
-
-// 진입 모달: Google => 같은 로그인 함수 재사용, 일반 => login.html
-const entryOverlay = document.getElementById("entry-overlay");
-const entryGoogle  = document.getElementById("entry-google");
-const entryNormal  = document.getElementById("entry-normal");
-
-entryGoogle.addEventListener("click", async () => {
-  await handleGoogleLogin();
-});
-
-entryNormal.addEventListener("click", () => {
-  window.location.href = "login.html";
-});
-
-// 원래처럼: 이미 로그인된 상태로 index 접근시 바로 home.html 로 튕기고 싶으면 이것도 다시 살려
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    window.location.href = "home.html";
-  }
-});
 </script>
 </body>
 </html>
+
+이부분 바로 열리게 말고 어차피 파이어 베스 연동 되어있어서 구글로그인 되어야만 진입이 가능한거라 
+
+일반 회원가입 로그인은 여기서 라는 창 모달 하나만 딱 네뷸라 아까 좀전 처럼 상황판 처럼 ㄱㄴ ? 그럼 HTML 하나를 더 만들어야하는데 그지 ?
