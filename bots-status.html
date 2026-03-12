@@ -5,9 +5,7 @@
   <title>라니 디지털 - 봇 상태</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      color-scheme: dark;
-    }
+    :root { color-scheme: dark; }
     * { box-sizing: border-box; }
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -51,9 +49,31 @@
       font-size: 11px;
       color: #6b7280;
     }
-    main {
-      padding: 16px 0 32px 0;
+    main { padding: 16px 0 32px 0; }
+
+    .summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 10px 0;
+      font-size: 12px;
+      color: #9ca3af;
     }
+    .summary-item {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .summary-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
     .filters {
       display: flex;
       flex-wrap: wrap;
@@ -62,7 +82,7 @@
     }
     .filter-btn {
       border-radius: 999px;
-      border: 1px solid #1f2933;
+      border: 1px solid #1f2937;
       background: #020617;
       color: #9ca3af;
       font-size: 12px;
@@ -182,6 +202,7 @@
     @media (max-width: 640px) {
       h1 { font-size: 22px; }
       .wrap { padding-inline: 12px; }
+      .summary { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -196,131 +217,9 @@
 
   <main>
     <div class="wrap">
+      <div class="summary" id="summary-bar"></div>
+
       <div class="filters">
         <button class="filter-btn active" data-filter="all">전체</button>
         <button class="filter-btn" data-filter="online">
-          <span class="filter-dot dot-online"></span> Online
-        </button>
-        <button class="filter-btn" data-filter="maintenance">
-          <span class="filter-dot dot-maintenance"></span> Maintenance
-        </button>
-        <button class="filter-btn" data-filter="testing">
-          <span class="filter-dot dot-testing"></span> Testing
-        </button>
-        <button class="filter-btn" data-filter="offline">
-          <span class="filter-dot dot-offline"></span> Offline
-        </button>
-      </div>
-
-      <div id="bots-grid" class="grid"></div>
-    </div>
-  </main>
-
-  <script>
-    const STATUS_LABEL = {
-      online: "ONLINE",
-      offline: "OFFLINE",
-      maintenance: "MAINTENANCE",
-      testing: "TESTING"
-    };
-
-    const CATEGORY_LABEL = {
-      game: "게임 / 이벤트",
-      utility: "유틸리티",
-      security: "보안 / 감지",
-      music: "뮤직",
-      shop: "상점 / 결제",
-      bank: "포인트 / 은행",
-      etc: "기타"
-    };
-
-    const UPDATED_TEXT = document.getElementById("updated-text");
-    UPDATED_TEXT.textContent = "마지막 갱신: " + new Date().toLocaleString("ko-KR");
-
-    function badgeClass(status) {
-      switch (status) {
-        case "online": return "badge badge-online";
-        case "offline": return "badge badge-offline";
-        case "maintenance": return "badge badge-maintenance";
-        case "testing": return "badge badge-testing";
-        default: return "badge";
-      }
-    }
-
-    let allBots = [];
-
-    function renderBots(filter = "all") {
-      const grid = document.getElementById("bots-grid");
-      grid.innerHTML = "";
-
-      const list = allBots.filter(bot => {
-        if (filter === "all") return true;
-        return bot.status === filter;
-      });
-
-      list.forEach(bot => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const inner = document.createElement("div");
-        inner.className = "card-inner";
-
-        const badge = document.createElement("div");
-        badge.className = badgeClass(bot.status);
-        badge.innerHTML = `<span class="dot"></span>${STATUS_LABEL[bot.status] || bot.status.toUpperCase()}`;
-
-        const name = document.createElement("div");
-        name.className = "name";
-        name.textContent = bot.name;
-
-        const tag = document.createElement("div");
-        tag.className = "tag";
-        const cat = CATEGORY_LABEL[bot.category] || "기타";
-        tag.textContent = cat;
-
-        const desc = document.createElement("div");
-        desc.className = "desc";
-        desc.textContent = bot.desc || "";
-
-        const meta = document.createElement("div");
-        meta.className = "meta";
-        meta.innerHTML = `
-          <div class="pill">ID: <span>${bot.id}</span></div>
-          <div>${bot.note || ""}</div>
-        `;
-
-        inner.appendChild(badge);
-        inner.appendChild(name);
-        inner.appendChild(tag);
-        inner.appendChild(desc);
-        inner.appendChild(meta);
-        card.appendChild(inner);
-        grid.appendChild(card);
-      });
-    }
-
-    // bots.json 에서 데이터 불러오기 (같은 폴더에 두면 됨)
-    fetch("bots.json")
-      .then(res => res.json())
-      .then(data => {
-        allBots = data;
-        renderBots("all");
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById("bots-grid").innerHTML =
-          "<div style='color:#f87171;font-size:13px;'>bots.json 을 불러오지 못했습니다. 파일 위치를 확인하세요.</div>";
-      });
-
-    // 필터 버튼 이벤트
-    document.addEventListener("click", (e) => {
-      const btn = e.target.closest(".filter-btn");
-      if (!btn) return;
-      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      const filter = btn.dataset.filter || "all";
-      renderBots(filter);
-    });
-  </script>
-</body>
-</html>
+          <span class="filter-dot dot-online"></span>
