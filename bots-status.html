@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <title>라니봇 상태판</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- 여기에 파비콘 등 head 요소들 추가해도 됨 -->
+
   <style>
     :root {
       --bg-main: #020617;
@@ -676,7 +678,7 @@
             </div>
             <div class="card-subtitle">
               <span class="dot"></span>
-              <span>${bot.description || "상세 설명 없음"}</span>
+              <span>${bot.description || bot.desc || "상세 설명 없음"}</span>
             </div>
             <div class="card-footer">
               <div class="card-footer-left">
@@ -704,7 +706,6 @@
         document.getElementById("filterOnline").textContent = `온라인 ${online}`;
         document.getElementById("filterOffline").textContent = `오프라인 ${offline}`;
         document.getElementById("lastUpdated").textContent = new Date().toLocaleString("ko-KR");
-
       } catch (e) {
         console.error(e);
         document.getElementById("botsGrid").innerHTML =
@@ -714,6 +715,13 @@
 
     loadBots();
     setInterval(loadBots, 60000);
+
+    // 메인 홈페이지 등으로 이동 불가 (링크 전부 막기)
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest("a");
+      if (!a) return;
+      e.preventDefault();
+    });
   </script>
 </body>
 </html>
