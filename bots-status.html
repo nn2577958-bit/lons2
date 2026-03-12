@@ -199,6 +199,7 @@
     .pill span {
       color: #e5e7eb;
     }
+
     @media (max-width: 640px) {
       h1 { font-size: 22px; }
       .wrap { padding-inline: 12px; }
@@ -222,4 +223,170 @@
       <div class="filters">
         <button class="filter-btn active" data-filter="all">전체</button>
         <button class="filter-btn" data-filter="online">
-          <span class="filter-dot dot-online"></span>
+          <span class="filter-dot dot-online"></span> Online
+        </button>
+        <button class="filter-btn" data-filter="maintenance">
+          <span class="filter-dot dot-maintenance"></span> Maintenance
+        </button>
+        <button class="filter-btn" data-filter="testing">
+          <span class="filter-dot dot-testing"></span> Testing
+        </button>
+        <button class="filter-btn" data-filter="offline">
+          <span class="filter-dot dot-offline"></span> Offline
+        </button>
+      </div>
+
+      <div id="bots-grid" class="grid"></div>
+    </div>
+  </main>
+
+  <script>
+    const STATUS_LABEL = {
+      online: "ONLINE",
+      offline: "OFFLINE",
+      maintenance: "MAINTENANCE",
+      testing: "TESTING"
+    };
+
+    const STATUS_DESC = {
+      online: "정상 운영 중",
+      offline: "일시 중단",
+      maintenance: "점검/업데이트 중",
+      testing: "테스트 환경에서만 운영"
+    };
+
+    const CATEGORY_LABEL = {
+      game: "게임 / 이벤트",
+      utility: "유틸리티",
+      security: "보안 / 제보",
+      music: "뮤직",
+      shop: "상점 / 결제",
+      bank: "포인트 / 은행",
+      etc: "기타"
+    };
+
+    const UPDATED_TEXT = document.getElementById("updated-text");
+    UPDATED_TEXT.textContent = "마지막 갱신: " + new Date().toLocaleString("ko-KR");
+
+    function badgeClass(status) {
+      switch (status) {
+        case "online": return "badge badge-online";
+        case "offline": return "badge badge-offline";
+        case "maintenance": return "badge badge-maintenance";
+        case "testing": return "badge badge-testing";
+        default: return "badge";
+      }
+    }
+
+    let allBots = [];
+
+    function renderSummary() {
+      const bar = document.getElementById("summary-bar");
+      if (!allBots.length) {
+        bar.textContent = "";
+        return;
+      }
+      const total = allBots.length;
+      const counts = { online: 0, offline: 0, maintenance: 0, testing: 0 };
+      allBots.forEach(b => {
+        if (counts[b.status] !== undefined) counts[b.status]++;
+      });
+
+      bar.innerHTML = "";
+      const totalEl = document.createElement("div");
+      totalEl.className = "summary-item";
+      totalEl.innerHTML = `총 <strong>${total}</strong> 개 봇`;
+      bar.appendChild(totalEl);
+
+      const makeItem = (status, label, cls) => {
+        const el = document.createElement("div");
+        el.className = "summary-item";
+        el.innerHTML = `
+          <span class="summary-dot ${cls}"></span>
+          ${label}: <strong>${counts[status]}</strong>
+        `;
+        bar.appendChild(el);
+      };
+
+      makeItem("online", "Online", "dot-online");
+      makeItem("maintenance", "Maintenance", "dot-maintenance");
+      makeItem("testing", "Testing", "dot-testing");
+      makeItem("offline", "Offline", "dot-offline");
+    }
+
+    function renderBots(filter = "all") {
+      const grid = document.getElementById("bots-grid");
+      grid.innerHTML = "";
+
+      const list = allBots.filter(bot => {
+        if (filter === "all") return true;
+        return bot.status === filter;
+      });
+
+      list.forEach(bot => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const inner = document.createElement("div");
+        inner.className = "card-inner";
+
+        const badge = document.createElement("div");
+        badge.className = badgeClass(bot.status);
+        badge.innerHTML = `<span class="dot"></span>${STATUS_LABEL[bot.status] || bot.status.toUpperCase()}`;
+
+        const name = document.createElement("div");
+        name.className = "name";
+        name.textContent = bot.name;
+
+        const tag = document.createElement("div");
+        tag.className = "tag";
+        const catKey = bot.category || "etc";
+        const cat = CATEGORY_LABEL[catKey] || CATEGORY_LABEL["etc"];
+        tag.textContent = cat;
+
+        const desc = document.createElement("div");
+        desc.className = "desc";
+        desc.textContent = bot.desc || STATUS_DESC[bot.status] || "";
+
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        const statusNote = bot.note || STATUS_DESC[bot.status] || "";
+        meta.innerHTML = `
+          <div class="pill">ID: <span>${bot.id}</span></div>
+          <div>${statusNote}</div>
+        `;
+
+        inner.appendChild(badge);
+        inner.appendChild(name);
+        inner.appendChild(tag);
+        inner.appendChild(desc);
+        inner.appendChild(meta);
+        card.appendChild(inner);
+        grid.appendChild(card);
+      });
+    }
+
+    fetch("bots.json")
+      .then(res => res.json())
+      .then(data => {
+        allBots = data;
+        renderSummary();
+        renderBots("all");
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById("bots-grid").innerHTML =
+          "<div style='color:#f87171;font-size:13px;'>bots.json 을 불러오지 못했습니다. 파일 위치를 확인하세요.</div>";
+      });
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".filter-btn");
+      if (!btn) return;
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const filter = btn.dataset.filter || "all";
+      renderBots(filter);
+    });
+  </script>
+</body>
+</html>
