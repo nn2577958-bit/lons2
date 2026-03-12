@@ -1,0 +1,13 @@
+[
+  { "id": "game",      "name": "RLNL 게임 봇",   "status": "online",      "desc": "게임·이벤트 진행" },
+  { "id": "backup",    "name": "백업봇",         "status": "online",      "desc": "채널/서버 백업" },
+  { "id": "detect",    "name": "감지봇",         "status": "online",      "desc": "로그·이상 행위 감지" },
+  { "id": "coin",      "name": "코인 봇",       "status": "maintenance", "desc": "코인 관련 유틸" },
+  { "id": "coinprice", "name": "코인 시세 봇",  "status": "online",      "desc": "실시간 시세 조회" },
+  { "id": "v1",        "name": "v1 배포용 봇",  "status": "testing",     "desc": "테스트/배포용" },
+  { "id": "music",     "name": "뮤직 봇",       "status": "offline",     "desc": "음악 재생" },
+  { "id": "shop",      "name": "상점봇",        "status": "online",      "desc": "상품/라이선스 판매" },
+  { "id": "bank",      "name": "은행봇",        "status": "online",      "desc": "포인트·잔액 관리" },
+  { "id": "record",    "name": "전적봇",        "status": "maintenance", "desc": "게임 전적 조회" },
+  { "id": "report",    "name": "제보봇",        "status": "online",      "desc": "사기 제보/공개" }
+]
