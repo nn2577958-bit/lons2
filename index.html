@@ -298,7 +298,7 @@ body {
   margin-bottom:6px;
 }
 .service-card ul { padding-left:16px; }
-.service-card li { margin-bottom:3px; }
+service-card li { margin-bottom:3px; }
 
 /* 프로세스 */
 .process-grid {
@@ -361,6 +361,111 @@ body {
 /* 모바일 */
 @media (max-width:640px){
   body { padding:16px; }
+}
+
+/* ==== 진입 모달 (한 다리) ==== */
+.entry-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(96,165,250,0.35), transparent 55%),
+    radial-gradient(circle at 80% 80%, rgba(244,114,182,0.35), transparent 55%),
+    rgba(15,23,42,0.92);
+  backdrop-filter: blur(18px);
+}
+.entry-panel {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 22px;
+  padding: 18px 18px 16px;
+  background: radial-gradient(circle at top left, rgba(56,189,248,0.18), transparent 55%),
+              radial-gradient(circle at bottom right, rgba(147,51,234,0.18), transparent 55%),
+              rgba(15,23,42,0.98);
+  border: 1px solid rgba(148,163,184,0.8);
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,1),
+    0 20px 50px rgba(15,23,42,1),
+    0 0 40px rgba(37,99,235,0.6);
+}
+.entry-header {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+}
+.entry-dot {
+  width:9px;
+  height:9px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#38bdf8,#22c55e,#a855f7);
+  box-shadow:0 0 14px rgba(56,189,248,0.9);
+}
+.entry-title {
+  font-size:1rem;
+  font-weight:600;
+  letter-spacing:.06em;
+}
+.entry-sub {
+  font-size:.82rem;
+  color:#9ca3af;
+  margin-bottom:10px;
+}
+.entry-note {
+  font-size:.78rem;
+  padding:6px 9px;
+  border-radius:12px;
+  background:rgba(15,23,42,0.98);
+  border:1px solid rgba(148,163,184,0.7);
+  margin-bottom:10px;
+}
+.entry-actions {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:4px;
+}
+.entry-btn {
+  width:100%;
+  border-radius:999px;
+  border:none;
+  padding:8px 10px;
+  font-size:.86rem;
+  font-weight:600;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.entry-btn-main {
+  background:linear-gradient(135deg,#2563eb,#22c55e);
+  color:#f9fafb;
+  box-shadow:0 4px 12px rgba(15,23,42,0.9);
+}
+.entry-btn-main:hover {
+  transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(15,23,42,1);
+}
+.entry-btn-sub {
+  background:rgba(15,23,42,0.98);
+  color:#e5e7eb;
+  border:1px solid rgba(148,163,184,0.8);
+}
+.entry-btn-sub:hover {
+  background:rgba(15,23,42,1);
+}
+.entry-helper {
+  font-size:.76rem;
+  color:#9ca3af;
+  margin-top:10px;
+}
+.entry-helper a {
+  color:#c4b5fd;
+  text-decoration:underline;
 }
 </style>
 </head>
@@ -539,6 +644,36 @@ body {
   </footer>
 </div>
 
+<!-- 진입 모달 -->
+<div class="entry-overlay" id="entry-overlay">
+  <div class="entry-panel">
+    <div class="entry-header">
+      <span class="entry-dot"></span>
+      <div class="entry-title">라니MALL 진입</div>
+    </div>
+    <p class="entry-sub">
+      RLNL · 라니 관련 결제·세팅을 관리하는 페이지입니다.<br>
+      아래에서 이용 방식을 선택해 주세요.
+    </p>
+    <div class="entry-note">
+      · Google 로그인 계정 기준으로 봇/서버 세팅 내역이 관리됩니다.<br>
+      · 지인 / 테스트 계정은 일반 회원가입(이메일/비밀번호)으로도 이용 가능합니다.
+    </div>
+    <div class="entry-actions">
+      <button type="button" class="entry-btn entry-btn-main" id="entry-google">
+        🔥 Google 계정으로 계속
+      </button>
+      <button type="button" class="entry-btn entry-btn-sub" id="entry-normal">
+        일반 회원가입 / 로그인으로 계속
+      </button>
+    </div>
+    <p class="entry-helper">
+      이 안내는 라니MALL 진입 시에만 한 번 표시됩니다.<br>
+      실제 상품·세팅 내용은 아래 메인 화면에서 그대로 확인할 수 있습니다.
+    </p>
+  </div>
+</div>
+
 <!-- Firebase 로그인 스크립트 -->
 <script type="module">
 import { auth } from "./firebase.js";
@@ -576,6 +711,22 @@ async function handleGoogleLogin() {
 }
 
 loginBtnTop.addEventListener("click", handleGoogleLogin);
+
+// ==== 진입 모달 동작 ====
+const entryOverlay = document.getElementById("entry-overlay");
+const entryGoogle  = document.getElementById("entry-google");
+const entryNormal  = document.getElementById("entry-normal");
+
+// Google로 계속 => 기존 상단 버튼 로직 재사용
+entryGoogle.addEventListener("click", () => {
+  entryOverlay.style.display = "none";
+  handleGoogleLogin();
+});
+
+// 일반 로그인 => login.html 로 이동
+entryNormal.addEventListener("click", () => {
+  window.location.href = "login.html";
+});
 </script>
 </body>
 </html>
