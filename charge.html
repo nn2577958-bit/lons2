@@ -163,7 +163,7 @@
     </div>
   </div>
 
-  <!-- V1 JS SDK: 이 두 줄만 쓰면 됨 -->
+  <!-- V1 JS SDK -->
   <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
   <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 
@@ -186,7 +186,7 @@
 
       IMP.request_pay(
         {
-          channelKey: "channel-key-72dd528f-1c37-407b-b5a7-40faa63f46ce",
+          pg: "html5_inicis",              // 홈 페이지와 동일하게 사용
           pay_method: "card",
           merchant_uid: "order-" + Date.now(),
           name: "포인트 충전",
@@ -199,7 +199,6 @@
           console.log("결제 응답:", rsp);
           if (rsp.success) {
             alert("결제 성공: " + rsp.merchant_uid);
-            // TODO: 여기서 서버로 rsp.imp_uid / rsp.merchant_uid 보내서 검증 + 포인트 충전
           } else {
             alert("결제 실패: " + rsp.error_msg);
           }
