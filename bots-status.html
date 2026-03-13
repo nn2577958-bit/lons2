@@ -4,584 +4,721 @@
   <meta charset="UTF-8" />
   <title>라니봇 상태판</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- 여기에 파비콘 등 head 요소들 추가해도 됨 -->
 
-<style>
-  :root {
-    --bg-main: #020617;
-    --bg-card: rgba(15, 23, 42, 0.78);
-    --border-subtle: rgba(148, 163, 184, 0.28);
-    --accent-blue: #38bdf8;
-    --accent-purple: #a855f7;
-    --accent-pink: #ec4899;
-    --online: #22c55e;
-    --offline: #ef4444;
-    --text-main: #e5e7eb;
-    --text-sub: #9ca3af;
-    --badge-bg: rgba(15, 23, 42, 0.9);
-    --glass-border: rgba(148, 163, 184, 0.38);
-    --shadow-soft: 0 14px 32px rgba(15, 23, 42, 0.6);
-  }
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background:
-      radial-gradient(circle at top, #0f172a 0%, #020617 42%, #000000 100%);
-    color: var(--text-main);
-    margin: 0;
-    position: relative;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  body::before {
-    content: "";
-    position: fixed;
-    inset: -20%;
-    pointer-events: none;
-    background:
-      radial-gradient(circle at 10% 20%, rgba(96,165,250,0.25), transparent 55%),
-      radial-gradient(circle at 82% 16%, rgba(56,189,248,0.22), transparent 55%),
-      radial-gradient(circle at 18% 80%, rgba(244,114,182,0.18), transparent 55%);
-    opacity: 0.8;
-    animation: nebulaTwinkle 11s ease-in-out infinite alternate;
-    z-index: 0;
-  }
-
-  @keyframes nebulaTwinkle {
-    0% { opacity: 0.6; transform: translate3d(0,0,0) scale(1); }
-    50% { opacity: 0.9; transform: translate3d(0,-3px,0) scale(1.01); }
-    100% { opacity: 0.65; transform: translate3d(0,2px,0) scale(1.005); }
-  }
-
-  main {
-    position: relative;
-    z-index: 1;
-    max-width: 1080px;
-    margin: 32px auto 40px;
-    padding: 0 16px 32px;
-  }
-
-  .panel {
-    background: radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 55%),
-                radial-gradient(circle at bottom right, rgba(147,51,234,0.12), transparent 55%),
-                linear-gradient(135deg, rgba(15,23,42,0.94), rgba(15,23,42,0.98));
-    border-radius: 26px;
-    border: 1px solid rgba(148,163,184,0.4);
-    box-shadow:
-      0 0 0 1px rgba(15,23,42,0.9),
-      var(--shadow-soft),
-      0 0 40px rgba(15,118,255,0.12);
-    padding: 22px 22px 20px;
-    backdrop-filter: blur(16px);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .panel::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    background:
-      linear-gradient(120deg,
-        rgba(56,189,248,0.4),
-        rgba(129,140,248,0.35),
-        rgba(244,114,182,0.4));
-    opacity: 0;
-    pointer-events: none;
-    z-index: -1;
-    transition: opacity 0.8s ease-out;
-  }
-
-  .panel:hover::before {
-    opacity: 0.35;
-  }
-
-  .panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid rgba(148,163,184,0.3);
-    margin-bottom: 10px;
-  }
-
-  .panel-title {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  .panel-title-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .panel-title-main {
-    font-size: 1.1rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    text-shadow: 0 0 10px rgba(15,118,255,0.35);
-  }
-
-  .panel-title-main span.logo-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #38bdf8, #a855f7);
-    box-shadow: 0 0 8px rgba(56,189,248,0.7);
-  }
-
-  .panel-subtitle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-sub);
-    font-size: 0.88rem;
-  }
-
-  .panel-subtitle span.dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 999px;
-    background: rgba(148,163,184,0.8);
-  }
-
-  .panel-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: flex-end;
-    font-size: 0.78rem;
-    color: var(--text-sub);
-  }
-
-  .panel-meta-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 8px;
-    border-radius: 999px;
-    background: rgba(15,23,42,0.9);
-    border: 1px solid rgba(148,163,184,0.4);
-  }
-
-  .panel-meta-item span.key {
-    color: rgba(148,163,184,0.9);
-  }
-
-  .panel-meta-item span.value {
-    color: #e5e7eb;
-  }
-
-  .filters-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 8px 10px 10px;
-    border-radius: 999px;
-    background: radial-gradient(circle at top left, rgba(30,64,175,0.4), transparent 55%),
-                radial-gradient(circle at bottom right, rgba(148,163,184,0.4), transparent 55%),
-                linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,0.99));
-    border: 1px solid rgba(148,163,184,0.8);
-    position: relative;
-  }
-
-  .filters-row::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    border: 1px solid transparent;
-    background: linear-gradient(120deg, rgba(56,189,248,0.6), rgba(129,140,248,0.55), rgba(248,113,113,0.6)) border-box;
-    -webkit-mask:
-      linear-gradient(#000 0 0) padding-box,
-      linear-gradient(#000 0 0) border-box;
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0.35;
-    pointer-events: none;
-  }
-
-  .filters-left {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.82rem;
-    padding: 3px 10px;
-    border-radius: 999px;
-    background: rgba(15,23,42,0.94);
-    border: 1px solid rgba(148,163,184,0.7);
-    color: #e5e7eb;
-  }
-
-  .filters-right {
-    display: inline-flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
-  }
-
-  .filter-pill {
-    border-radius: 999px;
-    padding: 4px 9px;
-    font-size: 0.8rem;
-    cursor: default;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    border: 1px solid rgba(148,163,184,0.7);
-    background: rgba(15,23,42,0.94);
-    color: rgba(226,232,240,0.96);
-    box-shadow: 0 4px 10px rgba(15,23,42,0.75);
-    white-space: nowrap;
-  }
-
-  .filter-pill .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-  }
-
-  .dot-online {
-    background: var(--online);
-    box-shadow: 0 0 8px rgba(34,197,94,0.75);
-  }
-
-  .dot-offline {
-    background: var(--offline);
-    box-shadow: 0 0 6px rgba(239,68,68,0.7);
-  }
-
-  .filter-pill span.emoji {
-    font-size: 0.78rem;
-  }
-
-  .filter-pill span.label {
-    opacity: 0.96;
-  }
-
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 12px;
-  }
-
-  .card {
-    position: relative;
-    background: radial-gradient(circle at top left, rgba(37,99,235,0.18), transparent 55%),
-                radial-gradient(circle at bottom right, rgba(147,51,234,0.14), transparent 60%),
-                linear-gradient(135deg, rgba(15,23,42,0.97), rgba(15,23,42,0.99));
-    border-radius: 22px;
-    padding: 10px 11px 10px;
-    border: 1px solid rgba(148,163,184,0.5);
-    box-shadow:
-      0 0 0 1px rgba(15,23,42,0.9),
-      0 10px 26px rgba(15,23,42,0.85),
-      0 0 26px rgba(37,99,235,0.28);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    transition:
-      transform 0.15s ease-out,
-      box-shadow 0.15s ease-out,
-      border-color 0.15s ease-out,
-      background 0.25s ease-out;
-  }
-
-  .card::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    background: linear-gradient(140deg, rgba(56,189,248,0.5), rgba(129,140,248,0.45), rgba(244,114,182,0.55));
-    opacity: 0;
-    z-index: -1;
-    transition: opacity 0.2s ease-out;
-  }
-
-  .card:hover {
-    transform: translateY(-3px);
-    box-shadow:
-      0 0 0 1px rgba(15,23,42,1),
-      0 14px 32px rgba(15,23,42,0.95),
-      0 0 34px rgba(59,130,246,0.45);
-    border-color: rgba(191,219,254,0.9);
-    background:
-      radial-gradient(circle at top left, rgba(59,130,246,0.3), transparent 60%),
-      radial-gradient(circle at bottom right, rgba(168,85,247,0.24), transparent 60%),
-      linear-gradient(135deg, rgba(15,23,42,0.97), rgba(15,23,42,1));
-  }
-
-  .card:hover::before {
-    opacity: 0.85;
-  }
-
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .card-main {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-  }
-
-  .card-title-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    min-width: 0;
-  }
-
-  .card-emoji {
-    font-size: 1rem;
-    flex-shrink: 0;
-    filter: drop-shadow(0 0 4px rgba(15,23,42,0.8));
-  }
-
-  .card-title {
-    font-size: 0.88rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    max-width: 170px;
-  }
-
-  .badge {
-    border-radius: 999px;
-    padding: 3px 8px;
-    font-size: 0.72rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    border: 1px solid rgba(148,163,184,0.8);
-    background: rgba(15,23,42,0.95);
-    color: #e5e7eb;
-    white-space: nowrap;
-  }
-
-  .badge span.dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-  }
-
-  .badge-online {
-    background: #16a34a22;
-    color: #4ade80;
-    border-color: rgba(22,163,74,0.8);
-    box-shadow: 0 0 0 1px rgba(15,23,42,1);
-    animation: onlineBlink 2.2s ease-in-out infinite;
-  }
-
-  .badge-online span.dot {
-    background: var(--online);
-    box-shadow: 0 0 8px rgba(34,197,94,0.85);
-  }
-
-  .badge-offline {
-    background: rgba(127,29,29,0.32);
-    color: #fecaca;
-    border-color: rgba(248,113,113,0.85);
-    box-shadow: 0 0 0 1px rgba(15,23,42,1);
-  }
-
-  .badge-offline span.dot {
-    background: var(--offline);
-    box-shadow: 0 0 6px rgba(239,68,68,0.75);
-  }
-
-  @keyframes onlineBlink {
-    0% {
-      box-shadow: 0 0 0px rgba(34,197,94,0.0);
-      background: #16a34a22;
+  <style>
+    :root {
+      --bg-main: #020617;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --border-subtle: rgba(148, 163, 184, 0.28);
+      --accent-blue: #38bdf8;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --online: #22c55e;
+      --offline: #ef4444;
+      --text-main: #e5e7eb;
+      --text-sub: #9ca3af;
+      --badge-bg: rgba(15, 23, 42, 0.9);
+      --glass-border: rgba(148, 163, 184, 0.38);
+      --shadow-soft: 0 14px 32px rgba(15, 23, 42, 0.6);
     }
-    40% {
-      box-shadow: 0 0 8px rgba(34,197,94,0.75);
-      background: #16a34a3a;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    60% {
-      box-shadow: 0 0 10px rgba(34,197,94,0.7);
-      background: #16a34a44;
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #0f172a 0%, #020617 42%, #000000 100%);
+      color: var(--text-main);
+      margin: 0;
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
-    100% {
-      box-shadow: 0 0 3px rgba(34,197,94,0.4);
-      background: #16a34a24;
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(96,165,250,0.25), transparent 55%),
+        radial-gradient(circle at 82% 16%, rgba(56,189,248,0.22), transparent 55%),
+        radial-gradient(circle at 18% 80%, rgba(244,114,182,0.18), transparent 55%);
+      opacity: 0.8;
+      animation: nebulaTwinkle 11s ease-in-out infinite alternate;
+      z-index: 0;
     }
-  }
 
-  .card-subtitle {
-    font-size: 0.78rem;
-    color: var(--text-sub);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
+    @keyframes nebulaTwinkle {
+      0% { opacity: 0.6; transform: translate3d(0,0,0) scale(1); }
+      50% { opacity: 0.9; transform: translate3d(0,-3px,0) scale(1.01); }
+      100% { opacity: 0.65; transform: translate3d(0,2px,0) scale(1.005); }
+    }
 
-  .card-subtitle span.dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 999px;
-    background: rgba(148,163,184,0.85);
-  }
-
-  .card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 4px;
-    gap: 6px;
-    font-size: 0.78rem;
-    color: var(--text-sub);
-  }
-
-  .card-footer-left {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .pill {
-    border-radius: 999px;
-    padding: 2px 7px;
-    border: 1px solid rgba(148,163,184,0.8);
-    background: rgba(15,23,42,0.95);
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-  }
-
-  .pill span.dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 999px;
-  }
-
-  .pill-category {
-    font-size: 0.76rem;
-  }
-
-  .pill-category span.dot {
-    background: rgba(129,140,248,0.95);
-    box-shadow: 0 0 8px rgba(129,140,248,0.8);
-  }
-
-  .pill-updated {
-    font-size: 0.75rem;
-    opacity: 0.95;
-  }
-
-  .pill-updated span.dot {
-    background: rgba(148,163,184,0.85);
-  }
-
-  .card-footer-right {
-    font-size: 0.76rem;
-    opacity: 0.94;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .card-footer-right span.dot {
-    width: 3px;
-    height: 3px;
-    border-radius: 999px;
-    background: rgba(148,163,184,0.85);
-  }
-
-  .footer-note {
-    margin-top: 12px;
-    font-size: 0.74rem;
-    color: var(--text-sub);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    opacity: 0.9;
-  }
-
-  .footer-note span.dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 999px;
-    background: rgba(148,163,184,0.85);
-  }
-
-  @media (max-width: 720px) {
     main {
-      margin-top: 20px;
+      position: relative;
+      z-index: 1;
+      max-width: 1080px;
+      margin: 32px auto 40px;
+      padding: 0 16px 32px;
     }
-    .panel {
-      padding: 18px 14px 16px;
-      border-radius: 22px;
-    }
-    .panel-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-    .panel-meta {
-      justify-content: flex-start;
-    }
-    .filters-row {
-      flex-direction: column;
-      align-items: stretch;
-      border-radius: 18px;
-    }
-    .filters-left {
-      justify-content: center;
-    }
-    .filters-right {
-      justify-content: center;
-    }
-    .card {
-      border-radius: 20px;
-    }
-  }
 
-  @media (max-width: 480px) {
-    .card-title {
-      max-width: 140px;
+    .panel {
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(147,51,234,0.12), transparent 55%),
+                  linear-gradient(135deg, rgba(15,23,42,0.94), rgba(15,23,42,0.98));
+      border-radius: 26px;
+      border: 1px solid rgba(148,163,184,0.4);
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,0.9),
+        var(--shadow-soft),
+        0 0 40px rgba(15,118,255,0.12);
+      padding: 22px 22px 20px;
+      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
     }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(120deg,
+          rgba(56,189,248,0.4),
+          rgba(129,140,248,0.35),
+          rgba(244,114,182,0.4));
+      opacity: 0;
+      pointer-events: none;
+      z-index: -1;
+      transition: opacity 0.8s ease-out;
+    }
+
+    .panel:hover::before {
+      opacity: 0.35;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(148,163,184,0.3);
+      margin-bottom: 10px;
+    }
+
+    .panel-title {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .panel-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     .panel-title-main {
-      font-size: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-shadow: 0 0 10px rgba(15,118,255,0.35);
     }
+
+    .panel-title-main span.logo-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #38bdf8, #a855f7);
+      box-shadow: 0 0 8px rgba(56,189,248,0.7);
+    }
+
     .panel-subtitle {
-      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-sub);
+      font-size: 0.88rem;
     }
-  }
-</style>
+
+    .panel-subtitle span.dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(148,163,184,0.8);
+    }
+
+    .panel-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+    }
+
+    .panel-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.4);
+    }
+
+    .panel-meta-item span.key {
+      color: rgba(148,163,184,0.9);
+    }
+
+    .panel-meta-item span.value {
+      color: #e5e7eb;
+    }
+
+    .filters-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 8px 10px 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.4), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(148,163,184,0.4), transparent 55%),
+                  linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,0.99));
+      border: 1px solid rgba(148,163,184,0.8);
+      position: relative;
+    }
+
+    .filters-row::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid transparent;
+      background: linear-gradient(120deg, rgba(56,189,248,0.6), rgba(129,140,248,0.55), rgba(248,113,113,0.6)) border-box;
+      -webkit-mask:
+        linear-gradient(#000 0 0) padding-box,
+        linear-gradient(#000 0 0) border-box;
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .filters-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.94);
+      border: 1px solid rgba(148,163,184,0.7);
+      color: #e5e7eb;
+    }
+
+    .filters-right {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .filter-pill {
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 0.8rem;
+      cursor: default;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.94);
+      color: rgba(226,232,240,0.96);
+      box-shadow: 0 4px 10px rgba(15,23,42,0.75);
+      white-space: nowrap;
+    }
+
+    .filter-pill .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+    }
+
+    .dot-online {
+      background: var(--online);
+      box-shadow: 0 0 8px rgba(34,197,94,0.75);
+    }
+
+    .dot-offline {
+      background: var(--offline);
+      box-shadow: 0 0 6px rgba(239,68,68,0.7);
+    }
+
+    .filter-pill span.emoji {
+      font-size: 0.78rem;
+    }
+
+    .filter-pill span.label {
+      opacity: 0.96;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      position: relative;
+      background: radial-gradient(circle at top left, rgba(37,99,235,0.18), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(147,51,234,0.14), transparent 60%),
+                  linear-gradient(135deg, rgba(15,23,42,0.97), rgba(15,23,42,0.99));
+      border-radius: 22px;
+      padding: 10px 11px 10px;
+      border: 1px solid rgba(148,163,184,0.5);
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,0.9),
+        0 10px 26px rgba(15,23,42,0.85),
+        0 0 26px rgba(37,99,235,0.28);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition:
+        transform 0.15s ease-out,
+        box-shadow 0.15s ease-out,
+        border-color 0.15s ease-out,
+        background 0.25s ease-out;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(140deg, rgba(56,189,248,0.5), rgba(129,140,248,0.45), rgba(244,114,182,0.55));
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.2s ease-out;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,1),
+        0 14px 32px rgba(15,23,42,0.95),
+        0 0 34px rgba(59,130,246,0.45);
+      border-color: rgba(191,219,254,0.9);
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.3), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(168,85,247,0.24), transparent 60%),
+        linear-gradient(135deg, rgba(15,23,42,0.97), rgba(15,23,42,1));
+    }
+
+    .card:hover::before {
+      opacity: 0.85;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-main {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .card-emoji {
+      font-size: 1rem;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 4px rgba(15,23,42,0.8));
+    }
+
+    .card-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 170px;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      white-space: nowrap;
+    }
+
+    .badge span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+    }
+
+    .badge-online {
+      background: #16a34a22;
+      color: #4ade80;
+      border-color: rgba(22,163,74,0.8);
+      box-shadow: 0 0 0 1px rgba(15,23,42,1);
+      animation: onlineBlink 2.2s ease-in-out infinite;
+    }
+
+    .badge-online span.dot {
+      background: var(--online);
+      box-shadow: 0 0 8px rgba(34,197,94,0.85);
+    }
+
+    .badge-offline {
+      background: rgba(127,29,29,0.32);
+      color: #fecaca;
+      border-color: rgba(248,113,113,0.85);
+      box-shadow: 0 0 0 1px rgba(15,23,42,1);
+    }
+
+    .badge-offline span.dot {
+      background: var(--offline);
+      box-shadow: 0 0 6px rgba(239,68,68,0.75);
+    }
+
+    @keyframes onlineBlink {
+      0% {
+        box-shadow: 0 0 0px rgba(34,197,94,0.0);
+        background: #16a34a22;
+      }
+      40% {
+        box-shadow: 0 0 8px rgba(34,197,94,0.75);
+        background: #16a34a3a;
+      }
+      60% {
+        box-shadow: 0 0 10px rgba(34,197,94,0.7);
+        background: #16a34a44;
+      }
+      100% {
+        box-shadow: 0 0 3px rgba(34,197,94,0.4);
+        background: #16a34a24;
+      }
+    }
+
+    .card-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .card-subtitle span.dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(148,163,184,0.85);
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+    }
+
+    .card-footer-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 2px 7px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.95);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .pill span.dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+    }
+
+    .pill-category {
+      font-size: 0.76rem;
+    }
+
+    .pill-category span.dot {
+      background: rgba(129,140,248,0.95);
+      box-shadow: 0 0 8px rgba(129,140,248,0.8);
+    }
+
+    .pill-updated {
+      font-size: 0.75rem;
+      opacity: 0.95;
+    }
+
+    .pill-updated span.dot {
+      background: rgba(148,163,184,0.85);
+    }
+
+    .card-footer-right {
+      font-size: 0.76rem;
+      opacity: 0.94;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-footer-right span.dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(148,163,184,0.85);
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      font-size: 0.74rem;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.9;
+    }
+
+    .footer-note span.dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(148,163,184,0.85);
+    }
+
+    @media (max-width: 720px) {
+      main {
+        margin-top: 20px;
+      }
+      .panel {
+        padding: 18px 14px 16px;
+        border-radius: 22px;
+      }
+      .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .panel-meta {
+        justify-content: flex-start;
+      }
+      .filters-row {
+        flex-direction: column;
+        align-items: stretch;
+        border-radius: 18px;
+      }
+      .filters-left {
+        justify-content: center;
+      }
+      .filters-right {
+        justify-content: center;
+      }
+      .card {
+        border-radius: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .card-title {
+        max-width: 140px;
+      }
+      .panel-title-main {
+        font-size: 1rem;
+      }
+      .panel-subtitle {
+        font-size: 0.82rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="panel" aria-label="라니봇 상태판">
+      <header class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-row">
+            <span class="logo-dot"></span>
+            <h1 class="panel-title-main">라니봇 상태판</h1>
+          </div>
+          <div class="panel-subtitle">
+            <span class="dot"></span>
+            <span>실시간 봇 상태 및 카테고리별 정리</span>
+          </div>
+        </div>
+        <div class="panel-meta" id="panelMeta">
+          <div class="panel-meta-item">
+            <span class="key">총 봇</span>
+            <span class="value" id="totalBots">-</span>
+          </div>
+          <div class="panel-meta-item">
+            <span class="key">온라인</span>
+            <span class="value" id="onlineBots">-</span>
+          </div>
+          <div class="panel-meta-item">
+            <span class="key">업데이트</span>
+            <span class="value" id="lastUpdated">-</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="filters-row" aria-label="봇 상태 요약">
+        <div class="filters-left">
+          <span style="font-size:0.8rem;">필터</span>
+          <span style="font-size:0.8rem; opacity:0.9;">·</span>
+          <span style="font-size:0.78rem; opacity:0.9;">상태 · 카테고리</span>
+        </div>
+        <div class="filters-right">
+          <div class="filter-pill">
+            <span class="dot dot-online"></span>
+            <span class="label" id="filterOnline">온라인</span>
+          </div>
+          <div class="filter-pill">
+            <span class="dot dot-offline"></span>
+            <span class="label" id="filterOffline">오프라인</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="cards-grid" id="botsGrid" aria-label="봇 목록">
+        <!-- JS에서 bots.json 기반으로 채움 -->
+      </section>
+
+      <p class="footer-note">
+        <span class="dot"></span>
+        <span>상태 정보는 일정 주기로 갱신됩니다.</span>
+      </p>
+    </section>
+  </main>
 
   <script>
-    // 메인 홈페이지 등으로 이동 불가 (링크 전부 막기)
+    async function loadBots() {
+      try {
+        const res = await fetch("bots.json", { cache: "no-store" });
+        const bots = await res.json();
+
+        const total = bots.length;
+        const online = bots.filter(b => b.status === "online").length;
+        const offline = total - online;
+
+        const grid = document.getElementById("botsGrid");
+        grid.innerHTML = "";
+
+        bots.forEach(bot => {
+          const card = document.createElement("article");
+          card.className = "card";
+          card.setAttribute("tabindex", "0");
+          card.setAttribute("aria-label", bot.name + " 상태 카드");
+
+          const badgeClass =
+            bot.status === "online"
+              ? "badge badge-online"
+              : "badge badge-offline";
+          const statusLabel =
+            bot.status === "online" ? "ONLINE" : "OFFLINE";
+
+          card.innerHTML = `
+            <div class="card-header">
+              <div class="card-main">
+                <div class="card-title-row">
+                  <span class="card-emoji">${bot.emoji || "🤖"}</span>
+                  <div class="card-title">${bot.name}</div>
+                </div>
+                <div class="${badgeClass}">
+                  <span class="dot"></span>
+                  <span>${statusLabel}</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-subtitle">
+              <span class="dot"></span>
+              <span>${bot.description || bot.desc || "상세 설명 없음"}</span>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-left">
+                <div class="pill pill-category">
+                  <span class="dot"></span>
+                  <span>${bot.category || "기타"}</span>
+                </div>
+                <div class="pill pill-updated">
+                  <span class="dot"></span>
+                  <span>${bot.updated || "업데이트 정보 없음"}</span>
+                </div>
+              </div>
+              <div class="card-footer-right">
+                <span class="dot"></span>
+                <span>${bot.id || ""}</span>
+              </div>
+            </div>
+          `;
+
+          grid.appendChild(card);
+        });
+
+        document.getElementById("totalBots").textContent = String(total);
+        document.getElementById("onlineBots").textContent = String(online);
+        document.getElementById("filterOnline").textContent = `온라인 ${online}`;
+        document.getElementById("filterOffline").textContent = `오프라인 ${offline}`;
+        document.getElementById("lastUpdated").textContent =
+          new Date().toLocaleString("ko-KR");
+      } catch (e) {
+        console.error(e);
+        document.getElementById("botsGrid").innerHTML =
+          '<p style="font-size:0.85rem; color:#fca5a5;">bots.json을 불러오지 못했습니다.</p>';
+      }
+    }
+
+    loadBots();
+    setInterval(loadBots, 60000);
+
+    // 링크 전부 막기
     document.addEventListener("click", (e) => {
       const a = e.target.closest("a");
       if (!a) return;
