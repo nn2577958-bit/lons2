@@ -163,56 +163,49 @@
     </div>
   </div>
 
-  <!-- V1 JS SDK -->
-  <script src="https://cdn.iamport.kr/js/iamport.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const IMP = window.IMP;
-      console.log("IMP 객체:", IMP);
+  <!-- V1 JS SDK: 이 두 줄만 쓰면 됨 -->
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 
-      if (!IMP) {
-        alert("포트원 스크립트가 로드되지 않았습니다.");
+  <script>
+    const IMP = window.IMP;
+    IMP.init("imp47048402"); // 고객사 식별코드
+
+    function requestPay() {
+      const discordId = document.getElementById("discordId").value.trim();
+      const amount = Number(document.getElementById("amount").value || "0");
+
+      if (!discordId) {
+        alert("디스코드 ID를 입력해 주세요.");
+        return;
+      }
+      if (!amount || amount <= 0) {
+        alert("금액을 올바르게 입력해 주세요.");
         return;
       }
 
-      IMP.init("imp47048402"); // 고객사 식별코드 [web:1060][web:1063]
-
-      window.requestPay = function () {
-        const discordId = document.getElementById("discordId").value.trim();
-        const amount = Number(document.getElementById("amount").value || "0");
-
-        if (!discordId) {
-          alert("디스코드 ID를 입력해 주세요.");
-          return;
-        }
-        if (!amount || amount <= 0) {
-          alert("금액을 올바르게 입력해 주세요.");
-          return;
-        }
-
-        IMP.request_pay(
-          {
-            channelKey: "channel-key-72dd528f-1c37-407b-b5a7-40faa63f46ce",
-            pay_method: "card",
-            merchant_uid: "order-" + Date.now(),
-            name: "포인트 충전",
-            amount: amount,
-            custom_data: {
-              discord_id: discordId
-            }
-          },
-          function (rsp) {
-            console.log("결제 응답:", rsp);
-            if (rsp.success) {
-              alert("결제 성공: " + rsp.merchant_uid);
-              // TODO: 여기서 서버로 rsp.imp_uid / rsp.merchant_uid 보내서 검증 + 포인트 충전
-            } else {
-              alert("결제 실패: " + rsp.error_msg);
-            }
+      IMP.request_pay(
+        {
+          channelKey: "channel-key-72dd528f-1c37-407b-b5a7-40faa63f46ce",
+          pay_method: "card",
+          merchant_uid: "order-" + Date.now(),
+          name: "포인트 충전",
+          amount: amount,
+          custom_data: {
+            discord_id: discordId
           }
-        );
-      };
-    });
+        },
+        function (rsp) {
+          console.log("결제 응답:", rsp);
+          if (rsp.success) {
+            alert("결제 성공: " + rsp.merchant_uid);
+            // TODO: 여기서 서버로 rsp.imp_uid / rsp.merchant_uid 보내서 검증 + 포인트 충전
+          } else {
+            alert("결제 실패: " + rsp.error_msg);
+          }
+        }
+      );
+    }
   </script>
 </body>
 </html>
