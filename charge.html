@@ -156,16 +156,20 @@
       <div class="hint">최소 100원부터 100원 단위로 입력할 수 있습니다.</div>
     </div>
 
-    <button class="button" onclick="pay()">결제하기</button>
+    <button class="button" onclick="requestPay()">결제하기</button>
 
     <div class="footer-text">
       결제 진행 시 포트원 · KG 이니시스의 이용약관에 동의한 것으로 간주됩니다.
     </div>
   </div>
 
-  <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+  <!-- V1 JS SDK -->
+  <script src="https://cdn.iamport.kr/js/iamport.js"></script>
   <script>
-    async function pay() {
+    const IMP = window.IMP;
+    IMP.init("imp47048402"); // 네 고객사 식별코드
+
+    function requestPay() {
       const discordId = document.getElementById("discordId").value.trim();
       const amount = Number(document.getElementById("amount").value || "0");
 
@@ -178,30 +182,29 @@
         return;
       }
 
-      try {
-        const response = await PortOne.requestPayment({
-          storeId: "store-16f9ad0b-fe2e-4c30-89d9-65943e891642",
+      IMP.request_pay(
+        {
           channelKey: "channel-key-72dd528f-1c37-407b-b5a7-40faa63f46ce",
-          // isTestChannel: true, // 실연동 시 사용 안 함
-
-          paymentId: "order-" + Date.now(),
-          orderName: "포인트 충전",
-          totalAmount: amount,
-          currency: "KRW",
-          payMethod: "CARD",
-
-          customData: {
+          // pg: "html5_inicis",  // channelKey 쓰면 pg는 생략 가능 (신규 SDK) [web:1046][web:1049]
+          pay_method: "card",
+          merchant_uid: "order-" + Date.now(),
+          name: "포인트 충전",
+          amount: amount,
+          custom_data: {
             discord_id: discordId
-          },
-
-          redirectUrl: "https://mall.rani-mall.xyz/charge-complete"
-        });
-
-        console.log("결제 응답:", response);
-      } catch (e) {
-        console.error("결제 에러:", e);
-        alert("에러: " + (e?.message || e));
-      }
+          }
+        },
+        function (rsp) {
+          console.log("결제 응답:", rsp);
+          if (rsp.success) {
+            alert("결제 성공: " + rsp.merchant_uid);
+            // TODO: 여기서 너 서버로 rsp.imp_uid / rsp.merchant_uid 보내서
+            //      결제 검증 + 포인트 충전 처리
+          } else {
+            alert("결제 실패: " + rsp.error_msg);
+          }
+        }
+      );
     }
   </script>
 </body>
